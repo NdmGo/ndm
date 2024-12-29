@@ -17,8 +17,9 @@ action:
     - go mod vendor
     - find . -name ".DS_Store" -print -delete
     - gofmt -w ./
+    - ps -ef|grep 'ndm web'| grep -v grep | awk '{print $2}' | xargs kill -9
   after:
-  - echo "zzz end"
+    - ./ndm web &
   exit:
-  - echo "exit"
+    - ps -ef|grep 'ndm web'| grep -v grep | awk '{print $2}' | xargs kill -9
 link: https://github.com/midoks/zzz
