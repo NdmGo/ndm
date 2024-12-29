@@ -8,7 +8,8 @@ import (
 
 func InitRouters() {
 
-	r := gin.Default()
-
-	r.Run(":5868")
+	engine := gin.Default()
+	engine.SetTrustedProxies(nil)
+	gin.SetMode(gin.ReleaseMode)
+	engine.Run(":5868")
 }
