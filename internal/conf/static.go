@@ -14,4 +14,10 @@ var (
 		RunUser   string
 		RunMode   string
 	}
+
+	// log
+	Log struct {
+		Format   string
+		RootPath string
+	}
 )

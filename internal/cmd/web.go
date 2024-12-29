@@ -2,6 +2,9 @@ package cmd
 
 import (
 	"github.com/urfave/cli"
+
+	"ndm/internal/conf"
+	"ndm/internal/routers"
 )
 
 var Web = cli.Command{
@@ -15,5 +18,7 @@ var Web = cli.Command{
 }
 
 func runWeb(c *cli.Context) error {
+	conf.InitConf("")
+	routers.InitRouters()
 	return nil
 }
