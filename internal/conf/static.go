@@ -15,6 +15,10 @@ var (
 		RunMode   string
 	}
 
+	Http struct {
+		Port int64
+	}
+
 	// log
 	Log struct {
 		Format   string

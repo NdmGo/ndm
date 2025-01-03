@@ -1,15 +1,18 @@
 package routers
 
 import (
-	// "fmt"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+
+	"ndm/internal/conf"
 )
 
 func InitRouters() {
-
 	engine := gin.Default()
 	engine.SetTrustedProxies(nil)
 	gin.SetMode(gin.ReleaseMode)
-	engine.Run(":5868")
+
+	port := fmt.Sprintf(":%d", conf.Http.Port)
+	engine.Run(port)
 }

@@ -60,6 +60,13 @@ func InitConf(customConf string) error {
 		return errors.Wrap(err, "mapping [log] section")
 	}
 
+	// ***************************
+	// ----- Http settings -----
+	// ***************************
+	if err = File.Section("http").MapTo(&Http); err != nil {
+		return errors.Wrap(err, "mapping [http] section")
+	}
+
 	fmt.Println(data, err)
 
 	return nil
