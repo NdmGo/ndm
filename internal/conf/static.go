@@ -24,4 +24,10 @@ var (
 		Format   string
 		RootPath string
 	}
+
+	// Security settings
+	Security struct {
+		InstallLock bool
+		SecretKey   string
+	}
 )
