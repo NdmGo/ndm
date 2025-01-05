@@ -17,7 +17,10 @@ var File *ini.File
 
 func InitConf(customConf string) error {
 
-	data, _ := public.Conf.ReadFile("conf/app.conf")
+	data, err := public.Conf.ReadFile("conf/app.conf")
+	if err != nil {
+		return err
+	}
 
 	File, err := ini.LoadSources(ini.LoadOptions{
 		IgnoreInlineComment: true,
@@ -38,8 +41,7 @@ func InitConf(customConf string) error {
 		}
 	}
 
-	fmt.Println(customConf)
-
+	// fmt.Println(customConf)
 	if utils.IsFile(customConf) {
 		if err = File.Append(customConf); err != nil {
 			return errors.Wrapf(err, "append %q", customConf)
@@ -61,13 +63,19 @@ func InitConf(customConf string) error {
 	}
 
 	// ***************************
+	// ----- Security settings -----
+	// ***************************
+	if err = File.Section("security").MapTo(&Security); err != nil {
+		return errors.Wrap(err, "mapping [security] section")
+	}
+
+	// ***************************
 	// ----- Http settings -----
 	// ***************************
 	if err = File.Section("http").MapTo(&Http); err != nil {
 		return errors.Wrap(err, "mapping [http] section")
 	}
 
-	fmt.Println(data, err)
-
+	// fmt.Println(data, err)
 	return nil
 }

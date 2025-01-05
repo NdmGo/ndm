@@ -16,7 +16,8 @@ var (
 	}
 
 	Http struct {
-		Port int64
+		Port     int64
+		SafePath string
 	}
 
 	// log
