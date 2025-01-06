@@ -26,8 +26,18 @@ var (
 		RootPath string
 	}
 
+	// database
 	Database struct {
-		Type string
+		Type        string `json:"type" env:"TYPE"`
+		Path        string
+		DSN         string `json:"dsn" env:"DSN"`
+		TablePrefix string `json:"table_prefix" env:"TABLE_PREFIX"`
+		Host        string `json:"host" env:"HOST"`
+		Port        int    `json:"port" env:"PORT"`
+		Name        string `json:"name" env:"NAME"`
+		User        string `json:"user" env:"USER"`
+		Password    string `json:"password" env:"PASS"`
+		SSLMode     string `json:"ssl_mode" env:"SSL_MODE"`
 	}
 
 	// Security settings
