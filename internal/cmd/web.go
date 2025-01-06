@@ -18,7 +18,7 @@ var Web = cli.Command{
 }
 
 func runWeb(c *cli.Context) error {
-	conf.InitConf("")
+	conf.InitConf(c.String("config"))
 	routers.InitRouters()
 	return nil
 }

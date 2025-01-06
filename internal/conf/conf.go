@@ -65,8 +65,8 @@ func InitConf(customConf string) error {
 	// ***************************
 	// ----- Security settings -----
 	// ***************************
-	if err = File.Section("security").MapTo(&Security); err != nil {
-		return errors.Wrap(err, "mapping [security] section")
+	if err = File.Section("database").MapTo(&Database); err != nil {
+		return errors.Wrap(err, "mapping [database] section")
 	}
 
 	// ***************************
@@ -74,6 +74,13 @@ func InitConf(customConf string) error {
 	// ***************************
 	if err = File.Section("http").MapTo(&Http); err != nil {
 		return errors.Wrap(err, "mapping [http] section")
+	}
+
+	// ***************************
+	// ----- Security settings -----
+	// ***************************
+	if err = File.Section("security").MapTo(&Security); err != nil {
+		return errors.Wrap(err, "mapping [security] section")
 	}
 
 	// fmt.Println(data, err)

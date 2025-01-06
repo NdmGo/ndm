@@ -26,6 +26,10 @@ var (
 		RootPath string
 	}
 
+	Database struct {
+		Type string
+	}
+
 	// Security settings
 	Security struct {
 		InstallLock bool

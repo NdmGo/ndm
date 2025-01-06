@@ -16,7 +16,7 @@ func initAppRouter(e *gin.Engine) {
 		})
 	}
 
-	g := g.Group(conf.Http.SafePath)
+	g := e.Group(conf.Http.SafePath)
 	api := g.Group("/api")
 
 	g.Any("/ping", func(c *gin.Context) {
