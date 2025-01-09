@@ -3,6 +3,7 @@ package conf
 import (
 	"fmt"
 	"log"
+	// "os"
 	"path/filepath"
 
 	"github.com/pkg/errors"
@@ -19,7 +20,7 @@ func InitConf(customConf string) error {
 
 	data, err := public.Conf.ReadFile("conf/app.conf")
 	if err != nil {
-		return err
+		return errors.Wrap(err, "read file 'conf/app.conf'")
 	}
 
 	File, err := ini.LoadSources(ini.LoadOptions{
@@ -83,6 +84,7 @@ func InitConf(customConf string) error {
 		return errors.Wrap(err, "mapping [security] section")
 	}
 
-	// fmt.Println(data, err)
+	// creare logs dir
+	// os.MkdirAll(conf.Log.RootPath, 0755)
 	return nil
 }

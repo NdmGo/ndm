@@ -5,6 +5,7 @@ import (
 
 	"ndm/internal/conf"
 	"ndm/internal/db"
+	"ndm/internal/logs"
 	"ndm/internal/routers"
 )
 
@@ -20,6 +21,7 @@ var Web = cli.Command{
 
 func runWeb(c *cli.Context) error {
 	conf.InitConf(c.String("config"))
+	logs.InitLog()
 
 	if conf.Security.InstallLock {
 		db.InitDb()
