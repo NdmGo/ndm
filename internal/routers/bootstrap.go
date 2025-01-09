@@ -62,18 +62,11 @@ func InitRouters() {
 		})
 	}
 	g := r.Group(conf.Http.SafePath)
+	g.Any("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	})
 
 	// gin.SetMode(gin.ReleaseMode)
-
-	// fmt.Println(public.Static)
-	// fmt.Println("sss:", http.FS(public.Static))
-	// fp, _ := fs.Sub(public.Static, "static")
-	// 静态文件
-	// r.StaticFS("/static", http.FS(fp))
-
-	ndmStatic(g, func(handlers ...gin.HandlerFunc) {
-		r.NoRoute(handlers...)
-	})
 
 	// r.NoRoute(func(c *gin.Context) {
 	// 	// fmt.Printf("%s doesn't exists, redirect on /\n", c.Request.URL.Path)
@@ -90,6 +83,10 @@ func InitRouters() {
 	// api.Any("/pings", func(c *gin.Context) {
 	// 	c.String(200, "pong")
 	// })
+
+	ndmStatic(g, func(handlers ...gin.HandlerFunc) {
+		r.NoRoute(handlers...)
+	})
 
 	r.Run(fmt.Sprintf(":%d", conf.Http.Port))
 }

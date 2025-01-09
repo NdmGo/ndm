@@ -18,6 +18,8 @@ var (
 	Http struct {
 		Port     int64
 		SafePath string
+		Template string
+		Debug    bool
 	}
 
 	// log
