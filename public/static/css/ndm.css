@@ -23,14 +23,14 @@ div {
 	background-color: #3c444d;
 }
 
-.ndm-logo  .logo_image {
+.ndm-logo .logo_image {
 	float: left;
 	width: 30px;
 	margin-left: 30px;
-	margin-top: -3px;
+	margin-top: -1px;
 }
 
-.ndm-logo  .logo_text {
+.ndm-logo .logo_text {
 	vertical-align: text-top;
 	float: left;
 }

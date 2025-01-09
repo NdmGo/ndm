@@ -9,6 +9,7 @@ dirfilter:
 - templates
 ext:
 - go
+- tmpl
 enablerun: true
 action:
   before:
