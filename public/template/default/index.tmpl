@@ -1,1 +1,218 @@
-dd
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Layui后台模版</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/ndm.css?t=39">
+</head>
+<body>
+
+<div id="ndm">
+    <div class="layui-layout-admin layui-layout">
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree layui-nav-side">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <div class="ndm-logo">
+                            <div class="logo_image">
+                                <img style="height: 24px;" src="../images/logo.png"/>
+                            </div>
+
+                            <div class="logo_text">
+                                <span  style="line-height: 24px;">NDM存储管理</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:;">
+                            <i class="layui-icon layui-icon-senior"></i>
+                            <cite>默认展开</cite>
+                        </a>
+
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="javascript:;">
+                                    <i class="layui-icon layui-icon-set"></i>
+                                    <cite>选项1</cite>
+                                </a>
+                            </dd>
+                            <dd><a href="javascript:;">选项2</a></dd>
+                            <dd><a href="javascript:;">选项3</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="layui-icon layui-icon-moon"></i>
+                            <cite>默认收缩</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">选项1</a></dd>
+                            <dd><a href="javascript:;">选项2</a></dd>
+                            <dd><a href="javascript:;">选项3</a></dd>
+                        </dl>
+                    </li>
+
+                    
+
+                    <li class="layui-nav-item">
+                        <a href="index.html">
+                            <i class="layui-icon layui-icon-firefox"></i>
+                            <cite>首页</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                         <a href="tab.html">
+                            <i class="layui-icon layui-icon-at"></i>
+                            <cite>TAB</cite>
+                        </a>
+                    </li>
+
+
+                    <li class="layui-nav-item">
+                         <a href="table.html">
+                            <i class="layui-icon layui-icon-music"></i>
+                            <cite>表格</cite>
+                        </a>
+                    </li>
+
+        
+                    <li class="layui-nav-item">
+                        <a href="login.html">
+                            <i class="layui-icon layui-icon-flag"></i>
+                            <cite>登录</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="install.html">
+                            <i class="layui-icon layui-icon-upload-drag"></i>
+                            <cite>安装页</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容页 -->
+        <div class="main-content">
+            <div class="container-fluid" style="padding-top: 4px;">
+                <div class="pos-box bgw mtb5">
+                    <div class="position f14 c9 pull-left">
+                        <i class="layui-icon layui-icon-home ndm-home"></i>
+
+                        <div class="ndm-breadcrumb">
+                            <a class="plr10 c4" href="/">首页</a>/<span class="plr10 c4">系统监控</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 给容器追加 class="layui-form-pane"，即可显示为方框风格 -->
+                <div class="bgw" style="padding:8px;font-size:12px;">
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                        <label class="layui-form-label">长输入框</label>
+                        <div class="layui-input-block">
+                          <input type="text" name="title" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input">
+                        </div>
+                        </div>
+                        <div class="layui-form-item">
+                        <div class="layui-inline">
+                          <label class="layui-form-label">日期选择</label>
+                          <div class="layui-input-block">
+                            <input type="text" name="date" id="date1" autocomplete="off" class="layui-input">
+                          </div>
+                        </div>
+                        <div class="layui-inline">
+                          <label class="layui-form-label">行内表单</label>
+                          <div class="layui-input-inline">
+                            <input type="text" name="number" autocomplete="off" class="layui-input">
+                          </div>
+                        </div>
+                        </div>
+                        <div class="layui-form-item">
+                        <label class="layui-form-label">密码框</label>
+                        <div class="layui-input-inline">
+                          <input type="password" name="password" placeholder="请输入" lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-text-em">请务必填写用户名</div>
+                        </div>
+                        <div class="layui-form-item">
+                        <div class="layui-inline">
+                          <label class="layui-form-label">范围</label>
+                          <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
+                          </div>
+                          <div class="layui-form-mid">-</div>
+                          <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">
+                          </div>
+                        </div>
+                        </div>
+                        <div class="layui-form-item">
+                        <label class="layui-form-label">选择框</label>
+                        <div class="layui-input-inline">
+                          <select name="interest" lay-filter="aihao">
+                            <option value=""></option>
+                            <option value="0">写作</option>
+                            <option value="1" selected>阅读</option>
+                            <option value="2">游戏</option>
+                            <option value="3">音乐</option>
+                            <option value="4">旅行</option>
+                          </select>
+                        </div>
+                        </div>
+                         <div class="layui-form-item" pane>
+                        <label class="layui-form-label">开关-默认开</label>
+                        <div class="layui-input-block">
+                          <input type="checkbox" checked name="open" lay-skin="switch" lay-filter="switchTest" title="开关">
+                        </div>
+                        </div>
+                        <div class="layui-form-item" pane>
+                        <label class="layui-form-label">单选框</label>
+                        <div class="layui-input-block">
+                          <input type="radio" name="sex" value="男" title="男" checked>
+                          <input type="radio" name="sex" value="女" title="女">
+                          <input type="radio" name="sex" value="禁" title="禁用" disabled>
+                        </div>
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">文本域</label>
+                        <div class="layui-input-block">
+                          <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                        </div>
+                        </div>
+                         <div class="layui-form-item">
+                        <button class="layui-btn" lay-submit lay-filter="demo2">确认</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- //// -->
+    </div>
+
+
+<!-- //// -->
+</div>
+
+
+
+<!-- body 末尾处引入 layui -->
+<script src="/static/layui/layui.js"></script>
+<script>
+layui.use(function(){
+    var layer = layui.layer;
+    var form = layui.form;
+    var laydate = layui.laydate;
+    var util = layui.util;
+
+    layer.msg('Hello World', {icon: 6});
+});
+</script>
+</body>
+</html>
