@@ -66,13 +66,13 @@ func InitRouters() {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
 
-	// gin.SetMode(gin.ReleaseMode)
-
-	// r.NoRoute(func(c *gin.Context) {
-	// 	// fmt.Printf("%s doesn't exists, redirect on /\n", c.Request.URL.Path)
-	// 	// c.Redirect(http.StatusMovedPermanently, "/")
-	// 	c.String(200, "error")
+	// g.Any("/install", func(c *gin.Context) {
+	// 	c.HTML(http.StatusOK, "install.tmpl", gin.H{})
 	// })
+
+	if !conf.Http.Debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	// api := g.Group("/api")
 
