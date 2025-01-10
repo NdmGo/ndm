@@ -26,3 +26,4 @@ go.work.sum
 ndm
 vendor
 logs
+*.DS_Store
