@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -35,11 +36,6 @@ func ndmStatic(r *gin.RouterGroup, noRoute func(handlers ...gin.HandlerFunc)) {
 	noRoute(func(c *gin.Context) {
 		c.Header("Content-Type", "text/html")
 		c.Status(200)
-		// if strings.HasPrefix(c.Request.URL.Path, "/@manage") {
-		// 	_, _ = c.Writer.WriteString(conf.ManageHtml)
-		// } else {
-		// 	_, _ = c.Writer.WriteString(conf.IndexHtml)
-		// }
 		_, _ = c.Writer.WriteString("not find")
 		c.Writer.Flush()
 		c.Writer.WriteHeaderNow()
@@ -49,12 +45,32 @@ func ndmStatic(r *gin.RouterGroup, noRoute func(handlers ...gin.HandlerFunc)) {
 func InitRouters() {
 	r := gin.Default()
 
-	tmpl, err := template.ParseFS(public.Template, "template/default/*.tmpl")
+	tmpl, err := template.ParseFS(public.Template, "template/default/*")
 	if err != nil {
 		logs.Infof("load template err: %s", err)
 	}
 
+	// r.Delims("{[", "]}")
 	r.SetHTMLTemplate(tmpl)
+	r.SetFuncMap(template.FuncMap{
+		"title": "测试",
+		"AppName": func() string {
+			return conf.App.Name
+		},
+		"AppVer": func() string {
+			return conf.App.Version
+		},
+		"LoadTimes": func(startTime time.Time) string {
+			return fmt.Sprint(time.Since(startTime).Nanoseconds()/1e6) + "ms"
+		},
+		"Join": strings.Join,
+		"DateFmtLong": func(t time.Time) string {
+			return t.Format(time.RFC1123Z)
+		},
+		"DateFmtShort": func(t time.Time) string {
+			return t.Format("Jan 02, 2006")
+		},
+	})
 	r.SetTrustedProxies(nil)
 	if !utils.SliceContains([]string{"", "/"}, conf.Http.SafePath) {
 		r.GET("/", func(c *gin.Context) {
