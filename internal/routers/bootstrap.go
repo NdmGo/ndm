@@ -6,7 +6,6 @@ import (
 	"io/fs"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -45,30 +44,33 @@ func ndmStatic(r *gin.RouterGroup, noRoute func(handlers ...gin.HandlerFunc)) {
 func InitRouters() {
 	r := gin.Default()
 
-	tmpl, err := template.ParseFS(public.Template, "template/default/*")
+	tmpl, err := template.ParseFS(public.Template, "template/default/**/*.tmpl", "template/default/*.tmpl")
 	if err != nil {
-		logs.Infof("load template err: %s", err)
+		logs.Infof("load template: %s", err)
 	}
 
+	fmt.Println("tmpl", tmpl)
+
 	// r.Delims("{[", "]}")
+	// r.FuncMap = template.FuncMap{
+	// 	"title": func() string {
+	// 		return "!23123"
+	// 	},
+	// 	"AppName": func() string {
+	// 		return conf.App.Name
+	// 	},
+	// 	"AppVer": func() string {
+	// 		return conf.App.Version
+	// 	},
+	// }
+
 	r.SetHTMLTemplate(tmpl)
 	r.SetFuncMap(template.FuncMap{
-		"title": "测试",
-		"AppName": func() string {
-			return conf.App.Name
+		"safe": func(str string) template.HTML {
+			return template.HTML(str)
 		},
-		"AppVer": func() string {
+		"appVer": func() string {
 			return conf.App.Version
-		},
-		"LoadTimes": func(startTime time.Time) string {
-			return fmt.Sprint(time.Since(startTime).Nanoseconds()/1e6) + "ms"
-		},
-		"Join": strings.Join,
-		"DateFmtLong": func(t time.Time) string {
-			return t.Format(time.RFC1123Z)
-		},
-		"DateFmtShort": func(t time.Time) string {
-			return t.Format("Jan 02, 2006")
 		},
 	})
 	r.SetTrustedProxies(nil)

@@ -20,10 +20,12 @@ func FuncMap() template.FuncMap {
 	// funcMapOnce.Do(func() {
 
 	funcMap = template.FuncMap{
-		"title": "测试",
-		"AppName": func() string {
-			return conf.App.Name
+		"title": func() string {
+			return "123123"
 		},
+		// "AppName": func() string {
+		// 	return conf.App.Name
+		// },
 		"AppVer": func() string {
 			return conf.App.Version
 		},
@@ -31,12 +33,12 @@ func FuncMap() template.FuncMap {
 			return fmt.Sprint(time.Since(startTime).Nanoseconds()/1e6) + "ms"
 		},
 		"Join": strings.Join,
-		"DateFmtLong": func(t time.Time) string {
-			return t.Format(time.RFC1123Z)
-		},
-		"DateFmtShort": func(t time.Time) string {
-			return t.Format("Jan 02, 2006")
-		},
+		// "DateFmtLong": func(t time.Time) string {
+		// 	return t.Format(time.RFC1123Z)
+		// },
+		// "DateFmtShort": func(t time.Time) string {
+		// 	return t.Format("Jan 02, 2006")
+		// },
 	}
 	// ---
 	// })
