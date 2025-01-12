@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"ndm/internal/common"
 	"ndm/internal/conf"
 	"ndm/internal/logs"
 	"ndm/internal/utils"
@@ -41,14 +42,6 @@ func ndmStatic(r *gin.RouterGroup, noRoute func(handlers ...gin.HandlerFunc)) {
 	})
 }
 
-func commonVer() map[string]interface{} {
-	data := map[string]interface{}{
-		"title":   "NDM存储管理",
-		"version": conf.App.Version,
-	}
-	return data
-}
-
 func initStaticFunc(r *gin.Engine) {
 	tmpl, err := template.ParseFS(public.Template, "template/default/**/*.tmpl", "template/default/*.tmpl")
 	if err != nil {
@@ -64,24 +57,37 @@ func initStaticFunc(r *gin.Engine) {
 }
 
 func initStaticPage(g *gin.RouterGroup) {
-	g.Any("/", func(c *gin.Context) {
-		data := commonVer()
-
+	g.GET("/", func(c *gin.Context) {
 		if !conf.Security.InstallLock {
 			c.Redirect(302, "/install")
 		}
 
+		data := common.CommonVer()
 		c.HTML(http.StatusOK, "index.tmpl", data)
 	})
 
-	g.Any("/install", func(c *gin.Context) {
-		data := commonVer()
+	g.GET("/install", func(c *gin.Context) {
+		data := common.CommonVer()
 		c.HTML(http.StatusOK, "install.tmpl", data)
 	})
 
-	g.Any("/step1", func(c *gin.Context) {
-		data := commonVer()
-		c.HTML(http.StatusOK, "step1.tmpl", data)
+	g.POST("/install_step1", func(c *gin.Context) {
+		username := c.PostForm("username")
+
+		fmt.Println(username)
+
+		// c.JSON(http.StatusOK, gin.H{
+		// 	"username": username,
+		// 	"password": password,
+		// 	"age":      age,
+		// })
+
+		common.SuccessResp(c, gin.H{"token": "安装成功!"})
+	})
+
+	g.GET("/install_step1", func(c *gin.Context) {
+		data := common.CommonVer()
+		c.HTML(http.StatusOK, "install_step1.tmpl", data)
 	})
 }
 
