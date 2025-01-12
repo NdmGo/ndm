@@ -69,7 +69,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">数据库前缀</label>
             <div class="layui-input-inline w200">
-                <input type="text" class="layui-input" name="prefix" lay-verify="title" value="hm_">
+                <input type="text" class="layui-input" name="prefix" lay-verify="title" value="ndm_">
             </div>
             <div class="layui-form-mid layui-word-aux">建议使用默认,数据库前缀必须带_</div>
         </div>
@@ -95,7 +95,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">管理员账号</label>
         <div class="layui-input-inline w200">
-            <input type="text" class="layui-input" name="account" lay-verify="title">
+            <input type="text" class="layui-input" name="account" value="admin" lay-verify="title">
         </div>
         <div class="layui-form-mid layui-word-aux">管理员账号最少4位</div>
     </div>
@@ -125,7 +125,10 @@ var $ = layui.$
 ,form = layui.form
 ,router = layui.router();
 
-form.render();
+// form.render();
+
+
+
 //提交
 form.on('submit(install)', function(d){
     location.href = "index.html";
