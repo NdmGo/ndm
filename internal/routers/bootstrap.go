@@ -41,38 +41,53 @@ func ndmStatic(r *gin.RouterGroup, noRoute func(handlers ...gin.HandlerFunc)) {
 	})
 }
 
-func InitRouters() {
-	r := gin.Default()
+func commonVer() map[string]interface{} {
+	data := map[string]interface{}{
+		"title":   "NDM存储管理",
+		"version": conf.App.Version,
+	}
+	return data
+}
 
+func initStaticFunc(r *gin.Engine) {
 	tmpl, err := template.ParseFS(public.Template, "template/default/**/*.tmpl", "template/default/*.tmpl")
 	if err != nil {
 		logs.Infof("load template: %s", err)
 	}
-
-	fmt.Println("tmpl", tmpl)
-
-	// r.Delims("{[", "]}")
-	// r.FuncMap = template.FuncMap{
-	// 	"title": func() string {
-	// 		return "!23123"
-	// 	},
-	// 	"AppName": func() string {
-	// 		return conf.App.Name
-	// 	},
-	// 	"AppVer": func() string {
-	// 		return conf.App.Version
-	// 	},
-	// }
 
 	r.SetHTMLTemplate(tmpl)
 	r.SetFuncMap(template.FuncMap{
 		"safe": func(str string) template.HTML {
 			return template.HTML(str)
 		},
-		"appVer": func() string {
-			return conf.App.Version
-		},
 	})
+}
+
+func initStaticPage(g *gin.RouterGroup) {
+	g.Any("/", func(c *gin.Context) {
+		data := commonVer()
+		c.HTML(http.StatusOK, "index.tmpl", data)
+	})
+
+	g.Any("/install", func(c *gin.Context) {
+		data := commonVer()
+		c.HTML(http.StatusOK, "install.tmpl", data)
+	})
+
+	g.Any("/step1", func(c *gin.Context) {
+		data := commonVer()
+		c.HTML(http.StatusOK, "step1.tmpl", data)
+	})
+}
+
+func InitRouters() {
+	if !conf.Http.Debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	r := gin.Default()
+	initStaticFunc(r)
+
 	r.SetTrustedProxies(nil)
 	if !utils.SliceContains([]string{"", "/"}, conf.Http.SafePath) {
 		r.GET("/", func(c *gin.Context) {
@@ -80,17 +95,7 @@ func InitRouters() {
 		})
 	}
 	g := r.Group(conf.Http.SafePath)
-	g.Any("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
-	})
-
-	// g.Any("/install", func(c *gin.Context) {
-	// 	c.HTML(http.StatusOK, "install.tmpl", gin.H{})
-	// })
-
-	if !conf.Http.Debug {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	initStaticPage(g)
 
 	// api := g.Group("/api")
 
