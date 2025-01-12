@@ -66,6 +66,11 @@ func initStaticFunc(r *gin.Engine) {
 func initStaticPage(g *gin.RouterGroup) {
 	g.Any("/", func(c *gin.Context) {
 		data := commonVer()
+
+		if !conf.Security.InstallLock {
+			c.Redirect(302, "/install")
+		}
+
 		c.HTML(http.StatusOK, "index.tmpl", data)
 	})
 
