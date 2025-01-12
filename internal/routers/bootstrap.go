@@ -72,9 +72,15 @@ func initStaticPage(g *gin.RouterGroup) {
 	})
 
 	g.POST("/install_step1", func(c *gin.Context) {
+		db_type := c.PostForm("db_type")
+		hostname := c.PostForm("hostname")
+		hostport := c.PostForm("hostport")
+		dbname := c.PostForm("dbname")
 		username := c.PostForm("username")
+		password := c.PostForm("password")
+		dbprefix := c.PostForm("dbprefix")
 
-		fmt.Println(username)
+		fmt.Println(db_type, hostname, hostport, dbname, username, password, dbprefix)
 
 		// c.JSON(http.StatusOK, gin.H{
 		// 	"username": username,
