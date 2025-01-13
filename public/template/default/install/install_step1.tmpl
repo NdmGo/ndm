@@ -94,29 +94,29 @@
             <button type="submit" class="layui-btn fl" style="margin-left:110px;margin-right: 10px;" lay-submit="" lay-filter="dbtest">测试数据库连接</button>
             <div class="layui-form-mid layui-word-aux">请先点击【测试数据连接】再安装</div>
         </div>
-    </form>
 
-    <fieldset class="layui-elem-field layui-field-title">
-        <legend>其他设置</legend>
-    </fieldset>
-    <div class="layui-form-item">
-        <label class="layui-form-label">管理员账号</label>
-        <div class="layui-input-inline w200">
-            <input type="text" class="layui-input" name="account" value="admin" lay-verify="title">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>其他设置</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label">管理员账号</label>
+            <div class="layui-input-inline w200">
+                <input type="text" class="layui-input" name="account" value="admin" lay-verify="title">
+            </div>
+            <div class="layui-form-mid layui-word-aux">管理员账号最少4位</div>
         </div>
-        <div class="layui-form-mid layui-word-aux">管理员账号最少4位</div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">管理员密码</label>
-        <div class="layui-input-inline w200">
-            <input type="password" class="layui-input" name="password" lay-verify="title">
+        <div class="layui-form-item">
+            <label class="layui-form-label">管理员密码</label>
+            <div class="layui-input-inline w200">
+                <input type="password" class="layui-input" name="pass" lay-verify="title">
+            </div>
+            <div class="layui-form-mid layui-word-aux">保证密码最少6位</div>
         </div>
-        <div class="layui-form-mid layui-word-aux">保证密码最少6位</div>
-    </div>
-    <div class="step-btns">
-        <a href="/install" class="layui-btn layui-btn-primary layui-btn-big fl">返回上一步</a>
-        <button type="submit" class="layui-btn layui-btn-big layui-btn-normal fr" lay-submit="" lay-filter="install">立即执行安装</button>
-    </div>
+        <div class="step-btns">
+            <a href="/install" class="layui-btn layui-btn-primary layui-btn-big fl">返回上一步</a>
+            <button type="submit" class="layui-btn layui-btn-big layui-btn-normal fr" lay-submit="" lay-filter="install">立即执行安装</button>
+        </div>
+    </form>
 
 </div>
 
@@ -185,8 +185,20 @@ form.on('submit(dbtest)', function(data){
 //提交
 form.on('submit(install)', function(data){
     var _form = $(this).parents('form');
-    console.log(_form);
+    console.log(_form.serialize());
     //location.href = "index.html";
+
+    $.ajax({
+        type: "POST",
+        url: _form.attr('action'),
+        data: _form.serialize(),
+        dataType:'json',
+        success: function(res) {
+            layer.msg(res.message, {icon: res.code>0?1:2});
+        }
+    });
+
+    return false;
 });
 
 ///
