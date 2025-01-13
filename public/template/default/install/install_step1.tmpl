@@ -169,7 +169,7 @@ form.on('submit(dbtest)', function(data){
     var _form = $(this).parents('form');
     $.ajax({
         type: "POST",
-        url: _form.attr('action'),
+        url: "/check",
         data: _form.serialize(),
         dataType:'json',
         success: function(res) {
@@ -183,9 +183,11 @@ form.on('submit(dbtest)', function(data){
 });
 
 //提交
-// form.on('submit(install)', function(d){
-//     location.href = "index.html";
-// });
+form.on('submit(install)', function(data){
+    var _form = $(this).parents('form');
+    console.log(_form);
+    //location.href = "index.html";
+});
 
 ///
 });

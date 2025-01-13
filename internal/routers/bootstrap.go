@@ -72,6 +72,24 @@ func initStaticPage(g *gin.RouterGroup) {
 		c.HTML(http.StatusOK, "install.tmpl", data)
 	})
 
+	g.POST("/check", func(c *gin.Context) {
+		data := make(map[string]string, 0)
+		data["db_type"] = c.PostForm("db_type")
+		data["hostname"] = c.PostForm("hostname")
+		data["hostport"] = c.PostForm("hostport")
+		data["dbname"] = c.PostForm("dbname")
+		data["username"] = c.PostForm("username")
+		data["password"] = c.PostForm("password")
+		data["dbprefix"] = c.PostForm("dbprefix")
+
+		err := db.CheckDbConnnect(data)
+		if err != nil {
+			common.ErrorStrResp(c, err.Error(), -1)
+			return
+		}
+		common.SuccessResp(c)
+	})
+
 	g.POST("/install_step1", func(c *gin.Context) {
 
 		data := make(map[string]string, 0)
@@ -95,12 +113,6 @@ func initStaticPage(g *gin.RouterGroup) {
 			common.ErrorStrResp(c, err.Error(), -1)
 			return
 		}
-
-		// c.JSON(http.StatusOK, gin.H{
-		// 	"username": username,
-		// 	"password": password,
-		// 	"age":      age,
-		// })
 
 		common.SuccessResp(c, gin.H{"token": "安装成功!"})
 	})
