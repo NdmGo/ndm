@@ -65,7 +65,7 @@ func InstallConf(data map[string]string) error {
 
 	safe_path := fmt.Sprintf("/ndm_%s", utils.RandString(6))
 
-	File.Section("http").Key("save_path").SetValue(safe_path)
+	File.Section("http").Key("safe_path").SetValue(safe_path)
 	File.Section("http").Key("debug").SetValue("false")
 
 	if strings.EqualFold(data["type"], "mysql") {
@@ -79,8 +79,6 @@ func InstallConf(data map[string]string) error {
 	} else if strings.EqualFold(data["type"], "sqlite3") {
 		File.Section("database").Key("type").SetValue("sqlite3")
 		File.Section("database").Key("path").SetValue(data["dbpath"])
-	} else {
-
 	}
 
 	File.Section("security").Key("install_lock").SetValue("true")

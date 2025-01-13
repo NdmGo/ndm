@@ -138,6 +138,8 @@ func InitRouters() {
 			c.Redirect(302, conf.Http.SafePath)
 		})
 	}
+
+	fmt.Println(conf.Http.SafePath)
 	g := r.Group(conf.Http.SafePath)
 	initStaticPage(g)
 
