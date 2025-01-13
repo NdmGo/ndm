@@ -87,6 +87,11 @@ func InstallConf(data map[string]string) error {
 		return err
 	}
 
+	// 安装后,重新初始化配置
+	err = InitConf("")
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

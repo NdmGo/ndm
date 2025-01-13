@@ -107,8 +107,11 @@ func initStaticPage(g *gin.RouterGroup) {
 		data["table_prefix"] = c.PostForm("table_prefix")
 		data["account"] = c.PostForm("account")
 		data["pass"] = c.PostForm("pass")
-		conf.InstallConf(data)
-
+		err := conf.InstallConf(data)
+		if err != nil {
+			common.ErrorStrResp(c, err.Error(), -1)
+			return
+		}
 		common.SuccessResp(c, gin.H{"token": "安装成功!"})
 	})
 }
