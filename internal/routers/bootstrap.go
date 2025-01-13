@@ -11,6 +11,7 @@ import (
 
 	"ndm/internal/common"
 	"ndm/internal/conf"
+	"ndm/internal/db"
 	"ndm/internal/logs"
 	"ndm/internal/utils"
 	"ndm/public"
@@ -72,15 +73,28 @@ func initStaticPage(g *gin.RouterGroup) {
 	})
 
 	g.POST("/install_step1", func(c *gin.Context) {
-		db_type := c.PostForm("db_type")
-		hostname := c.PostForm("hostname")
-		hostport := c.PostForm("hostport")
-		dbname := c.PostForm("dbname")
-		username := c.PostForm("username")
-		password := c.PostForm("password")
-		dbprefix := c.PostForm("dbprefix")
 
-		fmt.Println(db_type, hostname, hostport, dbname, username, password, dbprefix)
+		data := make(map[string]string, 0)
+
+		data["db_type"] = c.PostForm("db_type")
+		data["hostname"] = c.PostForm("hostname")
+		data["hostport"] = c.PostForm("hostport")
+		data["dbname"] = c.PostForm("dbname")
+		data["username"] = c.PostForm("username")
+		data["password"] = c.PostForm("password")
+		data["dbprefix"] = c.PostForm("dbprefix")
+
+		fmt.Println(data)
+
+		err := db.CheckDbConnnect(data)
+
+		if err == nil {
+			common.SuccessResp(c)
+			return
+		} else {
+			common.ErrorStrResp(c, err.Error(), -1)
+			return
+		}
 
 		// c.JSON(http.StatusOK, gin.H{
 		// 	"username": username,

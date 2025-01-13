@@ -166,20 +166,17 @@ form.on('select(db_type)', function(data){
 });
 
 form.on('submit(dbtest)', function(data){
-    console.log(data);
     var _form = $(this).parents('form');
-    console.log(_form);
-
     $.ajax({
         type: "POST",
         url: _form.attr('action'),
         data: _form.serialize(),
         dataType:'json',
         success: function(res) {
-            if(res.code==1){
+            if(res.code==200){
                 test = 1;
             }
-            layer.msg(res.msg);
+            layer.msg(res.message, {icon: res.code>0?1:2});
         }
     });
     return false;
