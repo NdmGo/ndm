@@ -105,3 +105,17 @@ func AutoMigrate(dst ...interface{}) error {
 	}
 	return err
 }
+
+func CheckDbConnnect(data map[string]string) bool {
+
+	if strings.EqualFold(data["db_type"], "mysql") {
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+			data["username"], data["password"], data["hostname"], data["hostport"], data["dbname"])
+		_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err == nil {
+			return true
+		}
+	}
+
+	return false
+}
