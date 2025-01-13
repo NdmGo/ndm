@@ -7,6 +7,7 @@ dirfilter:
 - vendor
 - logs
 - templates
+- custom
 ext:
 - go
 - tmpl

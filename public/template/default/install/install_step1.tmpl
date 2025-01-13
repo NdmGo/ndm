@@ -24,7 +24,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">数据库类型</label>
             <div class="layui-input-inline w200">
-                <select name="db_type" lay-filter="db_type">
+                <select name="type" lay-filter="db_type">
                     <option value="sqlite3" selected="selected">SQLite3</option>
                     <option value="mysql">MySQL</option>
                 </select>
@@ -75,10 +75,10 @@
             </div>
             <div class="layui-form-mid layui-word-aux">连接数据库的密码</div>
         </div>
-        <div class="layui-form-item" id="dbprefix" style="display: none;">
+        <div class="layui-form-item" id="table_prefix" style="display: none;">
             <label class="layui-form-label">数据库前缀</label>
             <div class="layui-input-inline w200">
-                <input type="text" class="layui-input" name="dbprefix" lay-verify="title" value="ndm_">
+                <input type="text" class="layui-input" name="table_prefix" lay-verify="title" value="ndm_">
             </div>
             <div class="layui-form-mid layui-word-aux">建议使用默认,数据库前缀必须带_</div>
         </div>
@@ -162,6 +162,7 @@ form.on('select(db_type)', function(data){
         $('#username').show();
         $('#password').show();
         $('#dbtest').show();
+        $('#table_prefix').show();
     }
 });
 

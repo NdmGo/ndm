@@ -64,7 +64,7 @@ func InitDb() {
 			if dsn == "" {
 				//[username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
 				dsn = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&tls=%s",
-					database.User, database.Password, database.Host, database.Port, database.Name, database.SSLMode)
+					database.User, database.Password, database.Hostname, database.Hostport, database.Name, database.SSLMode)
 			}
 			dB, err = gorm.Open(mysql.Open(dsn), gormConfig)
 		}
@@ -73,7 +73,7 @@ func InitDb() {
 			dsn := database.DSN
 			if dsn == "" {
 				dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s TimeZone=Asia/Shanghai",
-					database.Host, database.User, database.Password, database.Name, database.Port, database.SSLMode)
+					database.Hostname, database.User, database.Password, database.Name, database.Hostport, database.SSLMode)
 			}
 			dB, err = gorm.Open(postgres.Open(dsn), gormConfig)
 		}
@@ -107,7 +107,7 @@ func AutoMigrate(dst ...interface{}) error {
 }
 
 func CheckDbConnnect(data map[string]string) error {
-	if strings.EqualFold(data["db_type"], "mysql") {
+	if strings.EqualFold(data["type"], "mysql") {
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", data["username"], data["password"], data["hostname"], data["hostport"], data["dbname"])
 		_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 		if err != nil {

@@ -74,14 +74,13 @@ func initStaticPage(g *gin.RouterGroup) {
 
 	g.POST("/check", func(c *gin.Context) {
 		data := make(map[string]string, 0)
-		data["db_type"] = c.PostForm("db_type")
+		data["type"] = c.PostForm("type")
 		data["hostname"] = c.PostForm("hostname")
 		data["hostport"] = c.PostForm("hostport")
 		data["dbname"] = c.PostForm("dbname")
 		data["username"] = c.PostForm("username")
 		data["password"] = c.PostForm("password")
 		data["dbprefix"] = c.PostForm("dbprefix")
-
 		err := db.CheckDbConnnect(data)
 		if err != nil {
 			common.ErrorStrResp(c, err.Error(), -1)
@@ -90,36 +89,27 @@ func initStaticPage(g *gin.RouterGroup) {
 		common.SuccessResp(c)
 	})
 
+	g.GET("/install_step1", func(c *gin.Context) {
+		data := common.CommonVer()
+		c.HTML(http.StatusOK, "install_step1.tmpl", data)
+	})
+
 	g.POST("/install_step1", func(c *gin.Context) {
 
 		data := make(map[string]string, 0)
 
-		data["db_type"] = c.PostForm("db_type")
+		data["type"] = c.PostForm("type")
 		data["hostname"] = c.PostForm("hostname")
 		data["hostport"] = c.PostForm("hostport")
 		data["dbname"] = c.PostForm("dbname")
 		data["username"] = c.PostForm("username")
 		data["password"] = c.PostForm("password")
-		data["dbprefix"] = c.PostForm("dbprefix")
-
-		fmt.Println(data)
-
-		err := db.CheckDbConnnect(data)
-
-		if err == nil {
-			common.SuccessResp(c)
-			return
-		} else {
-			common.ErrorStrResp(c, err.Error(), -1)
-			return
-		}
+		data["table_prefix"] = c.PostForm("table_prefix")
+		data["account"] = c.PostForm("account")
+		data["pass"] = c.PostForm("pass")
+		conf.InstallConf(data)
 
 		common.SuccessResp(c, gin.H{"token": "安装成功!"})
-	})
-
-	g.GET("/install_step1", func(c *gin.Context) {
-		data := common.CommonVer()
-		c.HTML(http.StatusOK, "install_step1.tmpl", data)
 	})
 }
 
