@@ -1,7 +1,7 @@
 package conf
 
 import (
-	// "fmt"
+	"fmt"
 	// "log"
 	"os"
 	"path/filepath"
@@ -62,7 +62,10 @@ func InstallConf(data map[string]string) error {
 	File.Section("log").Key("root_path").SetValue(Log.RootPath)
 
 	File.Section("http").Key("port").SetValue("5868")
-	File.Section("http").Key("save_path").SetValue(Http.SafePath)
+
+	safe_path := fmt.Sprintf("/ndm_%s", utils.RandString(6))
+
+	File.Section("http").Key("save_path").SetValue(safe_path)
 	File.Section("http").Key("debug").SetValue("false")
 
 	if strings.EqualFold(data["type"], "mysql") {
