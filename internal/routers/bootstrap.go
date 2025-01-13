@@ -68,6 +68,10 @@ func initStaticPage(g *gin.RouterGroup) {
 	})
 
 	g.GET("/install", func(c *gin.Context) {
+		if conf.Security.InstallLock {
+			c.Redirect(302, "/")
+		}
+
 		data := common.CommonVer()
 		c.HTML(http.StatusOK, "install.tmpl", data)
 	})
@@ -90,6 +94,10 @@ func initStaticPage(g *gin.RouterGroup) {
 	})
 
 	g.GET("/install_step1", func(c *gin.Context) {
+		if conf.Security.InstallLock {
+			c.Redirect(302, "/")
+		}
+
 		data := common.CommonVer()
 		c.HTML(http.StatusOK, "install_step1.tmpl", data)
 	})

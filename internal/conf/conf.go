@@ -81,13 +81,13 @@ func InstallConf(data map[string]string) error {
 	}
 
 	File.Section("security").Key("install_lock").SetValue("true")
-	File.Section("security").Key("secret_key").SetValue(Security.SecretKey)
+	File.Section("security").Key("secret_key").SetValue(utils.RandString(10))
 
 	if err := File.SaveTo(customConf); err != nil {
 		return err
 	}
 
-	// 安装后,重新初始化配置
+	// write custom configuration file, rewrite initialization read
 	err = InitConf("")
 	if err != nil {
 		return err
