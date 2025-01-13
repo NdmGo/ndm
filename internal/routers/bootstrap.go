@@ -120,6 +120,11 @@ func initStaticPage(g *gin.RouterGroup) {
 			common.ErrorStrResp(c, err.Error(), -1)
 			return
 		}
+
+		if conf.Security.InstallLock {
+			db.InitDb()
+		}
+
 		common.SuccessResp(c, gin.H{"token": "安装成功!"})
 	})
 }
