@@ -1,7 +1,11 @@
 package model
 
 import (
-// "fmt"
+	"encoding/binary"
+	"fmt"
+	"time"
+
+	"ndm/internal/utils"
 )
 
 const (
@@ -10,8 +14,10 @@ const (
 	ADMIN
 )
 
+const StaticHashSalt = "https://github.com/midoks/ndm"
+
 type User struct {
-	ID       uint   `json:"id" gorm:"primaryKey"`                      // unique key
+	ID       int64  `json:"id" gorm:"primaryKey"`                      // unique key
 	Username string `json:"username" gorm:"unique" binding:"required"` // username
 	PwdHash  string `json:"-"`                                         // password hash
 	PwdTS    int64  `json:"-"`                                         // password timestamp
@@ -37,4 +43,45 @@ type User struct {
 	OtpSecret  string `json:"-"`
 	SsoID      string `json:"sso_id"` // unique by sso platform
 	Authn      string `gorm:"type:text" json:"-"`
+}
+
+func (u *User) IsGuest() bool {
+	return u.Role == GUEST
+}
+
+func (u *User) IsAdmin() bool {
+	return u.Role == ADMIN
+}
+
+func StaticHash(password string) string {
+	return utils.HashData(utils.SHA256, []byte(fmt.Sprintf("%s-%s", password, StaticHashSalt)))
+}
+
+func HashPwd(static string, salt string) string {
+	return utils.HashData(utils.SHA256, []byte(fmt.Sprintf("%s-%s", static, salt)))
+}
+
+func TwoHashPwd(password string, salt string) string {
+	return HashPwd(StaticHash(password), salt)
+}
+
+func (u *User) WebAuthnID() []byte {
+	bs := make([]byte, 8)
+	binary.LittleEndian.PutUint64(bs, uint64(u.ID))
+	return bs
+}
+
+func (u *User) WebAuthnName() string {
+	return u.Username
+}
+
+func (u *User) WebAuthnDisplayName() string {
+	return u.Username
+}
+
+func (u *User) SetPassword(pwd string) *User {
+	u.Salt = utils.RandString(16)
+	u.PwdHash = TwoHashPwd(pwd, u.Salt)
+	u.PwdTS = time.Now().Unix()
+	return u
 }

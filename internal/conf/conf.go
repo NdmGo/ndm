@@ -58,7 +58,7 @@ func InstallConf(data map[string]string) error {
 	File.Section("").Key("run_user").SetValue(App.RunUser)
 	File.Section("").Key("run_mode").SetValue("prod")
 
-	File.Section("log").Key("format").SetValue(Log.Format)
+	// File.Section("log").Key("format").SetValue(Log.Format)
 	File.Section("log").Key("root_path").SetValue(Log.RootPath)
 
 	File.Section("http").Key("port").SetValue("5868")
