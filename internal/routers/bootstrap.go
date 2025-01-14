@@ -58,7 +58,7 @@ func initStaticFunc(r *gin.Engine) {
 	})
 }
 
-func initStaticPage(g *gin.RouterGroup) {
+func initAdminStaticPage(g *gin.RouterGroup) {
 	g.GET("/", func(c *gin.Context) {
 		if !conf.Security.InstallLock {
 			c.Redirect(302, "/install")
@@ -148,7 +148,7 @@ func InitRouters() {
 
 	fmt.Println(conf.Http.SafePath)
 	g := r.Group(conf.Http.SafePath)
-	initStaticPage(g)
+	initAdminStaticPage(g)
 
 	// api := g.Group("/api")
 
