@@ -7,6 +7,7 @@ import (
 	"ndm/internal/db"
 	"ndm/internal/logs"
 	"ndm/internal/routers"
+	userdata "ndm/internal/routers/data"
 )
 
 var Web = cli.Command{
@@ -25,6 +26,7 @@ func runWeb(c *cli.Context) error {
 
 	if conf.Security.InstallLock {
 		db.InitDb()
+		userdata.InitAdmin("admin", "admin")
 	}
 
 	routers.InitRouters()

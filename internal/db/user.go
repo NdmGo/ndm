@@ -10,8 +10,28 @@ import (
 	"ndm/internal/utils"
 )
 
-func InitAdmin(user string, pass string) {
+func GetAdmin() (*model.User, error) {
+	var adminUser *model.User
+	if adminUser == nil {
+		user, err := GetUserByRole(model.ADMIN)
+		if err != nil {
+			return nil, err
+		}
+		adminUser = user
+	}
+	return adminUser, nil
+}
 
+func GetGuest() (*model.User, error) {
+	var guestUser *model.User
+	if guestUser == nil {
+		user, err := GetUserByRole(model.GUEST)
+		if err != nil {
+			return nil, err
+		}
+		guestUser = user
+	}
+	return guestUser, nil
 }
 
 func GetUserByRole(role int64) (*model.User, error) {
