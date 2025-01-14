@@ -64,8 +64,9 @@ func InstallConf(data map[string]string) error {
 	File.Section("http").Key("port").SetValue("5868")
 
 	safe_path := fmt.Sprintf("/ndm_%s", utils.RandString(6))
-
 	File.Section("http").Key("safe_path").SetValue(safe_path)
+
+	File.Section("http").Key("api_path").SetValue("/")
 	File.Section("http").Key("debug").SetValue("false")
 
 	if strings.EqualFold(data["type"], "mysql") {
