@@ -10,6 +10,10 @@ import (
 	"ndm/internal/utils"
 )
 
+func InitAdmin(user string, pass string) {
+
+}
+
 func GetUserByRole(role int64) (*model.User, error) {
 	user := model.User{Role: role}
 	if err := db.Where(user).Take(&user).Error; err != nil {

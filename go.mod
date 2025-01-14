@@ -3,6 +3,7 @@ module ndm
 go 1.23.4
 
 require (
+	github.com/Xhofe/go-cache v0.0.0-20240804043513-b1a71927bc21
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-webauthn/webauthn v0.11.2
 	github.com/json-iterator/go v1.1.12
