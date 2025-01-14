@@ -2,8 +2,11 @@ package model
 
 import (
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/go-webauthn/webauthn/webauthn"
 
 	"ndm/internal/utils"
 )
@@ -24,7 +27,7 @@ type User struct {
 	Salt     string `json:"salt"`                                      // unique salt
 	Password string `json:"password"`                                  // password
 	BasePath string `json:"base_path"`                                 // base path
-	Role     int    `json:"role"`                                      // user's role
+	Role     int64  `json:"role"`                                      // user's role
 	Disabled bool   `json:"disabled"`
 	// Determine permissions by bit
 	//   0:  can see hidden files
@@ -39,7 +42,7 @@ type User struct {
 	//   9:  webdav write
 	//   10: ftp/sftp login and read
 	//   11: ftp/sftp write
-	Permission int64  `json:"permission"`
+	Permission uint64 `json:"permission"`
 	OtpSecret  string `json:"-"`
 	SsoID      string `json:"sso_id"` // unique by sso platform
 	Authn      string `gorm:"type:text" json:"-"`
@@ -79,9 +82,66 @@ func (u *User) WebAuthnDisplayName() string {
 	return u.Username
 }
 
+func (u *User) WebAuthnCredentials() []webauthn.Credential {
+	var res []webauthn.Credential
+	err := json.Unmarshal([]byte(u.Authn), &res)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return res
+}
+
 func (u *User) SetPassword(pwd string) *User {
 	u.Salt = utils.RandString(16)
 	u.PwdHash = TwoHashPwd(pwd, u.Salt)
 	u.PwdTS = time.Now().Unix()
 	return u
+}
+
+func (u *User) CanSeeHides() bool {
+	return u.Permission&1 == 1
+}
+
+func (u *User) CanAccessWithoutPassword() bool {
+	return (u.Permission>>1)&1 == 1
+}
+
+func (u *User) CanAddOfflineDownloadTasks() bool {
+	return (u.Permission>>2)&1 == 1
+}
+
+func (u *User) CanWrite() bool {
+	return (u.Permission>>3)&1 == 1
+}
+
+func (u *User) CanRename() bool {
+	return (u.Permission>>4)&1 == 1
+}
+
+func (u *User) CanMove() bool {
+	return (u.Permission>>5)&1 == 1
+}
+
+func (u *User) CanCopy() bool {
+	return (u.Permission>>6)&1 == 1
+}
+
+func (u *User) CanRemove() bool {
+	return (u.Permission>>7)&1 == 1
+}
+
+func (u *User) CanWebdavRead() bool {
+	return (u.Permission>>8)&1 == 1
+}
+
+func (u *User) CanWebdavManage() bool {
+	return (u.Permission>>9)&1 == 1
+}
+
+func (u *User) CanFTPAccess() bool {
+	return (u.Permission>>10)&1 == 1
+}
+
+func (u *User) CanFTPManage() bool {
+	return (u.Permission>>11)&1 == 1
 }
