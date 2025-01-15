@@ -39,7 +39,7 @@ func GetGuest() (*model.User, error) {
 	return guestUser, nil
 }
 
-func GetUserByRole(role int) (*model.User, error) {
+func GetUserByRole(role int64) (*model.User, error) {
 	return db.GetUserByRole(role)
 }
 
@@ -61,7 +61,7 @@ func GetUserByName(username string) (*model.User, error) {
 	return user, err
 }
 
-func GetUserById(id uint) (*model.User, error) {
+func GetUserById(id int64) (*model.User, error) {
 	return db.GetUserById(id)
 }
 
@@ -74,7 +74,7 @@ func CreateUser(u *model.User) error {
 	return db.CreateUser(u)
 }
 
-func DeleteUserById(id uint) error {
+func DeleteUserById(id int64) error {
 	old, err := db.GetUserById(id)
 	if err != nil {
 		return err
@@ -107,7 +107,7 @@ func Cancel2FAByUser(u *model.User) error {
 	return UpdateUser(u)
 }
 
-func Cancel2FAById(id uint) error {
+func Cancel2FAById(id int64) error {
 	user, err := db.GetUserById(id)
 	if err != nil {
 		return err
