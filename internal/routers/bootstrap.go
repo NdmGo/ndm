@@ -9,11 +9,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"ndm/internal/common"
 	"ndm/internal/conf"
 	"ndm/internal/handles"
 	"ndm/internal/logs"
-	"ndm/internal/utils"
+	"ndm/internal/middlewates"
+	// "ndm/internal/utils"
 	"ndm/public"
 )
 
@@ -66,22 +66,19 @@ func initAdminStaticPage(r *gin.Engine) {
 
 	initStaticFunc(r)
 	g := r.Group(conf.Http.SafePath)
-	// gauth := r.Group(conf.Http.SafePath, middlewates.Auth)
 
-	g.GET("/", func(c *gin.Context) {
-		if !conf.Security.InstallLock {
-			c.Redirect(302, "/install")
-		}
-
-		data := common.CommonVer()
-		c.HTML(http.StatusOK, "index.tmpl", data)
-	})
-
+	// Install Page
 	g.POST("/check", handles.CheckConnectDb)
 	g.GET("/install", handles.InstallPage)
 	g.GET("/install_step1", handles.InstallStep1Page)
 	g.POST("/install_step1", handles.PostInstallStep1Page)
-	g.GET("/login", handles.InstallPage)
+
+	// Admin Page
+	g.GET("/login", handles.LoginPage)
+
+	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth)
+	gauth.GET("/", handles.IndexPage)
+
 }
 
 func InitRouters() {
@@ -91,11 +88,11 @@ func InitRouters() {
 
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
-	if !utils.SliceContains([]string{"", "/"}, conf.Http.SafePath) {
-		// r.GET("/", func(c *gin.Context) {
-		// 	c.Redirect(302, conf.Http.SafePath)
-		// })
-	}
+	// if !utils.SliceContains([]string{"", "/"}, conf.Http.SafePath) {
+	// r.GET("/", func(c *gin.Context) {
+	// 	c.Redirect(302, conf.Http.SafePath)
+	// })
+	// }
 	initAdminStaticPage(r)
 
 	// api := r.Group("/api")

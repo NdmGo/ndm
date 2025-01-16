@@ -5,15 +5,22 @@ import (
 	// "crypto/subtle"
 
 	"github.com/gin-gonic/gin"
-	// "ndm/internal/conf"
+	"ndm/internal/conf"
 	// "ndm/internal/logs"
 	// "ndm/internal/model"
 	// "ndm/internal/op"
 )
 
-func Auth(c *gin.Context) {
-	token := c.GetHeader("Authorization")
+func PageAuth(c *gin.Context) {
+	cookie, err := c.Cookie("token")
 
-	fmt.Println("token", token)
+	if err != nil {
+		url := fmt.Sprintf("%s/login", conf.Http.SafePath)
+		c.Redirect(302, url)
+		c.Next()
+		return
+	}
+
+	fmt.Println("cookie,", cookie)
 
 }
