@@ -21,6 +21,22 @@ type PageResp struct {
 	Total   int64       `json:"total"`
 }
 
+func CommonVer() map[string]interface{} {
+	data := map[string]interface{}{
+		"title":   "NDM存储管理",
+		"version": conf.App.Version,
+	}
+
+	data["admin_path"] = conf.Http.SafePath
+	return data
+}
+
+// ErrorResp is used to return error response
+// @param l: if true, log error
+func ErrorResp(c *gin.Context, err error, code int, l ...bool) {
+	ErrorWithDataResp(c, err, code, nil, l...)
+}
+
 func hidePrivacy(msg string) string {
 	// for _, r := range conf.PrivacyReg {
 	// 	msg = r.ReplaceAllStringFunc(msg, func(s string) string {
@@ -30,14 +46,20 @@ func hidePrivacy(msg string) string {
 	return msg
 }
 
-func CommonVer() map[string]interface{} {
-	data := map[string]interface{}{
-		"title":   "NDM存储管理",
-		"version": conf.App.Version,
+func ErrorWithDataResp(c *gin.Context, err error, code int, data interface{}, l ...bool) {
+	if len(l) > 0 && l[0] {
+		if conf.Http.Debug {
+			log.Errorf("%+v", err)
+		} else {
+			log.Errorf("%v", err)
+		}
 	}
-
-	data["admin_path"] = conf.Http.SafePath
-	return data
+	c.JSON(200, Resp[interface{}]{
+		Code:    code,
+		Message: hidePrivacy(err.Error()),
+		Data:    data,
+	})
+	c.Abort()
 }
 
 func ErrorStrResp(c *gin.Context, str string, code int, l ...bool) {
