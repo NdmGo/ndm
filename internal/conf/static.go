@@ -16,11 +16,12 @@ var (
 	}
 
 	Http struct {
-		Port     int64
-		SafePath string
-		ApiPath  string
-		Template string
-		Debug    bool
+		Port           int64
+		SafePath       string
+		ApiPath        string
+		Template       string
+		Debug          bool
+		TokenExpiresIn int64
 	}
 
 	// log

@@ -6,6 +6,7 @@ require (
 	github.com/Xhofe/go-cache v0.0.0-20240804043513-b1a71927bc21
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-webauthn/webauthn v0.11.2
+	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/json-iterator/go v1.1.12
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1

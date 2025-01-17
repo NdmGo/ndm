@@ -1,1 +1,2 @@
-console.log("ndm");
+var $ = layui.$;
+console.log("ndm:",$);

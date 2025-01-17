@@ -52,6 +52,8 @@ layui.use(function(){
 var $ = layui.$
 ,form = layui.form;
 
+console.log("$",$);
+
 form.on('submit(ndm-login)', function(d){
     console.log(d);
     var _form = $(this).parents('form');
@@ -59,8 +61,6 @@ form.on('submit(ndm-login)', function(d){
     console.log(_form.serialize());
     console.log(d.field);
     console.log(JSON.stringify(d.field));
-
-
     // $.post(_form.attr('action'), JSON.stringify(d.field), function(res){
     //     console.log(res);
     // },'json');
