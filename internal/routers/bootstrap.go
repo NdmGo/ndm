@@ -75,6 +75,7 @@ func initAdminStaticPage(r *gin.Engine) {
 
 	// Admin Page
 	g.GET("/login", handles.LoginPage)
+	g.POST("/login", handles.PostLogin)
 
 	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth)
 	gauth.GET("/", handles.IndexPage)

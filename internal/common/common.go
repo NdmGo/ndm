@@ -35,6 +35,8 @@ func CommonVer() map[string]interface{} {
 		"title":   "NDM存储管理",
 		"version": conf.App.Version,
 	}
+
+	data["admin_path"] = conf.Http.SafePath
 	return data
 }
 
