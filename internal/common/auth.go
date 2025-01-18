@@ -43,9 +43,9 @@ func ParseToken(tokenString string) (*UserClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return SecretKey, nil
 	})
-	if IsTokenInvalidated(tokenString) {
-		return nil, errors.New("token is invalidated")
-	}
+	// if IsTokenInvalidated(tokenString) {
+	// 	return nil, errors.New("token is invalidated")
+	// }
 	if err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
