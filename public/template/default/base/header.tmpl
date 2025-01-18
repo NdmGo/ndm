@@ -12,3 +12,74 @@
     <script src="/static/js/jquery.cookie-1.4.1.min.js?v={{.version}}"></script>
 </head>
 <body>
+
+<div id="ndm">
+    <div class="layui-layout-admin layui-layout">
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree layui-nav-side">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <div class="ndm-logo">
+                            <div class="logo_image">
+                                <img style="height: 24px;" src="/static/image/logo.svg"/>
+                            </div>
+
+                            <div class="logo_text">
+                                <span  style="line-height: 24px;">NDM存储管理</span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="{{.admin_path}}">
+                            <i class="layui-icon layui-icon-senior"></i>
+                            <cite>控制台</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="{{.admin_path}}/storage">
+                            <i class="layui-icon layui-icon-firefox"></i>
+                            <cite>存储</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">
+                            <i class="layui-icon layui-icon-moon"></i>
+                            <cite>设置</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item">
+                         <a href="tab.html">
+                            <i class="layui-icon layui-icon-at"></i>
+                            <cite>用户</cite>
+                        </a>
+                    </li>
+
+
+                    <li class="layui-nav-item">
+                         <a href="table.html">
+                            <i class="layui-icon layui-icon-music"></i>
+                            <cite>任务</cite>
+                        </a>
+                    </li>
+
+        
+                    <li class="layui-nav-item">
+                        <a href="login.html">
+                            <i class="layui-icon layui-icon-flag"></i>
+                            <cite>元信息</cite>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="install.html">
+                            <i class="layui-icon layui-icon-upload-drag"></i>
+                            <cite>主页</cite>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
