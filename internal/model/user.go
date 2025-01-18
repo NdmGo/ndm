@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/go-webauthn/webauthn/webauthn"
+	"github.com/pkg/errors"
 
+	"ndm/internal/errs"
 	"ndm/internal/utils"
 )
 
@@ -66,6 +68,16 @@ func HashPwd(static string, salt string) string {
 
 func TwoHashPwd(password string, salt string) string {
 	return HashPwd(StaticHash(password), salt)
+}
+
+func (u *User) ValidatePwdStaticHash(pwdStaticHash string) error {
+	if pwdStaticHash == "" {
+		return errors.WithStack(errs.EmptyPassword)
+	}
+	if u.PwdHash != HashPwd(pwdStaticHash, u.Salt) {
+		return errors.WithStack(errs.WrongPassword)
+	}
+	return nil
 }
 
 func (u *User) WebAuthnID() []byte {

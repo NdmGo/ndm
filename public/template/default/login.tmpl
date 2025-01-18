@@ -44,27 +44,17 @@
     <div class="layui-trans login-footer"><p>© 2025 - ∞</p></div>
 </div>
 
-<!-- body 末尾处引入 layui -->
 <script src="/static/layui/layui.js?v={{.version}}"></script>
+<script src="/static/js/jquery-1.10.2.min.js?v={{.version}}"></script>
+<script src="/static/js/jquery.cookie-1.4.1.min.js?v={{.version}}"></script>
 <script>
 layui.use(function(){
 ///
 var $ = layui.$
 ,form = layui.form;
 
-console.log("$",$);
-
 form.on('submit(ndm-login)', function(d){
-    console.log(d);
     var _form = $(this).parents('form');
-    console.log(_form);
-    console.log(_form.serialize());
-    console.log(d.field);
-    console.log(JSON.stringify(d.field));
-    // $.post(_form.attr('action'), JSON.stringify(d.field), function(res){
-    //     console.log(res);
-    // },'json');
-
     $.ajax({
         type: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -72,11 +62,20 @@ form.on('submit(ndm-login)', function(d){
         data: JSON.stringify(d.field),
         dataType:'json',
         success: function(res) {
-            console.log(res);
-            // layer.msg(res.message, {icon: res.code>0?1:2});
+            if (res.code != 200 ){
+                layer.msg(res.message, {icon: 2});
+            } else if (res.code == 200){
+                $.cookie("token", res.data.token);
+                layer.msg("登录成功", {icon: 1});
+                setTimeout(function(){
+                    location.href = "{{.admin_path}}";
+                }, 2000);
+            } else {
+                layer.msg("访问异常!", {icon: 2});
+            }
         },
         error:function(e){
-            console.log('ajax请求异常，异常信息如下：', e);
+            layer.msg(e, {icon: 2});
         }
     });
     return false;

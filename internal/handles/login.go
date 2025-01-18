@@ -1,12 +1,14 @@
 package handles
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"ndm/internal/common"
+	"ndm/internal/model"
+	"ndm/internal/op"
 )
 
 type LoginReq struct {
@@ -21,20 +23,34 @@ func LoginPage(c *gin.Context) {
 }
 
 func PostLogin(c *gin.Context) {
-
 	var req LoginReq
 	if err := c.ShouldBind(&req); err != nil {
 		common.ErrorResp(c, err, 400)
 		return
 	}
 
-	fmt.Println(req)
+	req.Password = model.StaticHash(req.Password)
+	loginHash(c, &req)
+}
 
-	username := c.PostForm("username")
-	password := c.PostForm("password")
+func loginHash(c *gin.Context, req *LoginReq) {
+	// check username
+	user, err := op.GetUserByName(req.Username)
+	if err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	// validate password hash
+	if err := user.ValidatePwdStaticHash(req.Password); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
 
-	fmt.Println(username, password)
-
-	data := common.CommonVer()
-	c.HTML(http.StatusOK, "login.tmpl", data)
+	// generate token
+	token, err := common.GenerateToken(user)
+	if err != nil {
+		common.ErrorResp(c, err, 400, true)
+		return
+	}
+	common.SuccessResp(c, gin.H{"token": token})
 }
