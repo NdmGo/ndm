@@ -14,38 +14,55 @@ import (
 	// "ndm/internal/op"
 )
 
-func PageAuth(c *gin.Context) {
+func PageNoAuth(c *gin.Context) {
+	url := fmt.Sprintf("%s", conf.Http.SafePath)
+
 	token, err := c.Cookie("token")
-
-	url := fmt.Sprintf("%s/login", conf.Http.SafePath)
 	if err != nil {
+		c.Next()
+		return
+	}
 
+	userClaims, err := common.ParseToken(token)
+	// fmt.Println(userClaims, err)
+	_, err = db.GetUserByName(userClaims.Username)
+	if err != nil {
+		c.Next()
+		return
+	}
+
+	now_time := time.Now().Unix()
+	token_expire_time := userClaims.RegisteredClaims.ExpiresAt.Unix()
+	if now_time < token_expire_time {
+		c.Redirect(302, url)
+		c.Next()
+		return
+	}
+}
+
+func PageAuth(c *gin.Context) {
+	url := fmt.Sprintf("%s/login", conf.Http.SafePath)
+
+	token, err := c.Cookie("token")
+	if err != nil {
 		c.Redirect(302, url)
 		c.Next()
 		return
 	}
 
 	userClaims, err := common.ParseToken(token)
-	user, err := db.GetUserByName(userClaims.Username)
+	_, err = db.GetUserByName(userClaims.Username)
 	if err != nil {
-		common.ErrorResp(c, err, 401)
+		c.Redirect(302, url)
 		c.Next()
 		return
 	}
 
 	now_time := time.Now().Unix()
-	token_expire := conf.Http.TokenExpiresIn
-
-	time_expire := userClaims.PwdTS + (token_expire * 24 * 60 * 60)
-
-	if time_expire > now_time {
+	token_expire_time := userClaims.RegisteredClaims.ExpiresAt.Unix()
+	if now_time > token_expire_time {
 		c.Redirect(302, url)
+		c.Next()
+		return
 	}
-
-	fmt.Println(time_expire, now_time)
-	fmt.Println("user,", user)
-
-	fmt.Println("token1,", userClaims.Username)
-	fmt.Println("err,", err)
-
 }
