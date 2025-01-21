@@ -14,9 +14,8 @@ var $ = layui.$
 
 $("#ndm_exit").click(function() {
     layer.confirm('您真的要退出面板吗?', {icon:3,closeBtn: 1}, function() {
-        
-        
-        window.location.href = "/login?signout=True"
+        $.removeCookie('token',{ path: '/'});
+        window.location.href = "{{.admin_path}}/login";
     });
     return false;
 });

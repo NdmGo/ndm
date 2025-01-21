@@ -65,7 +65,7 @@ form.on('submit(ndm-login)', function(d){
             if (res.code != 200 ){
                 layer.msg(res.message, {icon: 2});
             } else if (res.code == 200){
-                $.cookie("token", res.data.token, { expires: 7 });
+                $.cookie("token", res.data.token, { expires: 7, path: '/'});
                 layer.msg("登录成功", {icon: 1});
                 setTimeout(function(){
                     location.href = "{{.admin_path}}";
