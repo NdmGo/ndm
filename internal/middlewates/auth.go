@@ -24,7 +24,11 @@ func PageNoAuth(c *gin.Context) {
 	}
 
 	userClaims, err := common.ParseToken(token)
-	// fmt.Println(userClaims, err)
+	if err != nil {
+		c.Next()
+		return
+	}
+
 	_, err = db.GetUserByName(userClaims.Username)
 	if err != nil {
 		c.Next()
@@ -51,6 +55,12 @@ func PageAuth(c *gin.Context) {
 	}
 
 	userClaims, err := common.ParseToken(token)
+	if err != nil {
+		c.Redirect(302, url)
+		c.Next()
+		return
+	}
+
 	_, err = db.GetUserByName(userClaims.Username)
 	if err != nil {
 		c.Redirect(302, url)
