@@ -2,5 +2,27 @@
     </div>
 <!-- //// -->
 </div>
+
+<script type="text/javascript">
+    
+   
+
+layui.use(function(){
+///
+var $ = layui.$
+,form = layui.form;
+
+$("#ndm_exit").click(function() {
+    layer.confirm('您真的要退出面板吗?', {icon:3,closeBtn: 1}, function() {
+        
+        
+        window.location.href = "/login?signout=True"
+    });
+    return false;
+});
+
+///
+});
+</script>
 </body>
 </html>
