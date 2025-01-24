@@ -13,98 +13,57 @@
             </div>
         </div>
 
-        <!-- 给容器追加 class="layui-form-pane"，即可显示为方框风格 -->
-        <div class="bgw" style="padding:8px;font-size:12px;">
-            <form class="layui-form layui-form-pane" action="">
-                <div class="layui-form-item">
-                <label class="layui-form-label">长输入框</label>
-                <div class="layui-input-block">
-                  <input type="text" name="title" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input">
+        <div class="bgw divtable" style="padding:8px;font-size:12px;">
+
+            <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
+                <div class="layui-inline mr0">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="">添加</button>
                 </div>
-                </div>
-                <div class="layui-form-item">
-                <div class="layui-inline">
-                  <label class="layui-form-label">日期选择</label>
-                  <div class="layui-input-block">
-                    <input type="text" name="date" id="date1" autocomplete="off" class="layui-input">
-                  </div>
-                </div>
-                <div class="layui-inline">
-                  <label class="layui-form-label">行内表单</label>
-                  <div class="layui-input-inline">
-                    <input type="text" name="number" autocomplete="off" class="layui-input">
-                  </div>
-                </div>
-                </div>
-                <div class="layui-form-item">
-                <label class="layui-form-label">密码框</label>
-                <div class="layui-input-inline">
-                  <input type="password" name="password" placeholder="请输入" lay-verify="required" autocomplete="off" class="layui-input">
-                </div>
-                <div class="layui-form-mid layui-text-em">请务必填写用户名</div>
-                </div>
-                <div class="layui-form-item">
-                <div class="layui-inline">
-                  <label class="layui-form-label">范围</label>
-                  <div class="layui-input-inline" style="width: 100px;">
-                    <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
-                  </div>
-                  <div class="layui-form-mid">-</div>
-                  <div class="layui-input-inline" style="width: 100px;">
-                    <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">
-                  </div>
-                </div>
-                </div>
-                <div class="layui-form-item">
-                <label class="layui-form-label">选择框</label>
-                <div class="layui-input-inline">
-                  <select name="interest" lay-filter="aihao">
-                    <option value=""></option>
-                    <option value="0">写作</option>
-                    <option value="1" selected>阅读</option>
-                    <option value="2">游戏</option>
-                    <option value="3">音乐</option>
-                    <option value="4">旅行</option>
-                  </select>
-                </div>
-                </div>
-                 <div class="layui-form-item" pane>
-                <label class="layui-form-label">开关-默认开</label>
-                <div class="layui-input-block">
-                  <input type="checkbox" checked name="open" lay-skin="switch" lay-filter="switchTest" title="开关">
-                </div>
-                </div>
-                <div class="layui-form-item" pane>
-                <label class="layui-form-label">单选框</label>
-                <div class="layui-input-block">
-                  <input type="radio" name="sex" value="男" title="男" checked>
-                  <input type="radio" name="sex" value="女" title="女">
-                  <input type="radio" name="sex" value="禁" title="禁用" disabled>
-                </div>
-                </div>
-                <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">文本域</label>
-                <div class="layui-input-block">
-                  <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
-                </div>
-                </div>
-                 <div class="layui-form-item">
-                <button class="layui-btn" lay-submit lay-filter="demo2">确认</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
-            </form>
+            </div>
+            <div id="storage_list" class="bgw divtable"></div>
+
+           <!--  <table class="layui-table divtable" lay-data="{height:315, url:'../data/user.json', page:true}" id="ID-table-demo-init">
+                <thead>
+                    <tr>
+                        <th lay-data="{field:'username', width:200}">挂载路径</th>
+                        <th lay-data="{field:'sex', width:180}">驱动</th>
+                        <th lay-data="{field:'city', sort: true}">序号</th>
+                        <th lay-data="{field:'sign'}">状态</th>
+                        <th lay-data="{field:'experience'}">备注</th>
+                    </tr>
+                </thead>
+            </table> -->
         </div>
+
     </div>
 </div>
 
 <script>
 layui.use(function(){
-    var layer = layui.layer;
-    var form = layui.form;
-    var laydate = layui.laydate;
-    var util = layui.util;
+///
+var layer = layui.layer;
+var form = layui.form;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
 
-    layer.msg('Hello World', {icon: 6});
+table.render({
+    elem: '#storage_list',
+    url: '{{.api_path}}/storage/list',
+    defaultToolbar: [],
+    title: '数据表',
+    cols: [[
+        {type: 'checkbox', fixed: 'left'},
+        {field:'id', title:'ID', width:100,sort:true},
+        {field:'name', title:'名称', width:230},
+        {title:'操作', toolbar: '#cmdTpl', width:150, fixed: 'right',}
+     ]],
+    page: true,
+    where:[],
+});
+    
+
+///
 });
 </script>
 

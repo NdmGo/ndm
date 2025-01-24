@@ -28,6 +28,7 @@ func CommonVer() map[string]interface{} {
 	}
 
 	data["admin_path"] = conf.Http.SafePath
+	data["api_path"] = conf.Http.ApiPath
 	return data
 }
 
