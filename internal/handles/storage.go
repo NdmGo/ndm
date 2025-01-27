@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"ndm/internal/common"
+	"ndm/internal/db"
 	// "ndm/internal/model"
 	// "ndm/internal/op"
 )
@@ -29,4 +30,14 @@ func StoragesList(c *gin.Context) {
 	}
 
 	fmt.Println(args)
+
+	storages, total, err := db.GetStorages(args.Page, args.Size)
+	if err != nil {
+		common.ErrorResp(c, err, 500)
+		return
+	}
+	common.SuccessResp(c, common.PageResp{
+		Content: storages,
+		Total:   total,
+	})
 }
