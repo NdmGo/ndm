@@ -105,11 +105,6 @@ func InitRouters() {
 
 	r := gin.Default()
 	r.SetTrustedProxies(nil)
-	// if !utils.SliceContains([]string{"", "/"}, conf.Http.SafePath) {
-	// r.GET("/", func(c *gin.Context) {
-	// 	c.Redirect(302, conf.Http.SafePath)
-	// })
-	// }
 	initAdminStaticPage(r)
 	initRuoteApi(r)
 
