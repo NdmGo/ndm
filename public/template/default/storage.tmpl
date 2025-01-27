@@ -8,7 +8,7 @@
                 <i class="layui-icon layui-icon-home ndm-home"></i>
 
                 <div class="ndm-breadcrumb">
-                    <a class="plr10 c4" href="/">首页</a>/<span class="plr10 c4">存储管理</span>
+                    <a class="plr10 c4" href="{{.admin_path}}">首页</a>/<span class="plr10 c4">存储管理</span>
                 </div>
             </div>
         </div>
@@ -53,9 +53,10 @@ table.render({
     defaultToolbar: [],
     title: '数据表',
     cols: [[
-        {type: 'checkbox', fixed: 'left'},
-        {field:'id', title:'ID', width:100,sort:true},
-        {field:'name', title:'名称', width:230},
+        {field:'name', title:'挂载路径', width:200},
+        {field:'name', title:'驱动', width:180},
+        {field:'name', title:'序号', width:180},
+        {field:'name', title:'状态', width:180},
         {title:'操作', toolbar: '#cmdTpl', width:150, fixed: 'right',}
      ]],
     page: true,
