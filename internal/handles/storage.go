@@ -11,11 +11,11 @@ import (
 	// "ndm/internal/op"
 )
 
-func StoragePage(c *gin.Context) {
+func StoragesPage(c *gin.Context) {
 	data := common.CommonVer()
 	c.HTML(http.StatusOK, "storage.tmpl", data)
 }
 
-func StorageList(page, size int64) {
-
+func StoragesList(c *gin.Context) {
+	// page, size int64
 }

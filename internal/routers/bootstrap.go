@@ -76,12 +76,26 @@ func initAdminStaticPage(r *gin.Engine) {
 	// Admin Page
 	gnoauth := r.Group(conf.Http.SafePath, middlewates.PageNoAuth)
 	gnoauth.GET("/login", handles.LoginPage)
-	g.POST("/login", handles.PostLogin)
 
 	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth)
 	gauth.GET("/", handles.IndexPage)
-	gauth.GET("/storage", handles.StoragePage)
+	gauth.GET("/storage", handles.StoragesPage)
 
+}
+
+func initRuoteApi(r *gin.Engine) {
+
+	api := r.Group(conf.Http.ApiPath)
+
+	api.Any("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
+	})
+
+	auth := api.Group("/auth")
+	auth.POST("/login", handles.PostLogin)
+
+	storage := api.Group("/storage")
+	storage.GET("/list", handles.StoragesList)
 }
 
 func InitRouters() {
@@ -97,15 +111,7 @@ func InitRouters() {
 	// })
 	// }
 	initAdminStaticPage(r)
-
-	// api := r.Group("/api")
-	// api.Any("/ping", func(c *gin.Context) {
-	// 	c.String(200, "pong")
-	// })
-
-	// api.Any("/pings", func(c *gin.Context) {
-	// 	c.String(200, "pong")
-	// })
+	initRuoteApi(r)
 
 	r.Run(fmt.Sprintf(":%d", conf.Http.Port))
 }
