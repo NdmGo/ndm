@@ -86,7 +86,6 @@ func initAdminStaticPage(r *gin.Engine) {
 func initRuoteApi(r *gin.Engine) {
 
 	api := r.Group(conf.Http.ApiPath)
-
 	api.Any("/ping", func(c *gin.Context) {
 		c.String(200, "pong")
 	})
