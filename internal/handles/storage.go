@@ -1,7 +1,7 @@
 package handles
 
 import (
-	// "fmt"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +16,17 @@ func StoragesPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "storage.tmpl", data)
 }
 
+type StoragesArgs struct {
+	Page int `json:"page" form:"page"`
+	Size int `json:"size" form:"size"`
+}
+
 func StoragesList(c *gin.Context) {
-	// page, size int64
+	var args StoragesArgs
+	if err := c.ShouldBind(&args); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	fmt.Println(args)
 }

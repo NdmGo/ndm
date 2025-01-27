@@ -14,25 +14,12 @@
         </div>
 
         <div class="bgw divtable" style="padding:8px;font-size:12px;">
-
             <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
                 <div class="layui-inline mr0">
                     <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="">添加</button>
                 </div>
             </div>
             <div id="storage_list" class="bgw divtable"></div>
-
-           <!--  <table class="layui-table divtable" lay-data="{height:315, url:'../data/user.json', page:true}" id="ID-table-demo-init">
-                <thead>
-                    <tr>
-                        <th lay-data="{field:'username', width:200}">挂载路径</th>
-                        <th lay-data="{field:'sex', width:180}">驱动</th>
-                        <th lay-data="{field:'city', sort: true}">序号</th>
-                        <th lay-data="{field:'sign'}">状态</th>
-                        <th lay-data="{field:'experience'}">备注</th>
-                    </tr>
-                </thead>
-            </table> -->
         </div>
 
     </div>
@@ -50,6 +37,10 @@ var util = layui.util;
 table.render({
     elem: '#storage_list',
     url: '{{.api_path}}/storage/list',
+    request: {
+        pageName: 'page',
+        limitName: 'size'
+    },
     defaultToolbar: [],
     title: '数据表',
     cols: [[
@@ -58,7 +49,7 @@ table.render({
         {field:'name', title:'序号', width:180},
         {field:'name', title:'状态'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right',}
-     ]],
+    ]],
     page: true,
     where:[],
 });
