@@ -1,0 +1,62 @@
+{{template "header.tmpl" .}}
+
+<!-- 内容页 -->
+<div class="main-content">
+    <div class="container-fluid" style="padding-top: 4px;">
+        <div class="pos-box bgw mtb5">
+            <div class="position f14 c9 pull-left">
+                <i class="layui-icon layui-icon-home ndm-home"></i>
+
+                <div class="ndm-breadcrumb">
+                    <a class="plr10 c4" href="{{.admin_path}}">首页</a>/<span class="plr10 c4">存储管理</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bgw divtable" style="padding:8px;font-size:12px;">
+            <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
+                <div class="layui-inline mr0">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="">添加</button>
+                </div>
+            </div>
+            <div id="storage_list" class="bgw divtable"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+layui.use(function(){
+///
+var layer = layui.layer;
+var form = layui.form;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+table.render({
+    elem: '#storage_list',
+    url: '{{.api_path}}/storage/list',
+    request: {
+        pageName: 'page',
+        limitName: 'size'
+    },
+    defaultToolbar: [],
+    title: '数据表',
+    cols: [[
+        {field:'name', title:'挂载路径', width:200},
+        {field:'name', title:'驱动', width:180},
+        {field:'name', title:'序号', width:180},
+        {field:'name', title:'状态'},
+        {title:'操作', toolbar: '#cmdTpl', fixed: 'right',}
+    ]],
+    page: true,
+    where:[],
+});
+    
+
+///
+});
+</script>
+
+{{template "footer.tmpl" .}}
