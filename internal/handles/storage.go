@@ -22,16 +22,6 @@ func StoragesEditPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "storage_edit.tmpl", data)
 }
 
-type StoragesPageArgs struct {
-	Page int `json:"page" form:"page"`
-	Size int `json:"size" form:"size"`
-}
-
-type StoragesPostArgs struct {
-	Page int `json:"page" form:"page"`
-	Size int `json:"size" form:"size"`
-}
-
 func StoragesEditPost(c *gin.Context) {
 	var args model.Storage
 	if err := c.ShouldBind(&args); err != nil {
@@ -44,7 +34,7 @@ func StoragesEditPost(c *gin.Context) {
 }
 
 func StoragesList(c *gin.Context) {
-	var args StoragesPageArgs
+	var args model.PageReq
 	if err := c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)
 		return
