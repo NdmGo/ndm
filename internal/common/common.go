@@ -91,6 +91,22 @@ func SuccessResp(c *gin.Context, data ...interface{}) {
 	})
 }
 
+type LayuiResp[T any] struct {
+	Code  int    `json:"code"`
+	Count int64  `json:"count"`
+	Msg   string `json:"msg"`
+	Data  T      `json:"data"`
+}
+
+func SuccessLayuiResp(c *gin.Context, count int64, msg string, data ...interface{}) {
+	c.JSON(200, LayuiResp[interface{}]{
+		Code:  0,
+		Count: count,
+		Msg:   msg,
+		Data:  data[0],
+	})
+}
+
 func GetHttpReq(ctx context.Context) *http.Request {
 	if c, ok := ctx.(*gin.Context); ok {
 		return c.Request

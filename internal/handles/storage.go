@@ -36,8 +36,5 @@ func StoragesList(c *gin.Context) {
 		common.ErrorResp(c, err, 500)
 		return
 	}
-	common.SuccessResp(c, common.PageResp{
-		Content: storages,
-		Total:   total,
-	})
+	common.SuccessLayuiResp(c, total, "ok", storages)
 }
