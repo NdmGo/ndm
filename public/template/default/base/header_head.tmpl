@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{{.title}}</title>
+    <link rel="shortcut icon" href="/static/image/logo.svg?v={{.version}}" />
+    <link rel="stylesheet" href="/static/layui/css/layui.css?v={{.version}}">
+    <link rel="stylesheet" href="/static/css/ndm.css?v={{.version}}">
+    <script src="/static/layui/layui.js?v={{.version}}"></script>
+    <script src="/static/js/jquery-1.10.2.min.js?v={{.version}}"></script>
+    <script src="/static/js/jquery.cookie-1.4.1.min.js?v={{.version}}"></script>
+    <script src="/static/js/ndm.js?v={{.version}}"></script>
+</head>
+<body>
+
+<style type="text/css">
+.layui-form-item .layui-input-inline{
+    width: auto;
+    margin-left: 5px;
+}
+.type-input{
+    height:70px;
+    overflow-y: auto;
+}
+.type-input::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width : 10px;  /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+.type-input::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background   : #666;
+}
+.type-input::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow   : inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background   : #ededed;
+}
+.layui-form-radio{
+    margin: 0; 
+    padding-right: 0;
+}
+
+.layui-form-pane .layui-form-checkbox {
+    margin: 4px 0 4px 1px;
+}
+.layui-form-checkbox[lay-skin=primary] span {
+    padding-right: 4px;
+}
+.layui-form-checkbox[lay-skin=primary] i {
+    left: 6px;
+}
+.layui-form-item .layui-col-xs12{
+    margin-top: 10px;
+}
+@media screen and (max-width: 990px){
+    .layui-form-item .layui-col-xs12:first-child{
+        margin-top: 0px;
+    }
+    .layui-form-item{
+        margin-bottom: 10px; 
+    }
+}
+
+.layui-form-pane .layui-form-label {
+    width: 160px;
+}
+
+.layui-form-pane .layui-input-block {
+    margin-left: 160px;
+}
+</style>

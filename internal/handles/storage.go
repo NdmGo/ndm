@@ -12,17 +12,22 @@ import (
 	// "ndm/internal/op"
 )
 
-func TaskPage(c *gin.Context) {
+func StoragesPage(c *gin.Context) {
 	data := common.CommonVer()
-	c.HTML(http.StatusOK, "task.tmpl", data)
+	c.HTML(http.StatusOK, "storage.tmpl", data)
 }
 
-type TaskArgs struct {
+func StoragesEditPage(c *gin.Context) {
+	data := common.CommonVer()
+	c.HTML(http.StatusOK, "storage_edit.tmpl", data)
+}
+
+type StoragesArgs struct {
 	Page int `json:"page" form:"page"`
 	Size int `json:"size" form:"size"`
 }
 
-func TaskList(c *gin.Context) {
+func StoragesList(c *gin.Context) {
 	var args StoragesArgs
 	if err := c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)

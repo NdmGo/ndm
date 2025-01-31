@@ -1,0 +1,152 @@
+{{template "header_head.tmpl" .}}
+
+<div class="layui-fluid" style="background-color: white;padding: 20px;">
+    <form class="layui-form layui-form-pane" action="{{.admin_path}}/storage/edit">
+
+    	<div class="layui-form-item">
+	    	<label class="layui-form-label">驱动</label>
+	    	<div class="layui-input-block">
+                <select name="driver">
+                    <option value="local">本机存储</option>
+                </select>
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">挂载路径</label>
+	    	<div class="layui-input-block">
+                <input type="path" name="path" autocomplete="off" class="layui-input" placeholder="要挂载到的路径，它是唯一的，不能重复">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">序号</label>
+	    	<div class="layui-input-block">
+                <input type="number" value="0" name="sort" class="layui-input" placeholder="用于排序">
+            </div>
+	  	</div>
+
+        <div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">备注</label>
+			<div class="layui-input-block">
+				<textarea placeholder="" class="layui-textarea" name="mark"></textarea>
+			</div>
+		</div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">WebDAV策略</label>
+            <div class="layui-input-block">
+                <select name="webdav">
+                    <option value="local">本地代理</option>
+                    <option value="proxy">使用代理地址</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">下载代理URL</label>
+			<div class="layui-input-block">
+				<textarea placeholder="" class="layui-textarea" name="proxy_addr"></textarea>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <select name="sort">
+                	<option value="">选择</option>
+                    <option value="name">名称</option>
+                    <option value="size">大小</option>
+                    <option value="mtime">修改时间</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序方式</label>
+            <div class="layui-input-block">
+                <select name="sort">
+                	<option value="">选择</option>
+                    <option value="name">生序</option>
+                    <option value="size">降序</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">提取文件夹</label>
+            <div class="layui-input-block">
+                <select name="sort">
+                    <option value="">选择</option>
+                    <option value="name">提取到最前</option>
+                    <option value="size">提取到最后</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane>
+			<label class="layui-form-label">启用签名</label>
+		    <div class="layui-input-block">
+				<input type="checkbox" name="open" lay-skin="switch" lay-filter="switchTest" title="开关" checked>
+		    </div>
+		</div>
+
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">根文件夹路径</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="/" name="root_path" class="layui-input" placeholder="">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item" pane>
+			<label class="layui-form-label">缩略图</label>
+		    <div class="layui-input-block">
+				<input type="checkbox" name="open" lay-skin="switch" lay-filter="switchTest" title="开关" placeholder="启用缩略图">
+		    </div>
+		</div>
+
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">缩略图缓存文件夹</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="/" name="root_path" class="layui-input" placeholder="">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">缩略图并发数</label>
+	    	<div class="layui-input-block">
+                <input type="number" value="16" name="thume" class="layui-input" placeholder="同时生成缩略图的数量。这控制了可以并行生成多少缩略图。">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item" pane>
+			<label class="layui-form-label">显示隐藏</label>
+		    <div class="layui-input-block">
+				<input type="checkbox" name="open" lay-skin="switch" lay-filter="switchTest" title="开关" placeholder="显示隐藏目录以及文件">
+		    </div>
+		</div>
+
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">创建文件夹权限</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="777" name="thume" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">回收站路径</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="" name="thume" class="layui-input" placeholder="回收站的路径，如果空或保留“永久删除”则永久删除">
+            </div>
+	  	</div>
+
+        <div class="layui-form-item" style="text-align: center;padding: 10px;">
+            <input type="hidden" name="id" value="">
+            <button class="layui-btn layui-btn-sm" lay-filter="submit_save" lay-submit>保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
