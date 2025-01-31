@@ -23,7 +23,7 @@ type TaskArgs struct {
 }
 
 func TaskList(c *gin.Context) {
-	var args StoragesArgs
+	var args TaskArgs
 	if err := c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)
 		return

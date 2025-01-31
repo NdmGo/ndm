@@ -23,7 +23,7 @@ type PluginsArgs struct {
 }
 
 func PluginsList(c *gin.Context) {
-	var args StoragesArgs
+	var args PluginsArgs
 	if err := c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)
 		return

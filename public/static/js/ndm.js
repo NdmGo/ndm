@@ -46,6 +46,24 @@ table = layui.table;
 laydate = layui.laydate;
 util = layui.util;
 
+// 设置请求默认值
+$.ajaxSetup({
+    beforeSend: function (xhr) {
+        // 将token塞进Header里
+        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+        xhr.setRequestHeader('Powered-By', 'NDM');
+    },
+    complete: function (xhr) {
+        // 设置登陆拦截
+        if (xhr.responseJSON.code == "error_unauth") {
+            console.log("没有登录！");
+            layer.msg("没有登录！");
+        } else {
+            console.log("已经登录！");
+        }
+    },
+});
+
 
 //监听table表单搜索
 form.on('submit(table-sreach)', function (data) {
@@ -86,16 +104,30 @@ form.on('switch(*)', function(data){
 
 //监听全局表单提交
 form.on('submit(submit_save)', function(data){
-    var index = layer.load();
-    $.post(data.form.action, data.field, function(res) {
-        // console.log(res);
-        showMsg(res.msg, function(){
-            layer.close(index);
-            if(res.code > -1){
-                parent.location.reload();
+	var index = layer.load();
+	$.ajax({
+        type: "POST",
+        headers: {'Content-Type': 'application/json'},
+        url: data.form.action,
+        data: JSON.stringify(data.field),
+        dataType: 'json',
+        success: function(res) {
+        	layer.close(index);
+            if (res.code != 200 ){
+                layer.msg(res.message, {icon: 2});
+            } else if (res.code == 200){
+                setTimeout(function(){
+                    parent.location.reload();
+                }, 2000);
+            } else {
+                layer.msg("访问异常!", {icon: 2});
             }
-        },{icon: res.code > -1 ? 1 : 2,shift:res.code>-1 ? 0 : 6});
-    },'json');
+        },
+        error:function(e){
+        	layer.close(index);
+            layer.msg(e, {icon: 2});
+        }
+    });
     return false;
 });
 
@@ -112,7 +144,7 @@ laydate.render({
 $('.layui-input,.layui-textarea').click(function(){
     if($(this).attr('placeholder') != ''){
         var tps = $(this).attr('placeholder');
-        layer.tips(tps, $(this),{tips:1});    
+        layer.tips(tps, $(this),{tips:1});
     }
 });
 

@@ -8,7 +8,7 @@ import (
 
 	"ndm/internal/common"
 	"ndm/internal/db"
-	// "ndm/internal/model"
+	"ndm/internal/model"
 	// "ndm/internal/op"
 )
 
@@ -22,13 +22,29 @@ func StoragesEditPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "storage_edit.tmpl", data)
 }
 
-type StoragesArgs struct {
+type StoragesPageArgs struct {
 	Page int `json:"page" form:"page"`
 	Size int `json:"size" form:"size"`
 }
 
+type StoragesPostArgs struct {
+	Page int `json:"page" form:"page"`
+	Size int `json:"size" form:"size"`
+}
+
+func StoragesEditPost(c *gin.Context) {
+	var args model.Storage
+	if err := c.ShouldBind(&args); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	fmt.Println(args)
+	common.SuccessLayuiResp(c, 0, "ok")
+}
+
 func StoragesList(c *gin.Context) {
-	var args StoragesArgs
+	var args StoragesPageArgs
 	if err := c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)
 		return

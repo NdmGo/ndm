@@ -99,6 +99,16 @@ func SuccessResp(c *gin.Context, data ...interface{}) {
 }
 
 func SuccessLayuiResp(c *gin.Context, count int64, msg string, data ...interface{}) {
+	if len(data) == 0 {
+		c.JSON(200, LayuiResp[interface{}]{
+			Code:  0,
+			Count: count,
+			Msg:   msg,
+			Data:  nil,
+		})
+		return
+	}
+
 	c.JSON(200, LayuiResp[interface{}]{
 		Code:  0,
 		Count: count,
