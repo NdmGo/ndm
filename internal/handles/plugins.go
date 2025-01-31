@@ -14,7 +14,7 @@ import (
 
 func PluginsPage(c *gin.Context) {
 	data := common.CommonVer()
-	c.HTML(http.StatusOK, "task.tmpl", data)
+	c.HTML(http.StatusOK, "plugins.tmpl", data)
 }
 
 type PluginsArgs struct {
