@@ -129,14 +129,14 @@
 		<div class="layui-form-item">
 	    	<label class="layui-form-label">创建文件夹权限</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="777" name="addition[mkdir_perm]" class="layui-input">
+                <input type="text" value="777" name="addition.mkdir_perm" class="layui-input">
             </div>
 	  	</div>
 
 	  	<div class="layui-form-item">
 	    	<label class="layui-form-label">回收站路径</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="" name="addition[recycle_bin_path]" class="layui-input" placeholder="回收站的路径，如果空或保留“永久删除”则永久删除">
+                <input type="text" value="" name="addition.recycle_bin_path" class="layui-input" placeholder="回收站的路径，如果空或保留“永久删除”则永久删除">
             </div>
 	  	</div>
 
@@ -186,6 +186,8 @@ form.on('submit(submit_storage)', function(data){
 			} else {
 				data.field[d] = false;
 			}
+		} else if ( d.indexOf(".") > -1){
+			console.log(d);
 		}
 	}
 
