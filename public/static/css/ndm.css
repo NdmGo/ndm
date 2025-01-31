@@ -10,6 +10,24 @@ div {
     unicode-bidi: isolate;
 }
 
+.h30, .h30 .layui-input {
+    height: 32px;
+}
+
+.select70,.select70 .layui-unselect,.select70 .layui-input-inline{
+    width: 70px!important;
+}
+.select100,.select100 .layui-unselect,.select100 .layui-input-inline{
+    width: 100px!important;
+}
+.select120,.select120 .layui-unselect,.select120 .layui-input-inline{
+    width: 120px!important;
+}
+
+.ck-editor__editable_inline {
+    min-height: 400px;
+}
+
 .layui-side-menu .layui-nav {
     background-color:#353d44;
     border:none;

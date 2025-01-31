@@ -82,6 +82,7 @@ func initAdminStaticPage(r *gin.Engine) {
 	gauth.GET("/storage", handles.StoragesPage)
 	gauth.GET("/setting", handles.SettingPage)
 	gauth.GET("/user", handles.UserPage)
+	gauth.GET("/task", handles.TaskPage)
 
 }
 
@@ -105,6 +106,10 @@ func InitRouters() {
 	}
 
 	r := gin.Default()
+	r.GET("/", func(c *gin.Context) {
+		c.String(200, "home")
+	})
+
 	r.SetTrustedProxies(nil)
 	initAdminStaticPage(r)
 	initRuoteApi(r)

@@ -21,6 +21,13 @@ type PageResp struct {
 	Total   int64       `json:"total"`
 }
 
+type LayuiResp[T any] struct {
+	Code  int    `json:"code"`
+	Count int64  `json:"count"`
+	Msg   string `json:"msg"`
+	Data  T      `json:"data"`
+}
+
 func CommonVer() map[string]interface{} {
 	data := map[string]interface{}{
 		"title":   "NDM存储管理",
@@ -89,13 +96,6 @@ func SuccessResp(c *gin.Context, data ...interface{}) {
 		Message: "success",
 		Data:    data[0],
 	})
-}
-
-type LayuiResp[T any] struct {
-	Code  int    `json:"code"`
-	Count int64  `json:"count"`
-	Msg   string `json:"msg"`
-	Data  T      `json:"data"`
 }
 
 func SuccessLayuiResp(c *gin.Context, count int64, msg string, data ...interface{}) {
