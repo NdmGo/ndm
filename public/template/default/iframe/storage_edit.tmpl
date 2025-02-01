@@ -159,15 +159,6 @@ table = layui.table;
 laydate = layui.laydate;
 util = layui.util;
 
-function fromToJsonObj(formId){
-    var strdata = $("#"+formId).serializeArray();
-    var data = {};
-    for(var i =0;i<strdata.length;i++){
-        data[strdata[i].name] = strdata[i]['value'];
-    }
-    return data;
-}
-
 form.on('submit(submit_storage)', function(data){
 	var index = layer.load();
 	var intarr = ['order','id'];
@@ -194,7 +185,8 @@ form.on('submit(submit_storage)', function(data){
 			delete data.field[d];
 		}
 	}
-	console.log(data.field);
+
+	data.field['addition'] = JSON.stringify(data.field['addition']);
 	$.ajax({
         type: "POST",
         headers: {'Content-Type': 'application/json'},
