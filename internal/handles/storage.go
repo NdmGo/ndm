@@ -9,7 +9,7 @@ import (
 	"ndm/internal/common"
 	"ndm/internal/db"
 	"ndm/internal/model"
-	// "ndm/internal/op"
+	"ndm/internal/op"
 )
 
 func StoragesPage(c *gin.Context) {
@@ -31,6 +31,23 @@ func StoragesEditPost(c *gin.Context) {
 
 	fmt.Println(args)
 	common.SuccessLayuiResp(c, 0, "ok")
+}
+
+func CreateStorage(c *gin.Context) {
+	var req model.Storage
+	if err := c.ShouldBind(&req); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	if id, err := op.CreateStorage(c, req); err != nil {
+		common.ErrorWithDataResp(c, err, 500, gin.H{
+			"id": id,
+		}, true)
+	} else {
+		common.SuccessResp(c, gin.H{
+			"id": id,
+		})
+	}
 }
 
 func StoragesList(c *gin.Context) {

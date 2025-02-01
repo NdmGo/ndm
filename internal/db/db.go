@@ -90,7 +90,7 @@ func InitDb() {
 
 func Init(d *gorm.DB) {
 	db = d
-	err := AutoMigrate(new(model.User), new(model.Storage))
+	err := AutoMigrate(new(model.User), new(model.Storage), new(model.SettingItem))
 	if err != nil {
 		log.Fatalf("failed migrate database: %s", err.Error())
 	}

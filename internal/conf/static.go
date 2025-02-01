@@ -22,6 +22,7 @@ var (
 		Template       string
 		Debug          bool
 		TokenExpiresIn int64
+		TempDir        string
 	}
 
 	// log
