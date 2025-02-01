@@ -94,35 +94,35 @@
 		<div class="layui-form-item">
 	    	<label class="layui-form-label">根文件夹路径</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="/" name="addition[root_folder_path]" class="layui-input" placeholder="">
+                <input type="text" value="/" name="addition.root_folder_path" class="layui-input" placeholder="">
             </div>
 	  	</div>
 
 	  	<div class="layui-form-item" pane>
 			<label class="layui-form-label">缩略图</label>
 		    <div class="layui-input-block">
-				<input type="checkbox" name="addition[thumbnail]" lay-skin="switch" lay-filter="switchTest" title="开关" placeholder="启用缩略图">
+				<input type="checkbox" name="addition.thumbnail" lay-skin="switch" lay-filter="switchTest" title="开关" placeholder="启用缩略图">
 		    </div>
 		</div>
 
 		<div class="layui-form-item">
 	    	<label class="layui-form-label">缩略图缓存文件夹</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="/" name="addition[thumb_cache_folder]" class="layui-input" placeholder="">
+                <input type="text" value="/" name="addition.thumb_cache_folder" class="layui-input" placeholder="">
             </div>
 	  	</div>
 
 	  	<div class="layui-form-item">
 	    	<label class="layui-form-label">缩略图并发数</label>
 	    	<div class="layui-input-block">
-                <input type="number" value="16" name="addition[thumb_concurrency]" class="layui-input" placeholder="同时生成缩略图的数量。这控制了可以并行生成多少缩略图。">
+                <input type="number" value="16" name="addition.thumb_concurrency" class="layui-input" placeholder="同时生成缩略图的数量。这控制了可以并行生成多少缩略图。">
             </div>
 	  	</div>
 
 	  	<div class="layui-form-item" pane>
 			<label class="layui-form-label">显示隐藏</label>
 		    <div class="layui-input-block">
-				<input type="checkbox" name="addition[show_hidden]" lay-skin="switch" lay-filter="switchTest" title="开关" placeholder="显示隐藏目录以及文件">
+				<input type="checkbox" name="addition.show_hidden" lay-skin="switch" lay-filter="switchTest" title="开关" placeholder="显示隐藏目录以及文件">
 		    </div>
 		</div>
 
@@ -170,15 +170,9 @@ function fromToJsonObj(formId){
 
 form.on('submit(submit_storage)', function(data){
 	var index = layer.load();
-	console.log(data.field);
-	// console.log(JSON.stringify(data.field['addition']));
-
-	// data.field['addition'] = JSON.stringify(data.field['addition']);
-
 	var intarr = ['order','id'];
 	for (var d in data.field) {
 		if ($.inArray(d, intarr)!==-1){
-			console.log('inArray', d);
 			data.field[d] = parseInt(data.field[d]);
 		} else if (d === 'enable_sign'){
 			if (data.field[d] == 'on'){
@@ -187,11 +181,19 @@ form.on('submit(submit_storage)', function(data){
 				data.field[d] = false;
 			}
 		} else if ( d.indexOf(".") > -1){
-			console.log(d);
+			var t = d.split(".");
+			var name = t[0];
+			var val = t[1];
+
+			if (name in data.field){
+				data.field[name][val] = data.field[d];
+			} else{
+				data.field[name] = {};
+				data.field[name][val] = data.field[d];
+			}
+			delete data.field[d];
 		}
 	}
-
-	console.log(fromToJsonObj('storage_edit'));
 	console.log(data.field);
 	$.ajax({
         type: "POST",
