@@ -1,0 +1,120 @@
+{{template "header_head.tmpl" .}}
+
+<div class="layui-fluid" style="background-color: white;padding: 20px;">
+    <form class="layui-form layui-form-pane" id="user_edit" action="{{.admin_path}}/user/edit" method="POST">
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" autocomplete="off" class="layui-input" placeholder="">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" autocomplete="off" class="layui-input" placeholder="">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">基本路径</label>
+            <div class="layui-input-block">
+                <input type="text" name="basedir" autocomplete="off" class="layui-input" placeholder="">
+            </div>
+        </div>
+        
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">权限</label>
+            <div class="layui-input-block">
+                <textarea placeholder="" class="layui-textarea" name="remark"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">停用</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="disabled" lay-skin="switch" lay-filter="switchTest" title="" checked>
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center;padding: 10px;">
+            <input type="hidden" name="id" value=0>
+            <button class="layui-btn layui-btn-sm" lay-filter="submit_storage" lay-submit>保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+        </div>
+    </form>
+</div>
+
+<script>
+layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
+///
+$ = layui.$;
+layer = layui.layer;
+form = layui.form;
+element = layui.element;
+table = layui.table;
+laydate = layui.laydate;
+util = layui.util;
+
+form.on('submit(submit_storage)', function(data){
+    var index = layer.load();
+    var intarr = ['order','id'];
+    for (var d in data.field) {
+        if ($.inArray(d, intarr)!==-1){
+            data.field[d] = parseInt(data.field[d]);
+        } else if (d === 'enable_sign'){
+            if (data.field[d] == 'on'){
+                data.field[d] = true;
+            } else {
+                data.field[d] = false;
+            }
+        } else if ( d.indexOf(".") > -1){
+            var t = d.split(".");
+            var name = t[0];
+            var val = t[1];
+
+            if (name in data.field){
+                data.field[name][val] = data.field[d];
+            } else{
+                data.field[name] = {};
+                data.field[name][val] = data.field[d];
+            }
+            delete data.field[d];
+        }
+    }
+
+    data.field['addition'] = JSON.stringify(data.field['addition']);
+    $.ajax({
+        type: "POST",
+        headers: {'Content-Type': 'application/json'},
+        url: data.form.action,
+        data: JSON.stringify(data.field),
+        dataType: 'json',
+        success: function(res) {
+            layer.close(index);
+            if (res.code != 200 ){
+                layer.msg(res.message, {icon: 2});
+            } else if (res.code == 200){
+                setTimeout(function(){
+                    parent.location.reload();
+                }, 2000);
+            } else {
+                layer.msg("访问异常!", {icon: 2});
+            }
+        },
+        error:function(e){
+            layer.close(index);
+            layer.msg(e, {icon: 2});
+        }
+    });
+    return false;
+});
+///
+});
+</script>
+</body>
+</html>

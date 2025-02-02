@@ -17,6 +17,11 @@ func UserPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "user.tmpl", data)
 }
 
+func UserEditPage(c *gin.Context) {
+	data := common.CommonVer()
+	c.HTML(http.StatusOK, "user_edit.tmpl", data)
+}
+
 type UserArgs struct {
 	Page int `json:"page" form:"page"`
 	Size int `json:"size" form:"size"`

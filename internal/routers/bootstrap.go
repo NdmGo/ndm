@@ -88,6 +88,7 @@ func initAdminStaticPage(r *gin.Engine) {
 
 	gauth.GET("/setting", handles.SettingPage)
 	gauth.GET("/user", handles.UserPage)
+	gauth.GET("/user/edit", handles.UserEditPage)
 	gauth.GET("/task", handles.TaskPage)
 	gauth.GET("/plugins", handles.PluginsPage)
 
