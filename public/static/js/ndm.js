@@ -38,13 +38,16 @@ function array2arr(sa){
 
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
-$ = layui.$;
-layer = layui.layer;
-form = layui.form;
-element = layui.element;
-table = layui.table;
-laydate = layui.laydate;
-util = layui.util;
+var $ = layui.$;
+var layer = layui.layer;
+var form = layui.form;
+var element = layui.element;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+var laytpl = layui.laytpl;
+laytpl.config({open: '<{', close: '}>'});
 
 // 设置请求默认值
 $.ajaxSetup({

@@ -38,7 +38,7 @@
                     </button>
                 </div>
             </div>
-            <div id="storage_list" class="bgw divtable"></div>
+            <div id="list" class="bgw divtable"></div>
         </div>
 
     </div>
@@ -54,28 +54,35 @@ var laydate = layui.laydate;
 var util = layui.util;
 
 table.render({
-    elem: '#storage_list',
-    url: '{{.api_path}}/storage/list',
+    elem: '#list',
+    url: '{{.api_path}}/user/list',
     request: {
         pageName: 'page',
         limitName: 'size'
     },
     defaultToolbar: [],
-    title: '驱动',
+    title: '数据表',
     cols: [[
-        {field:'name', title:'挂载路径', width:200},
-        {field:'name', title:'驱动', width:180},
-        {field:'name', title:'序号', width:180},
-        {field:'name', title:'状态'},
+        {field:'mount_path', title:'挂载路径', width:200},
+        {field:'driver', title:'驱动', width:180},
+        {field:'order', title:'序号', width:180},
+        {field:'remark', title:'备注', width:180},
+        {field:'disabled', title:'状态'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right',}
     ]],
     page: true,
     where:[],
 });
-    
-
 ///
 });
+</script>
+
+
+
+<script type="text/html" id="cmdTpl">
+    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id=<{d.id}>',800,480)">编辑</a>
+    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id=<{d.id}>',800,480)">禁用</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.admin_path}}/storage/delete?id=<{d.id}>')">删除</a>
 </script>
 
 {{template "footer.tmpl" .}}
