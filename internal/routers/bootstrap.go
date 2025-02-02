@@ -81,7 +81,10 @@ func initAdminStaticPage(r *gin.Engine) {
 	gauth.GET("/", handles.IndexPage)
 	gauth.GET("/storage", handles.StoragesPage)
 	gauth.GET("/storage/edit", handles.StoragesEditPage)
-	gauth.POST("/storage/edit", handles.CreateStorage)
+
+	// gauth.GET("/user", handles.StoragesPage)
+	// user := g.Group("/user")
+	// user.GET("/list", handles.ListUsers)
 
 	gauth.GET("/setting", handles.SettingPage)
 	gauth.GET("/user", handles.UserPage)
@@ -102,6 +105,10 @@ func initRuoteApi(r *gin.Engine) {
 
 	storage := api.Group("/storage")
 	storage.GET("/list", handles.StoragesList)
+	storage.POST("/edit", handles.CreateStorage)
+
+	user := api.Group("/user")
+	user.GET("/list", handles.StoragesList)
 }
 
 func InitRouters() {

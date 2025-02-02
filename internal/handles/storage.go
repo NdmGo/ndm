@@ -57,8 +57,7 @@ func StoragesList(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(args)
-
+	// fmt.Println(args)
 	storages, total, err := db.GetStorages(args.Page, args.Size)
 	if err != nil {
 		common.ErrorResp(c, err, 500)
