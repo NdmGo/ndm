@@ -9,11 +9,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/alist-org/alist/v3/internal/conf"
-	"github.com/alist-org/alist/v3/internal/model"
-	"github.com/alist-org/alist/v3/pkg/utils"
 	"github.com/disintegration/imaging"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
+
+	"ndm/internal/conf"
+	"ndm/internal/model"
+	"ndm/pkg/utils"
 )
 
 func isSymlinkDir(f fs.FileInfo, path string) bool {

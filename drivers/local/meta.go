@@ -1,6 +1,8 @@
 package local
 
 import (
+	"fmt"
+
 	"ndm/internal/driver"
 	"ndm/internal/op"
 )
@@ -24,6 +26,7 @@ var config = driver.Config{
 }
 
 func init() {
+	fmt.Println("init local driver")
 	op.RegisterDriver(func() driver.Driver {
 		return &Local{}
 	})

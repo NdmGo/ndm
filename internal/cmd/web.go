@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/urfave/cli"
 
+	"ndm/drivers"
 	"ndm/internal/conf"
 	"ndm/internal/db"
 	"ndm/internal/logs"
@@ -23,6 +24,7 @@ var Web = cli.Command{
 func runWeb(c *cli.Context) error {
 	conf.InitConf(c.String("config"))
 	logs.InitLog()
+	drivers.All()
 
 	if conf.Security.InstallLock {
 		db.InitDb()

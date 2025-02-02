@@ -19,13 +19,13 @@ import (
 	log "github.com/sirupsen/logrus"
 	_ "golang.org/x/image/webp"
 
+	"ndm/internal/common"
 	"ndm/internal/conf"
 	"ndm/internal/driver"
 	"ndm/internal/errs"
 	"ndm/internal/model"
 	"ndm/internal/sign"
 	"ndm/pkg/utils"
-	"ndm/server/common"
 )
 
 type Local struct {
