@@ -111,3 +111,20 @@ func CreateStorage(ctx context.Context, storage model.Storage) (uint, error) {
 	log.Debugf("storage %+v is created", storageDriver)
 	return storage.ID, nil
 }
+
+// LoadStorage load exist storage in db to memory
+func LoadStorage(ctx context.Context, storage model.Storage) error {
+	storage.MountPath = utils.FixAndCleanPath(storage.MountPath)
+	// check driver first
+	driverName := storage.Driver
+	driverNew, err := GetDriver(driverName)
+	if err != nil {
+		return errors.WithMessage(err, "failed get driver new")
+	}
+	storageDriver := driverNew()
+
+	err = initStorage(ctx, storage, storageDriver)
+	go callStorageHooks("add", storageDriver)
+	log.Debugf("storage %+v is created", storageDriver)
+	return err
+}

@@ -1,9 +1,9 @@
-package bootstrap
+package routers
 
 import (
 	"context"
 
-	"ndm/internal/conf"
+	// "ndm/internal/conf"
 	"ndm/internal/db"
 	"ndm/internal/model"
 	"ndm/internal/op"
@@ -25,6 +25,6 @@ func LoadStorages() {
 					storages[i].MountPath, storages[i].Driver, storages[i].Order)
 			}
 		}
-		conf.StoragesLoaded = true
+		// conf.StoragesLoaded = true
 	}(storages)
 }
