@@ -16,7 +16,7 @@
         <div class="bgw divtable" style="padding:8px;font-size:12px;">
             <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
                 <div class="layui-inline mr0">
-                    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('添加','{{.admin_path}}/user/edit?id=0',800,480)">添加</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('添加','{{.admin_path}}/user/edit?id=0',800,440)">添加</button>
                 </div>
 
                 <div class="layui-inline select100 mr0">
@@ -63,10 +63,10 @@ table.render({
     defaultToolbar: [],
     title: '数据表',
     cols: [[
-        {field:'mount_path', title:'用户名', width:200},
-        {field:'driver', title:'基本路径', width:180},
-        {field:'order', title:'角色', width:180},
-        {field:'remark', title:'权限', width:180},
+        {field:'username', title:'用户名', width:200},
+        {field:'base_path', title:'基本路径', width:180},
+        {field:'role', title:'角色', width:180},
+        {field:'permission', title:'权限', width:180},
         {field:'disabled', title:'已启用'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:216}
     ]],
@@ -80,7 +80,7 @@ table.render({
 
 
 <script type="text/html" id="cmdTpl">
-    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id=<{d.id}>',800,480)">编辑</a>
+    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id=<{d.id}>',800,440)">编辑</a>
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id=<{d.id}>',800,480)">取消两步验证</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.admin_path}}/user/delete?id=<{d.id}>')">删除</a>
 </script>
