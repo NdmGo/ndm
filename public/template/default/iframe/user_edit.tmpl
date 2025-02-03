@@ -96,7 +96,6 @@ form.on('submit(submit_storage)', function(data){
         }
     }
 
-    data.field['addition'] = JSON.stringify(data.field['addition']);
     $.ajax({
         type: "POST",
         headers: {'Content-Type': 'application/json'},
