@@ -65,7 +65,7 @@ table.render({
     cols: [[
         {field:'username', title:'用户名', width:200},
         {field:'base_path', title:'基本路径', width:180},
-        {field:'role', title:'角色', width:180},
+        {field:'role', title:'角色', width:180, toolbar:'#roleTpl'},
         {field:'permission', title:'权限', toolbar: '#permTpl'},
         {field:'disabled', title:'已启用', toolbar: '#disabledTpl', width:75},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:216}
@@ -73,11 +73,6 @@ table.render({
     page: true,
     where:[],
     done: function(res, curr, count, origin){
-        console.log(res); // 得到当前渲染的数据
-        console.log(curr);  // 得到当前页码
-        console.log(count); // 得到数据总量
-        console.log(origin); // 回调函数所执行的来源 --- 2.8.7+
-
         var index;
         $('.tips').mouseenter(function(){
             var tps = $(this).attr('placeholder');
@@ -98,6 +93,16 @@ table.render({
 });
 </script>
 
+<script type="text/html" id="roleTpl">
+    {@# if(d.role==2){ @}
+    <button type="button" class="layui-btn layui-btn-xs layui-bg-red">ADMIN</button>
+    {@# }else if(d.role==1) { @}
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">GUEST</button>
+    {@# }else{ @}
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">GENERAL</button>
+    {@# } @}
+</script>
+
 <script type="text/html" id="permTpl">
     <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="可以看到隐藏"></button>
     <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="无需密码访问"></button>
@@ -114,7 +119,7 @@ table.render({
 <script type="text/html" id="cmdTpl">
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id={@d.id@}',800,440)">编辑</a>
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id={@d.id@}',800,480)">取消两步验证</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.admin_path}}/user/delete?id={@d.id@}')">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/user/delete?id={@d.id@}')">删除</a>
 </script>
 
 {{template "footer.tmpl" .}}

@@ -115,5 +115,5 @@ func DeleteUser(c *gin.Context) {
 		common.ErrorResp(c, err, 500)
 		return
 	}
-	common.SuccessResp(c)
+	common.SuccessLayuiMsgResp(c, "user deleted successfully")
 }
