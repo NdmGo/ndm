@@ -47,7 +47,7 @@
         <div class="layui-form-item" pane>
             <label class="layui-form-label">停用</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="disabled" lay-skin="switch" lay-filter="switchTest" title="" checked>
+                <input type="checkbox" name="disabled" lay-skin="switch" lay-filter="switchTest" {{if .user}}{{if .user.Disabled }}checked{{end}}{{end}}>
             </div>
         </div>
 

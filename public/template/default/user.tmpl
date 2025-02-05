@@ -67,7 +67,7 @@ table.render({
         {field:'base_path', title:'基本路径', width:180},
         {field:'role', title:'角色', width:180},
         {field:'permission', title:'权限', width:180},
-        {field:'disabled', title:'已启用'},
+        {field:'disabled', title:'已启用', toolbar: '#disabledTpl', width:180},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:216}
     ]],
     page: true,
@@ -78,6 +78,14 @@ table.render({
 </script>
 
 
+
+<script type="text/html" id="disabledTpl">
+    <{ if(d.disabled){ }>
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">是</button>
+    <{ } else { }>
+    <button type="button" class="layui-btn layui-btn-xs">是</button>
+    <{ } }>
+</script>
 
 <script type="text/html" id="cmdTpl">
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id=<{d.id}>',800,440)">编辑</a>
