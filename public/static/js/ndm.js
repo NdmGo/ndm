@@ -47,7 +47,7 @@ var laydate = layui.laydate;
 var util = layui.util;
 
 var laytpl = layui.laytpl;
-laytpl.config({open: '<{', close: '}>'});
+laytpl.config({open: '{@', close: '@}'});
 
 // 设置请求默认值
 $.ajaxSetup({
@@ -153,6 +153,37 @@ $('.layui-input,.layui-textarea').click(function(){
         }   
     }
 });
+
+// util.on('lay-on', {
+//     'tips-top': function(){
+//         layer.tips('向上', this, {tips: 1});
+//     },
+//     'tips-right': function(){
+//         layer.tips('默认向右', this);
+//     },
+// });
+
+
+
+
+//
+$(document).ready(function(){
+    var index;
+    $('.tips').mouseenter(function(){
+        var tps = $(this).attr('placeholder');
+        if(tps != ''){
+            index = layer.tips(tps, this, {
+                tips: [1], // tips 方向和颜色
+                time: 0 // 不自动关闭
+            });
+        }
+    });
+
+    $('.tips').mouseleave(function(){
+        layer.close(index);
+    });
+});
+///
 
 ///
 });!function (win) {

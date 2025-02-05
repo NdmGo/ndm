@@ -10,7 +10,7 @@ import (
 	"ndm/internal/conf"
 )
 
-const Version = "0.0.1.9"
+const Version = "0.0.1.26"
 const AppName = "ndm"
 
 func init() {
