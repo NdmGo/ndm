@@ -3,7 +3,7 @@
 <!-- {{.}} -->
 
 <div class="layui-fluid" style="background-color: white;padding: 20px;">
-    <form class="layui-form layui-form-pane" id="user_edit" action="{{.api_path}}/user/create" method="POST">
+    <form class="layui-form layui-form-pane" id="user_edit" action="{{.api_path}}/user/{{if .user}}update{{else}}create{{end}}" method="POST">
 
 
         <div class="layui-form-item">
@@ -34,10 +34,10 @@
                 <input type="checkbox" name="permission.0" title="可以看到隐藏" {{if .user}}{{if .user.CanSeeHides }}checked{{end}}{{end}}>
                 <input type="checkbox" name="permission.1" title="无需密码访问" {{if .user}}{{if .user.CanAccessWithoutPassword }}checked{{end}}{{end}}>
                 <input type="checkbox" name="permission.2" title="添加离线下载任务" {{if .user}}{{if .user.CanAddOfflineDownloadTasks }}checked{{end}}{{end}}>
-                <input type="checkbox" name="permission.3" title="创建目录或上传" {{if .user}}{{if .user.CanAddOfflineDownloadTasks }}checked{{end}}{{end}}>
-                <input type="checkbox" name="permission.4" title="重命名"  {{if .user}}{{if .user.CanWrite }}checked{{end}}{{end}}>
-                <input type="checkbox" name="permission.5" title="移动" {{if .user}}{{if .user.CanRename }}checked{{end}}{{end}}>
-                <input type="checkbox" name="permission.6" title="复制" {{if .user}}{{if .user.CanMove }}checked{{end}}{{end}}>
+                <input type="checkbox" name="permission.3" title="创建目录或上传" {{if .user}}{{if .user.CanWrite }}checked{{end}}{{end}}>
+                <input type="checkbox" name="permission.4" title="重命名"  {{if .user}}{{if .user.CanRename }}checked{{end}}{{end}}>
+                <input type="checkbox" name="permission.5" title="移动" {{if .user}}{{if .user.CanMove }}checked{{end}}{{end}}>
+                <input type="checkbox" name="permission.6" title="复制" {{if .user}}{{if .user.CanCopy }}checked{{end}}{{end}}>
                 <input type="checkbox" name="permission.7" title="删除" {{if .user}}{{if .user.CanRemove }}checked{{end}}{{end}}>
                 <input type="checkbox" name="permission.8" title="Webdav读取" {{if .user}}{{if .user.CanWebdavRead }}checked{{end}}{{end}}>
                 <input type="checkbox" name="permission.9" title="Webdav管理" {{if .user}}{{if .user.CanWebdavManage }}checked{{end}}{{end}}>

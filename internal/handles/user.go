@@ -68,6 +68,42 @@ func CreateUser(c *gin.Context) {
 	}
 }
 
+func UpdateUser(c *gin.Context) {
+	var req model.User
+	if err := c.ShouldBind(&req); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	user, err := db.GetUserById(req.ID)
+	if err != nil {
+		common.ErrorResp(c, err, 500)
+		return
+	}
+	if user.Role != req.Role {
+		common.ErrorStrResp(c, "role can not be changed", 400)
+		return
+	}
+	if req.Password == "" {
+		req.PwdHash = user.PwdHash
+		req.Salt = user.Salt
+	} else {
+		req.SetPassword(req.Password)
+		req.Password = ""
+	}
+	if req.OtpSecret == "" {
+		req.OtpSecret = user.OtpSecret
+	}
+	if req.Disabled && req.IsAdmin() {
+		common.ErrorStrResp(c, "admin user can not be disabled", 400)
+		return
+	}
+	if err := db.UpdateUser(&req); err != nil {
+		common.ErrorResp(c, err, 500)
+	} else {
+		common.SuccessResp(c)
+	}
+}
+
 func DeleteUser(c *gin.Context) {
 	idStr := c.Query("id")
 	id, err := strconv.Atoi(idStr)

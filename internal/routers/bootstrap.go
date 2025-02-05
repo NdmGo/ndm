@@ -112,6 +112,7 @@ func initRuoteApi(r *gin.Engine) {
 	user := api.Group("/user")
 	user.GET("/list", handles.ListUsers)
 	user.POST("/create", handles.CreateUser)
+	user.POST("/update", handles.UpdateUser)
 	user.POST("/delete", handles.DeleteUser)
 }
 
