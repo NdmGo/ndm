@@ -96,14 +96,18 @@ form.on('submit(submit_user)', function(data){
             delete data.field[d];
         }
     }
-
-    console.log(data.field['permission']);
-
+    
     var permission = data.field['permission'];
-    for (var i = 0; i < permission.length; i++) {
-        console.log(i,permission[i]);
-    }
+    var permission_init = 0;
+    for (var i in permission) {
+        if (i>0){
+            permission_init += 1<<i;
+        } else if (i==0){
+            permission_init += 1;
+        }
 
+    }
+    data.field['permission'] = permission_init;
 
     $.ajax({
         type: "POST",
