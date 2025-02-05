@@ -58,12 +58,12 @@ $.ajaxSetup({
     },
     complete: function (xhr) {
         // 设置登陆拦截
-        if (xhr.responseJSON.code == "error_unauth") {
-            console.log("没有登录！");
-            layer.msg("没有登录！");
-        } else {
-            console.log("已经登录！");
-        }
+        // if (xhr.responseJSON.code == "error_unauth") {
+        //     console.log("没有登录！");
+        //     layer.msg("没有登录！");
+        // } else {
+        //     console.log("已经登录！");
+        // }
     },
 });
 
@@ -147,7 +147,10 @@ laydate.render({
 $('.layui-input,.layui-textarea').click(function(){
     if($(this).attr('placeholder') != ''){
         var tps = $(this).attr('placeholder');
-        layer.tips(tps, $(this),{tips:1});
+        if (tps.indexOf("*")>-1){
+        } else {
+            layer.tips(tps, $(this),{tips:1});
+        }   
     }
 });
 
@@ -230,7 +233,6 @@ Admin.prototype.del = function(_this,_url,_id) {
 };
 //弹出层
 Admin.prototype.open = function (title,url,w,h,full) {
-    // console.log(title,url,w,h,full);
     if (title == null || title == '') {
         var title = false;
     };

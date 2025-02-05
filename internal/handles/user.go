@@ -20,12 +20,16 @@ func UserPage(c *gin.Context) {
 
 func UserEditPage(c *gin.Context) {
 	data := common.CommonVer()
+	idStr := c.Query("id")
+	uid, err := strconv.Atoi(idStr)
+	if err != nil {
+		uid = 0
+	}
+	user, err := db.GetUserById(int64(uid))
+	if err == nil {
+		data["user"] = user
+	}
 	c.HTML(http.StatusOK, "user_edit.tmpl", data)
-}
-
-type UserArgs struct {
-	Page int `json:"page" form:"page"`
-	Size int `json:"size" form:"size"`
 }
 
 func ListUsers(c *gin.Context) {
