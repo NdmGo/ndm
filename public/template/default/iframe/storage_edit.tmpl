@@ -1,7 +1,7 @@
 {{template "header_head.tmpl" .}}
 
 <div class="layui-fluid" style="background-color: white;padding: 20px;">
-    <form class="layui-form layui-form-pane" id="storage_edit" action="{{.admin_path}}/storage/edit" method="POST">
+    <form class="layui-form layui-form-pane" id="storage_edit" action="{{.api_path}}/storage/{{if .user}}update{{else}}create{{end}}" method="POST">
 
     	<div class="layui-form-item">
 	    	<label class="layui-form-label">驱动</label>
