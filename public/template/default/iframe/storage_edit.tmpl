@@ -127,7 +127,7 @@
 		</div>
 
 		<div class="layui-form-item">
-	    	<label class="layui-form-label">创建文件夹权限{{.storage.Addition}}</label>
+	    	<label class="layui-form-label">创建文件夹权限{{.storage.GetAdditionMkdirPerm}}</label>
 	    	<div class="layui-input-block">
                 <input type="text" value="{{if ne .storage.Addition.MkdirPerm ""}}{{.storage.MkdirPerm}}{{end}}" name="addition.mkdir_perm" class="layui-input">
             </div>

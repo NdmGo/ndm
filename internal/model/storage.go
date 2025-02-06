@@ -1,7 +1,10 @@
 package model
 
 import (
+	"fmt"
 	"time"
+
+	"ndm/internal/utils"
 )
 
 type Storage struct {
@@ -45,8 +48,14 @@ func (s *Storage) SetStatus(status string) {
 	s.Status = status
 }
 
-func (s *Storage) GetAddition() {
+func (s *Storage) GetAdditionMkdirPerm() string {
 
+	// c := s.Addition
+	// fmt.Println("GetAdditionMkdirPerm", c)
+
+	// err = utils.Json.UnmarshalFromString(s.Addition, s.GetAddition())
+	// fmt.Println(err)
+	return ""
 }
 
 func (p Proxy) Webdav302() bool {
