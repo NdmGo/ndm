@@ -104,8 +104,66 @@ table.render({
 </script>
 
 <script type="text/html" id="permTpl">
+    {@# if( d.permission&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="可以看到隐藏"></button>
+    {@# }else{ @}
     <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="可以看到隐藏"></button>
+    {@# } @}
+
+    {@# if( d.permission>>1&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="无需密码访问"></button>
+    {@# }else{ @}
     <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="无需密码访问"></button>
+    {@# } @}
+
+    {@# if( d.permission>>2&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="添加离线下载任务"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="添加离线下载任务"></button>
+    {@# } @}
+
+    {@# if( d.permission>>3&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="创建目录或上传"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="创建目录或上传"></button>
+    {@# } @}
+
+    {@# if( d.permission>>4&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="重命名"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="重命名"></button>
+    {@# } @}
+
+    {@# if( d.permission>>5&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="移动"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="移动"></button>
+    {@# } @}
+
+    {@# if( d.permission>>6&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="复制"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="复制"></button>
+    {@# } @}
+
+    {@# if( d.permission>>7&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="删除"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="删除"></button>
+    {@# } @}
+
+    {@# if( d.permission>>8&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="Webdav读取"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="Webdav读取"></button>
+    {@# } @}
+
+    {@# if( d.permission>>9&1 == 1 ){ @}
+    <button type="button" class="tips layui-bg-blue" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="Webdav管理"></button>
+    {@# }else{ @}
+    <button type="button" class="tips layui-bg-red" style="width:8px;height: 8px; border-radius: 4px;border-width: 0px;" placeholder="Webdav管理"></button>
+    {@# } @}
+    
 </script>
 
 <script type="text/html" id="disabledTpl">
