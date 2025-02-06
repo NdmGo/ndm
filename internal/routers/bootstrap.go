@@ -113,6 +113,7 @@ func initRuoteApi(r *gin.Engine) {
 	user.GET("/list", handles.ListUsers)
 	user.POST("/create", handles.CreateUser)
 	user.POST("/update", handles.UpdateUser)
+	user.POST("/cancel_2fa", handles.Cancel2FAById)
 	user.POST("/delete", handles.DeleteUser)
 }
 

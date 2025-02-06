@@ -10,7 +10,7 @@ import (
 	"ndm/internal/common"
 	"ndm/internal/db"
 	"ndm/internal/model"
-	// "ndm/internal/op"
+	"ndm/internal/op"
 )
 
 func UserPage(c *gin.Context) {
@@ -102,6 +102,20 @@ func UpdateUser(c *gin.Context) {
 	} else {
 		common.SuccessResp(c)
 	}
+}
+
+func Cancel2FAById(c *gin.Context) {
+	idStr := c.Query("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	if err := op.Cancel2FAById(int64(id)); err != nil {
+		common.ErrorResp(c, err, 500)
+		return
+	}
+	common.SuccessLayuiMsgResp(c, "取消两步验证成功")
 }
 
 func DeleteUser(c *gin.Context) {

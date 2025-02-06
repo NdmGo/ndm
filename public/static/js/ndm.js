@@ -71,15 +71,8 @@ $.ajaxSetup({
 //监听table表单搜索
 form.on('submit(table-sreach)', function (data) {
 	var _id = $(this).data('id');
-    if (data.field.times) {
-        var searchDate = data.field.times.split(' - ');
-        data.field.kstime = searchDate[0];
-        data.field.jstime = searchDate[1];
-    } else {
-        data.field.kstime = '';
-        data.field.jstime = '';
-    }
-    data.field.times = undefined;
+
+    console.log(data);
     table.reload(_id,{where: data.field, page:{curr: 1}});
 });
 
@@ -153,18 +146,6 @@ $('.layui-input,.layui-textarea').click(function(){
         }   
     }
 });
-
-// util.on('lay-on', {
-//     'tips-top': function(){
-//         layer.tips('向上', this, {tips: 1});
-//     },
-//     'tips-right': function(){
-//         layer.tips('默认向右', this);
-//     },
-// });
-
-
-
 
 //
 $(document).ready(function(){

@@ -14,30 +14,17 @@
         </div>
 
         <div class="bgw divtable" style="padding:8px;font-size:12px;">
-            <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
+            <script type="text/html" id="nav">
+            <div class="layui-form toolbar">
                 <div class="layui-inline mr0">
                     <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('添加','{{.admin_path}}/user/edit?id=0',800,440)">添加</button>
                 </div>
 
-                <div class="layui-inline select100 mr0">
-                    <div class="layui-input-inline h30">
-                        <select name="zd">
-                            <option value="name">名称</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div class="layui-inline mr0">
-                    <div class="layui-input-inline mr0">
-                        <input type="text" name="key" placeholder="请输入关键字" autocomplete="off" class="layui-input h30" value="">
-                    </div>
-                </div>
-
-                <div class="layui-inline mr0">
-                    <button class="layui-btn layui-btn-sm" id="table-sreach" data-id="list" lay-submit lay-filter="table-sreach"><i class="layui-icon">&#xe615;</i>搜索
-                    </button>
+                    <button class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
                 </div>
             </div>
+            </script>
             <div id="list" class="bgw divtable"></div>
         </div>
 
@@ -71,6 +58,7 @@ table.render({
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:216}
     ]],
     page: true,
+    toolbar: '#nav',
     where:[],
     done: function(res, curr, count, origin){
         var index;
@@ -89,6 +77,36 @@ table.render({
         });
     },
 });
+
+// refresh
+function user_cancel_2fa(_url,_id) {
+    layer.confirm('确定要取消两步验证吗?', { title:'提示', btn: ['确定', '取消'],shade:0.001}, function(index) {
+        $.post(_url, { 'id':_id }, function(res) {
+            showMsg(res.msg, function(){
+                if(res.code > -1){
+                    table.reload();
+                }
+            },{icon: res.code > -1 ? 1 : 2});
+        },'json');
+    }, function(index) {
+        layer.close(index);
+    });
+}
+
+table.on('toolbar(list)', function(obj){
+    switch(obj.event){
+        case 'refresh':table.reload("list");break;
+    };
+});
+
+table.on('tool(list)', function(obj){
+    switch(obj.event){
+        case 'cancel_2fa':
+            user_cancel_2fa('{{.api_path}}/user/cancel_2fa?id='+obj.data.id,obj.data.id);
+            break;
+    };
+});
+
 ///
 });
 </script>
@@ -176,7 +194,7 @@ table.render({
 
 <script type="text/html" id="cmdTpl">
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id={@d.id@}',800,440)">编辑</a>
-    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/user/edit?id={@d.id@}',800,480)">取消两步验证</a>
+    <a class="layui-btn layui-btn-xs" lay-event="cancel_2fa">取消两步验证</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/user/delete?id={@d.id@}')">删除</a>
 </script>
 
