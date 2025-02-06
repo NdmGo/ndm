@@ -19,6 +19,10 @@
                     <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('添加','{{.admin_path}}/storage/edit?id=0',800,480)">添加</button>
                 </div>
 
+                <div class="layui-inline mr0">
+                    <button id="refresh" class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
+                </div>
+
                 <div class="layui-inline select100 mr0">
                     <div class="layui-input-inline h30">
                         <select name="zd">
@@ -39,7 +43,7 @@
                     </button>
                 </div>
             </div>
-            <div id="storage_list" class="bgw divtable"></div>
+            <div id="list" class="bgw divtable"></div>
         </div>
 
     </div>
@@ -55,7 +59,7 @@ var laydate = layui.laydate;
 var util = layui.util;
 
 table.render({
-    elem: '#storage_list',
+    elem: '#list',
     url: '{{.api_path}}/storage/list',
     request: {
         pageName: 'page',
@@ -74,6 +78,12 @@ table.render({
     page: true,
     where:[],
 });
+
+// refresh
+$("#refresh").click(function(){
+    table.reload("list");
+});
+
 ///
 });
 </script>
