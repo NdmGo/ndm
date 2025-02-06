@@ -14,17 +14,15 @@
         </div>
 
         <div class="bgw divtable" style="padding:8px;font-size:12px;">
-            <script type="text/html" id="nav">
-            <div class="layui-form toolbar">
+            <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
                 <div class="layui-inline mr0">
                     <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('添加','{{.admin_path}}/user/edit?id=0',800,440)">添加</button>
                 </div>
 
                 <div class="layui-inline mr0">
-                    <button class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
+                    <button id="refresh" class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
                 </div>
             </div>
-            </script>
             <div id="list" class="bgw divtable"></div>
         </div>
 
@@ -58,7 +56,7 @@ table.render({
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:216}
     ]],
     page: true,
-    toolbar: '#nav',
+    // toolbar: '#nav',
     where:[],
     done: function(res, curr, count, origin){
         var index;
@@ -78,7 +76,7 @@ table.render({
     },
 });
 
-// refresh
+
 function user_cancel_2fa(_url,_id) {
     layer.confirm('确定要取消两步验证吗?', { title:'提示', btn: ['确定', '取消'],shade:0.001}, function(index) {
         $.post(_url, { 'id':_id }, function(res) {
@@ -93,11 +91,16 @@ function user_cancel_2fa(_url,_id) {
     });
 }
 
-table.on('toolbar(list)', function(obj){
-    switch(obj.event){
-        case 'refresh':table.reload("list");break;
-    };
+// refresh
+$("#refresh").click(function(){
+    table.reload("list");
 });
+
+// table.on('toolbar(list)', function(obj){
+//     switch(obj.event){
+//         case 'refresh':table.reload("list");break;
+//     };
+// });
 
 table.on('tool(list)', function(obj){
     switch(obj.event){
