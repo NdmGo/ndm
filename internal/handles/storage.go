@@ -3,6 +3,7 @@ package handles
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -19,17 +20,31 @@ func StoragesPage(c *gin.Context) {
 
 func StoragesEditPage(c *gin.Context) {
 	data := common.CommonVer()
+	idStr := c.Query("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		id = 0
+	}
+	storage, err := db.GetStorageById(int64(id))
+	if err == nil {
+		data["storage"] = storage
+
+		fmt.Println(storage)
+	}
 	c.HTML(http.StatusOK, "storage_edit.tmpl", data)
 }
 
 func StoragesEditPost(c *gin.Context) {
-	var args model.Storage
-	if err := c.ShouldBind(&args); err != nil {
-		common.ErrorResp(c, err, 400)
-		return
+	data := common.CommonVer()
+	idStr := c.Query("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		id = 0
 	}
-
-	fmt.Println(args)
+	storage, err := db.GetStorageById(int64(id))
+	if err == nil {
+		data["storage"] = storage
+	}
 	common.SuccessLayuiResp(c, 0, "ok")
 }
 
@@ -48,6 +63,20 @@ func CreateStorage(c *gin.Context) {
 			"id": id,
 		})
 	}
+}
+
+func DeleteStorage(c *gin.Context) {
+	idStr := c.Query("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	if err := op.DeleteStorageById(c, int64(id)); err != nil {
+		common.ErrorResp(c, err, 500, true)
+		return
+	}
+	common.SuccessResp(c)
 }
 
 func StoragesList(c *gin.Context) {

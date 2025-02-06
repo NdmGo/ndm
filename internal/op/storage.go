@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"runtime"
+	// "strconv"
 	"time"
 
 	"github.com/pkg/errors"
@@ -24,6 +25,15 @@ func GetAllStorages() []driver.Driver {
 
 func HasStorage(mountPath string) bool {
 	return storagesMap.Has(utils.FixAndCleanPath(mountPath))
+}
+
+func GetStorageByMountPath(mountPath string) (driver.Driver, error) {
+	mountPath = utils.FixAndCleanPath(mountPath)
+	storageDriver, ok := storagesMap.Load(mountPath)
+	if !ok {
+		return nil, errors.Errorf("no mount path for an storage is: %s", mountPath)
+	}
+	return storageDriver, nil
 }
 
 func getCurrentGoroutineStack() string {
@@ -84,9 +94,34 @@ func initStorage(ctx context.Context, storage model.Storage, storageDriver drive
 	return err
 }
 
+func DeleteStorageById(ctx context.Context, id int64) error {
+	storage, err := db.GetStorageById(id)
+	if err != nil {
+		return errors.WithMessage(err, "failed get storage")
+	}
+	if !storage.Disabled {
+		storageDriver, err := GetStorageByMountPath(storage.MountPath)
+		if err != nil {
+			return errors.WithMessage(err, "failed get storage driver")
+		}
+		// drop the storage in the driver
+		if err := storageDriver.Drop(ctx); err != nil {
+			return errors.Wrapf(err, "failed drop storage")
+		}
+		// delete the storage in the memory
+		storagesMap.Delete(storage.MountPath)
+		go callStorageHooks("del", storageDriver)
+	}
+	// delete the storage in the database
+	if err := db.DeleteStorageById(id); err != nil {
+		return errors.WithMessage(err, "failed delete storage in database")
+	}
+	return nil
+}
+
 // CreateStorage Save the storage to database so storage can get an id
 // then instantiate corresponding driver and save it in memory
-func CreateStorage(ctx context.Context, storage model.Storage) (uint, error) {
+func CreateStorage(ctx context.Context, storage model.Storage) (int64, error) {
 	storage.Modified = time.Now()
 	storage.MountPath = utils.FixAndCleanPath(storage.MountPath)
 	var err error

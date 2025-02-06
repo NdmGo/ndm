@@ -5,7 +5,7 @@ import (
 )
 
 type Storage struct {
-	ID              uint   `json:"id" gorm:"primaryKey"`     // unique key
+	ID              int64  `json:"id" gorm:"primaryKey"`     // unique key
 	MountPath       string `json:"mount_path" gorm:"unique"` // must be standardized
 	Order           int    `json:"order"`                    // use to sort
 	Driver          string `json:"driver"`                   // driver used
@@ -43,6 +43,10 @@ func (s *Storage) SetStorage(storage Storage) {
 
 func (s *Storage) SetStatus(status string) {
 	s.Status = status
+}
+
+func (s *Storage) GetAddition() {
+
 }
 
 func (p Proxy) Webdav302() bool {
