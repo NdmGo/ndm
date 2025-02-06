@@ -7,7 +7,7 @@
 	    	<label class="layui-form-label">驱动</label>
 	    	<div class="layui-input-block">
                 <select name="driver">
-                    <option value="local">本机存储</option>
+                    <option value="local" {{if .storage}}{{if eq .storage.Driver "local"}}selected{{end}}{{end}}>本机存储</option>
                 </select>
             </div>
 	  	</div>
@@ -126,10 +126,11 @@
 		    </div>
 		</div>
 
+		<!-- {{.storage.GetAdditionMkdirPerm}} -->
 		<div class="layui-form-item">
-	    	<label class="layui-form-label">创建文件夹权限{{.storage.GetAdditionMkdirPerm}}</label>
+	    	<label class="layui-form-label">创建文件夹权限</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="{{if ne .storage.Addition.MkdirPerm ""}}{{.storage.MkdirPerm}}{{end}}" name="addition.mkdir_perm" class="layui-input">
+                <input type="text" value="" name="addition.mkdir_perm" class="layui-input">
             </div>
 	  	</div>
 
