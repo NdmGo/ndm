@@ -14,6 +14,7 @@ import (
 	"ndm/internal/logs"
 	"ndm/internal/middlewates"
 	// "ndm/internal/utils"
+	"ndm/internal/common"
 	"ndm/public"
 )
 
@@ -125,7 +126,8 @@ func InitRouters() {
 
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
-		c.String(200, "home")
+		data := common.CommonVer()
+		c.HTML(http.StatusOK, "home.tmpl", data)
 	})
 
 	r.SetTrustedProxies(nil)
