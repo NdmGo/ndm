@@ -17,7 +17,7 @@ action:
     - go mod vendor
     - taskkill /F /im ndm.exe
   after:
-    - .\ndm web &
+    - .\ndm.exe web &
   exit:
     - taskkill /F /im ndm.exe
 link: https://github.com/midoks/zzz
