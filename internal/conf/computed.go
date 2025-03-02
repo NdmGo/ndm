@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -29,6 +30,7 @@ func AppPath() string {
 	appPathOnce.Do(func() {
 		var err error
 		appPath, err = exec.LookPath(os.Args[0])
+		fmt.Println(appPath, err)
 		if err != nil {
 			panic("look executable path: " + err.Error())
 		}
@@ -74,6 +76,8 @@ var (
 func CustomDir() string {
 	customDirOnce.Do(func() {
 		customDir = os.Getenv("NDM_CUSTOM")
+
+		fmt.Println("tste", customDir)
 		if customDir != "" {
 			return
 		}
