@@ -9,6 +9,7 @@ dirfilter:
 - templates
 ext:
 - go
+- tmpl
 enablerun: true
 action:
   before:
@@ -18,5 +19,5 @@ action:
   after:
     - .\ndm web &
   exit:
-  - echo "exit"
+    - taskkill /F /im ndm.exe
 link: https://github.com/midoks/zzz
