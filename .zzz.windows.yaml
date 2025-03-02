@@ -1,0 +1,22 @@
+title: zzz
+frequency: 3
+dirfilter:
+- tmp
+- .git
+- scripts
+- vendor
+- logs
+- templates
+ext:
+- go
+enablerun: true
+action:
+  before:
+    - go mod tidy
+    - go mod vendor
+    - taskkill /F /im ndm.exe
+  after:
+    - .\ndm web &
+  exit:
+  - echo "exit"
+link: https://github.com/midoks/zzz
