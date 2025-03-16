@@ -37,6 +37,7 @@ func PostInstallStep1Page(c *gin.Context) {
 	install_data["username"] = c.PostForm("username")
 	install_data["password"] = c.PostForm("password")
 	install_data["table_prefix"] = c.PostForm("table_prefix")
+	install_data["dbpath"] = c.PostForm("dbpath")
 
 	init_account := c.PostForm("account")
 	init_pass := c.PostForm("pass")

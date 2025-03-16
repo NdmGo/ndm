@@ -4,6 +4,7 @@ import (
 	"fmt"
 	stdlog "log"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -18,6 +19,7 @@ import (
 
 	"ndm/internal/conf"
 	"ndm/internal/model"
+	"ndm/internal/utils"
 )
 
 var db *gorm.DB
@@ -56,8 +58,23 @@ func InitDb() {
 			if !(strings.HasSuffix(database.Path, ".db") && len(database.Path) > 3) {
 				log.Fatalf("db name error.")
 			}
-			dB, err = gorm.Open(sqlite.Open(fmt.Sprintf("%s?_journal=WAL&_vacuum=incremental",
-				database.Path)), gormConfig)
+
+			if strings.HasPrefix(database.Path, "/") {
+				dB, err = gorm.Open(sqlite.Open(fmt.Sprintf("%s?_journal=WAL&_vacuum=incremental", database.Path)), gormConfig)
+			} else {
+				conf_path := conf.WorkDir()
+				custom_dir := fmt.Sprintf("%s/custom", conf_path)
+
+				db_file := fmt.Sprintf("%s/%s", custom_dir, database.Path)
+				db_dir := filepath.Dir(db_file)
+
+				if !utils.IsExist(db_dir) {
+					os.MkdirAll(db_dir, 777)
+				}
+
+				dB, err = gorm.Open(sqlite.Open(fmt.Sprintf("%s?_journal=WAL&_vacuum=incremental", db_file)), gormConfig)
+			}
+
 		}
 	case "mysql":
 		{
