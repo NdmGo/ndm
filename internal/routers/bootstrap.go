@@ -75,10 +75,10 @@ func initAdminStaticPage(r *gin.Engine) {
 	g.POST("/install_step1", handles.PostInstallStep1Page)
 
 	// Admin Page
-	gnoauth := r.Group(conf.Http.SafePath, middlewates.PageNoAuth)
+	gnoauth := r.Group(conf.Http.SafePath, middlewates.SysIsInstalled, middlewates.PageNoAuth)
 	gnoauth.GET("/login", handles.LoginPage)
 
-	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth)
+	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth, middlewates.SysIsInstalled)
 	gauth.GET("/", handles.IndexPage)
 	gauth.GET("/storage", handles.StoragesPage)
 	gauth.GET("/storage/edit", handles.StoragesEditPage)

@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"ndm/internal/common"
 	"ndm/internal/conf"
+	"ndm/internal/utils"
 	// "ndm/internal/logs"
 	"ndm/internal/db"
 	// "ndm/internal/model"
@@ -75,4 +76,13 @@ func PageAuth(c *gin.Context) {
 		c.Next()
 		return
 	}
+}
+
+func SysIsInstalled(c *gin.Context) {
+	conf_path := conf.WorkDir()
+	fmt.Println("ddd:", conf_path)
+	if utils.IsExist("/") {
+
+	}
+
 }
