@@ -80,9 +80,10 @@ func PageAuth(c *gin.Context) {
 
 func SysIsInstalled(c *gin.Context) {
 	conf_path := conf.WorkDir()
-	fmt.Println("ddd:", conf_path)
-	if utils.IsExist("/") {
-
+	custom_dir := fmt.Sprintf("%s/custom", conf_path)
+	install_url := fmt.Sprintf("%s/install", conf.Http.SafePath)
+	if !utils.IsExist(custom_dir) {
+		c.Redirect(302, install_url)
+		return
 	}
-
 }

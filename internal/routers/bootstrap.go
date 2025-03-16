@@ -125,7 +125,9 @@ func InitRouters() {
 	}
 
 	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
+
+	home := r.Group("", middlewates.SysIsInstalled)
+	home.GET("/", func(c *gin.Context) {
 		data := common.CommonVer()
 		c.HTML(http.StatusOK, "home.tmpl", data)
 	})

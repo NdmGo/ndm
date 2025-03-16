@@ -14,6 +14,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	_ "modernc.org/sqlite"
 
 	"ndm/internal/conf"
 	"ndm/internal/model"
