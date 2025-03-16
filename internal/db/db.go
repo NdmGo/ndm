@@ -69,7 +69,7 @@ func InitDb() {
 				db_dir := filepath.Dir(db_file)
 
 				if !utils.IsExist(db_dir) {
-					os.MkdirAll(db_dir, 777)
+					os.MkdirAll(db_dir, os.ModePerm)
 				}
 
 				dB, err = gorm.Open(sqlite.Open(fmt.Sprintf("%s?_journal=WAL&_vacuum=incremental", db_file)), gormConfig)
