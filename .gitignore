@@ -30,4 +30,4 @@ logs
 /custom
 /dist
 *.bat
-/custom_bk
+/custom_*
