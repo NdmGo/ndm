@@ -233,6 +233,7 @@ Admin.prototype.batchDel = function(_url,_id) {
 Admin.prototype.del = function(_this,_url,_id) {
     layer.confirm('确定要删除吗?', { title:'删除提示', btn: ['确定', '取消'],shade:0.001}, function(index) {
         $.post(_url, { 'id':_id }, function(res) {
+            console.log(res);
             showMsg(res.msg, function(){
         		if(res.code > -1){
             		location.reload();

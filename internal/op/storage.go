@@ -95,23 +95,25 @@ func initStorage(ctx context.Context, storage model.Storage, storageDriver drive
 }
 
 func DeleteStorageById(ctx context.Context, id int64) error {
-	storage, err := db.GetStorageById(id)
-	if err != nil {
-		return errors.WithMessage(err, "failed get storage")
-	}
-	if !storage.Disabled {
-		storageDriver, err := GetStorageByMountPath(storage.MountPath)
-		if err != nil {
-			return errors.WithMessage(err, "failed get storage driver")
-		}
-		// drop the storage in the driver
-		if err := storageDriver.Drop(ctx); err != nil {
-			return errors.Wrapf(err, "failed drop storage")
-		}
-		// delete the storage in the memory
-		storagesMap.Delete(storage.MountPath)
-		go callStorageHooks("del", storageDriver)
-	}
+	// storage, err := db.GetStorageById(id)
+	// if err != nil {
+	// 	return errors.WithMessage(err, "failed get storage")
+	// }
+
+	// if !storage.Disabled {
+	// 	storageDriver, err := GetStorageByMountPath(storage.MountPath)
+	// 	if err != nil {
+	// 		return errors.WithMessage(err, "failed get storage driver")
+	// 	}
+	// 	// drop the storage in the driver
+	// 	if err := storageDriver.Drop(ctx); err != nil {
+	// 		return errors.Wrapf(err, "failed drop storage")
+	// 	}
+	// 	// delete the storage in the memory
+	// 	storagesMap.Delete(storage.MountPath)
+	// 	go callStorageHooks("del", storageDriver)
+	// }
+
 	// delete the storage in the database
 	if err := db.DeleteStorageById(id); err != nil {
 		return errors.WithMessage(err, "failed delete storage in database")

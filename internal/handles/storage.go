@@ -65,6 +65,10 @@ func CreateStorage(c *gin.Context) {
 	}
 }
 
+func UpdateStorage(c *gin.Context) {
+
+}
+
 func DeleteStorage(c *gin.Context) {
 	idStr := c.Query("id")
 	id, err := strconv.Atoi(idStr)
