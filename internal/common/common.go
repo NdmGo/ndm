@@ -11,9 +11,9 @@ import (
 )
 
 type Resp[T any] struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Data    T      `json:"data"`
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data T      `json:"data"`
 }
 
 type PageResp struct {
@@ -63,9 +63,9 @@ func ErrorWithDataResp(c *gin.Context, err error, code int, data interface{}, l 
 		}
 	}
 	c.JSON(200, Resp[interface{}]{
-		Code:    code,
-		Message: hidePrivacy(err.Error()),
-		Data:    data,
+		Code: code,
+		Msg:  hidePrivacy(err.Error()),
+		Data: data,
 	})
 	c.Abort()
 }
@@ -75,9 +75,9 @@ func ErrorStrResp(c *gin.Context, str string, code int, l ...bool) {
 		log.Error(str)
 	}
 	c.JSON(200, Resp[interface{}]{
-		Code:    code,
-		Message: hidePrivacy(str),
-		Data:    nil,
+		Code: code,
+		Msg:  hidePrivacy(str),
+		Data: nil,
 	})
 	c.Abort()
 }
@@ -85,16 +85,16 @@ func ErrorStrResp(c *gin.Context, str string, code int, l ...bool) {
 func SuccessResp(c *gin.Context, data ...interface{}) {
 	if len(data) == 0 {
 		c.JSON(200, Resp[interface{}]{
-			Code:    200,
-			Message: "success",
-			Data:    nil,
+			Code: 200,
+			Msg:  "success",
+			Data: nil,
 		})
 		return
 	}
 	c.JSON(200, Resp[interface{}]{
-		Code:    200,
-		Message: "success",
-		Data:    data[0],
+		Code: 200,
+		Msg:  "success",
+		Data: data[0],
 	})
 }
 

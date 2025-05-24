@@ -121,6 +121,14 @@ func DeleteStorageById(ctx context.Context, id int64) error {
 	return nil
 }
 
+func TriggerDisabledStorageById(ctx context.Context, id int64) error {
+	// trigger the storage in the database
+	if err := db.TriggerDisabledStorageById(id); err != nil {
+		return errors.WithMessage(err, "failed trigger disabled storage in database")
+	}
+	return nil
+}
+
 // CreateStorage Save the storage to database so storage can get an id
 // then instantiate corresponding driver and save it in memory
 func CreateStorage(ctx context.Context, storage model.Storage) (int64, error) {

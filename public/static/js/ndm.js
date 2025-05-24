@@ -238,12 +238,27 @@ Admin.prototype.del = function(_this,_url,_id) {
         		if(res.code > -1){
             		location.reload();
            	 	}
-            },{icon: res.code > -1 ? 1 : 2,shift:res.code ? 0 : 6});
+            },{icon: res.code > -1 ? 1 : 2});
         },'json');
     }, function(index) {
         layer.close(index);
     });
 };
+
+Admin.prototype.trigger = function(_this,_url,_id) {
+    layer.confirm('确定要触发吗?', { title:'触发提示', btn: ['确定', '取消'],shade:0.001}, function(index) {
+        $.post(_url, { 'id':_id }, function(res) {
+            showMsg(res.msg, function(){
+                if(res.code > -1){
+                    location.reload();
+                }
+            },{icon: res.code > -1 ? 1 : 2});
+        },'json');
+    }, function(index) {
+        layer.close(index);
+    });
+};
+
 //弹出层
 Admin.prototype.open = function (title,url,w,h,full) {
     if (title == null || title == '') {

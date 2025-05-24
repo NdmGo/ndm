@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-
 	"ndm/internal/model"
 )
 
@@ -20,6 +19,22 @@ func UpdateStorage(storage *model.Storage) error {
 // DeleteStorageById just delete storage from database by id
 func DeleteStorageById(id int64) error {
 	return errors.WithStack(db.Delete(&model.Storage{}, id).Error)
+}
+
+// TriggerDisabledStorageById just disabled storage from database by id
+func TriggerDisabledStorageById(id int64) error {
+	s, err := GetStorageById(id)
+	if err != nil {
+		return err
+	}
+
+	disabled := 1
+	if s.Disabled {
+		disabled = 0
+	} else {
+		disabled = 1
+	}
+	return db.Model(&model.Storage{ID: id}).Update("disabled", disabled).Error
 }
 
 // GetStorages Get all storages from database order by index

@@ -111,6 +111,7 @@ func initRuoteApi(r *gin.Engine) {
 	storage.POST("/edit", handles.CreateStorage)
 	storage.POST("/create", handles.CreateStorage)
 	storage.POST("/delete", handles.DeleteStorage)
+	storage.POST("/trigger_disable", handles.TriggerDisabledStorage)
 
 	user := api.Group("/user")
 	user.GET("/list", handles.ListUsers)

@@ -83,6 +83,20 @@ func DeleteStorage(c *gin.Context) {
 	common.SuccessResp(c)
 }
 
+func TriggerDisabledStorage(c *gin.Context) {
+	idStr := c.PostForm("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	if err := op.TriggerDisabledStorageById(c, int64(id)); err != nil {
+		common.ErrorResp(c, err, 500, true)
+		return
+	}
+	common.SuccessResp(c)
+}
+
 func StoragesList(c *gin.Context) {
 	var args model.PageReq
 	if err := c.ShouldBind(&args); err != nil {

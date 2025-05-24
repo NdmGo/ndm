@@ -14,8 +14,8 @@ ext:
 enablerun: true
 action:
   before:
-    - go mod tidy
-    - go mod vendor
+    # - go mod tidy
+    # - go mod vendor
     - find . -name ".DS_Store" -print -delete
     - gofmt -w ./
     - ps -ef|grep 'ndm web'| grep -v grep | awk '{print $2}' | xargs kill -9

@@ -73,7 +73,7 @@ table.render({
         {field:'order', title:'序号', width:180},
         {field:'remark', title:'备注', width:180},
         {field:'status', title:'状态'},
-        {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:167}
+        {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
     ]],
     page: true,
     where:[],
@@ -88,11 +88,23 @@ $("#refresh").click(function(){
 });
 </script>
 
+<script type="text/html" id="disabledTpl">
+    {@# if(d.disabled){ @}
+    <button type="button" class="layui-btn layui-btn-xs layui-bg-red">否</button>
+    {@# }else{ @}
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">是</button>
+    {@# } @}
+</script>
+
 
 
 <script type="text/html" id="cmdTpl">
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id={@d.id@}',800,480)">编辑</a>
-    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.api_path}}/storage/edit?id={@d.id@}',800,480)">禁用</a>
+    {@# if(d.disabled == 1){ @}
+    <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已禁用</a>
+    {@# }else{ @}
+    <a class="layui-btn layui-btn-xs" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已启用</a>
+    {@# } @}
     <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/storage/delete?id={@d.id@}')">删除</a>
 </script>
 
