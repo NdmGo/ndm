@@ -6,6 +6,7 @@ require (
 	github.com/Xhofe/go-cache v0.0.0-20240804043513-b1a71927bc21
 	github.com/alist-org/alist/v3 v3.42.0
 	github.com/alist-org/times v0.0.0-20240721124654-efa0c7d3ad92
+	github.com/aws/aws-sdk-go v1.55.5
 	github.com/deckarep/golang-set/v2 v2.7.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/dlclark/regexp2 v1.11.4
@@ -22,9 +23,11 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/u2takey/ffmpeg-go v0.5.0
 	github.com/urfave/cli v1.22.16
+	go4.org v0.0.0-20230225012048-214862532bf5
 	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
 	golang.org/x/image v0.19.0
 	golang.org/x/oauth2 v0.25.0
+	golang.org/x/time v0.8.0
 	gopkg.in/ini.v1 v1.67.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.11
@@ -34,7 +37,6 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go v1.55.5 // indirect
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect

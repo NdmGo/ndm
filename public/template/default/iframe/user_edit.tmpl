@@ -16,7 +16,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">密码</label>
             <div class="layui-input-block">
-                <input type="password" name="password" value="" autocomplete="off" class="layui-input" placeholder="******">
+                <input type="password" name="password" value="" autocomplete="off" class="layui-input" placeholder="请输入用户密码">
             </div>
         </div>
 
@@ -62,13 +62,13 @@
 <script>
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
-$ = layui.$;
-layer = layui.layer;
-form = layui.form;
-element = layui.element;
-table = layui.table;
-laydate = layui.laydate;
-util = layui.util;
+var $ = layui.$;
+var layer = layui.layer;
+var form = layui.form;
+var element = layui.element;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
 
 form.on('submit(submit_user)', function(data){
     var index = layer.load();
@@ -116,7 +116,6 @@ form.on('submit(submit_user)', function(data){
         data: JSON.stringify(data.field),
         dataType: 'json',
         success: function(res) {
-            console.log(res);
             layer.close(index);
             if (res.code != 200 ){
                 layer.msg(res.message, {icon: 2});

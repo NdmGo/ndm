@@ -1,9 +1,11 @@
 package handles
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -18,6 +20,11 @@ func StoragesPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "storage.tmpl", data)
 }
 
+func StoragesCreatePage(c *gin.Context) {
+	data := common.CommonVer()
+	c.HTML(http.StatusOK, "storage_create.tmpl", data)
+}
+
 func StoragesEditPage(c *gin.Context) {
 	data := common.CommonVer()
 	idStr := c.Query("id")
@@ -28,10 +35,10 @@ func StoragesEditPage(c *gin.Context) {
 	storage, err := db.GetStorageById(int64(id))
 	if err == nil {
 		data["storage"] = storage
-
-		fmt.Println(storage)
 	}
-	c.HTML(http.StatusOK, "storage_edit.tmpl", data)
+
+	tpl_name := fmt.Sprintf("storage_edit_%s.tmpl", storage.Driver)
+	c.HTML(http.StatusOK, tpl_name, data)
 }
 
 func StoragesEditPost(c *gin.Context) {
@@ -54,6 +61,14 @@ func CreateStorage(c *gin.Context) {
 		common.ErrorResp(c, err, 400)
 		return
 	}
+
+	if strings.EqualFold(req.MountPath, "") {
+		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
+			"id": 0,
+		}, true)
+		return
+	}
+
 	if id, err := op.CreateStorage(c, req); err != nil {
 		common.ErrorWithDataResp(c, err, 500, gin.H{
 			"id": id,

@@ -7,8 +7,9 @@
 	    	<label class="layui-form-label">驱动</label>
 	    	<div class="layui-input-block">
                 <select name="driver" lay-filter="driver">
-                    <option value="local" {{if .storage}}{{if eq .storage.Driver "local"}}selected{{end}}{{end}}>本机存储</option>
-                    <option value="s3" {{if .storage}}{{if eq .storage.Driver "s3"}}selected{{end}}{{end}}>对象存储</option>
+                	<option value="">选择</option>
+                    <option value="local" >本机存储</option>
+                    <option value="s3">对象存储</option>
                 </select>
             </div>
 	  	</div>
@@ -257,6 +258,14 @@ var options = {
 		{
 			"tag": "input",
 			"type":"text",
+			"label":"创建文件夹权限",
+			"key": "addition.mkdir_perm",
+			"placeholder":"",
+			"default":"777",
+		},
+		{
+			"tag": "input",
+			"type":"text",
 			"label":"回收站路径",
 			"key": "addition.recycle_bin_path",
 			"placeholder":"回收站的路径，如果空或保留“永久删除”则永久删除",
@@ -275,21 +284,72 @@ var options = {
 		},
 		{
 			"tag": "input",
-			"type":"text",
-			"label":"挂载路径",
+			"type":"number",
+			"label":"序号",
 			"key": "order",
-			"placeholder":"回收站的路径，如果空或保留“永久删除”则永久删除",
+			"placeholder":"用于排序",
 			"default":"0",
-		}
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"存储桶",
+			"key": "bucket",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"Endpoint",
+			"key": "endpoint",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"地区",
+			"key": "region",
+			"placeholder":"",
+			"default":"auto",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"访问密钥ID",
+			"key": "access_key_id",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"安全访问密钥",
+			"key": "secret_access_key",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "textarea",
+			"label":"备注",
+			"key": "remark",
+			"default":"",
+		},
 	],
 };
 
 
 form.on('select(driver)', function(data){
-	var content = Admin.renderFormItemMulti(options, data.value);
-	$('#options').text('').append(content);
 
-	form.render(null, 'storage');
+	if(data.value == ''){
+		$('#options').text('');
+		form.render(null, 'storage');
+	} else {
+		var content = Admin.renderFormItemMulti(options, data.value);
+		$('#options').text('').append(content);
+		form.render(null, 'storage');
+	}
 });
 
 
@@ -330,11 +390,11 @@ form.on('submit(submit_storage)', function(data){
         success: function(res) {
         	layer.close(index);
             if (res.code != 200 ){
-                layer.msg(res.message, {icon: 2});
+                layer.msg(res.msg, {icon: 2});
             } else if (res.code == 200){
                 setTimeout(function(){
                     parent.location.reload();
-                }, 2000);
+                }, 5000);
             } else {
                 layer.msg("访问异常!", {icon: 2});
             }

@@ -81,6 +81,7 @@ func initAdminStaticPage(r *gin.Engine) {
 	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth, middlewates.SysIsInstalled)
 	gauth.GET("/", handles.IndexPage)
 	gauth.GET("/storage", handles.StoragesPage)
+	gauth.GET("/storage/create", handles.StoragesCreatePage)
 	gauth.GET("/storage/edit", handles.StoragesEditPage)
 
 	gauth.GET("/user", handles.UserPage)

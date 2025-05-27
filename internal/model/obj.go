@@ -2,16 +2,17 @@ package model
 
 import (
 	"io"
+	"os"
 	"sort"
 	"strings"
 	"time"
 
+	"ndm/pkg/http_range"
+	"ndm/pkg/utils"
+
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/dlclark/regexp2"
 	"github.com/maruel/natural"
-
-	"ndm/pkg/http_range"
-	"ndm/pkg/utils"
 )
 
 type ObjUnwrap interface {
@@ -47,7 +48,11 @@ type FileStreamer interface {
 	RangeRead(http_range.Range) (io.Reader, error)
 	//for a non-seekable Stream, if Read is called, this function won't work
 	CacheFullInTempFile() (File, error)
+	SetTmpFile(r *os.File)
+	GetFile() File
 }
+
+type UpdateProgress func(percentage float64)
 
 type URL interface {
 	URL() string

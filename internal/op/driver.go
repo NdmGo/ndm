@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 
 	// "ndm/internal/conf"
+	log "github.com/sirupsen/logrus"
 	"ndm/internal/driver"
 )
 
@@ -16,9 +17,12 @@ var driverMap = map[string]DriverConstructor{}
 var driverInfoMap = map[string]driver.Info{}
 
 func RegisterDriver(driver DriverConstructor) {
-	// log.Infof("register driver: [%s]", config.Name)
+
 	tempDriver := driver()
 	tempConfig := tempDriver.Config()
+
+	log.Infof("register driver: [%s]", tempConfig.Name)
+
 	registerDriverItems(tempConfig, tempDriver.GetAddition())
 	driverMap[tempConfig.Name] = driver
 }

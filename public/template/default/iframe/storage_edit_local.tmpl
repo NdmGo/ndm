@@ -7,38 +7,33 @@
 	    	<label class="layui-form-label">驱动</label>
 	    	<div class="layui-input-block">
                 <select name="driver" lay-filter="driver">
-                    <option value="local" {{if .storage}}{{if eq .storage.Driver "local"}}selected{{end}}{{end}}>本机存储</option>
-                    <option value="s3" {{if .storage}}{{if eq .storage.Driver "s3"}}selected{{end}}{{end}}>对象存储</option>
+                    <option value="local">本机存储</option>
                 </select>
             </div>
 	  	</div>
 
-	  	<div id="options">
-	  		
-	  	</div>
-
-<!-- 	  	<div class="layui-form-item">
+		<div class="layui-form-item">
 	    	<label class="layui-form-label">挂载路径</label>
 	    	<div class="layui-input-block">
                 <input type="mount_path" name="mount_path" value="{{if .storage}}{{.storage.MountPath}}{{end}}" autocomplete="off" class="layui-input" placeholder="要挂载到的路径，它是唯一的，不能重复">
             </div>
-	  	</div> -->
+	  	</div>
 
-<!-- 	  	<div class="layui-form-item">
+		<div class="layui-form-item">
 	    	<label class="layui-form-label">序号</label>
 	    	<div class="layui-input-block">
                 <input type="number" value="{{if .storage}}{{.storage.Order}}{{end}}" name="order" class="layui-input" placeholder="用于排序">
             </div>
-	  	</div> -->
-<!-- 
+	  	</div>
+
         <div class="layui-form-item layui-form-text">
 			<label class="layui-form-label">备注</label>
 			<div class="layui-input-block">
 				<textarea placeholder="备注" class="layui-textarea" name="remark">{{if .storage}}{{.storage.Remark}}{{end}}</textarea>
 			</div>
-		</div> -->
+		</div>
 
-<!--         <div class="layui-form-item">
+        <div class="layui-form-item">
             <label class="layui-form-label">WebDAV策略</label>
             <div class="layui-input-block">
                 <select name="webdav_policy">
@@ -53,8 +48,8 @@
 			<div class="layui-input-block">
 				<textarea placeholder="下载代理URL" class="layui-textarea" name="down_proxy_url">{{if .storage}}{{.storage.DownProxyUrl}}{{end}}</textarea>
 			</div>
-		</div> -->
-<!-- 
+		</div>
+
 		<div class="layui-form-item">
             <label class="layui-form-label">排序</label>
             <div class="layui-input-block">
@@ -65,9 +60,9 @@
                     <option value="mtime">修改时间</option>
                 </select>
             </div>
-        </div> -->
+        </div>
 
-<!--         <div class="layui-form-item">
+        <div class="layui-form-item">
             <label class="layui-form-label">排序方式</label>
             <div class="layui-input-block">
                 <select name="order_direction">
@@ -76,9 +71,9 @@
                     <option value="desc">降序</option>
                 </select>
             </div>
-        </div> -->
+        </div>
 
-<!--         <div class="layui-form-item">
+       <div class="layui-form-item">
             <label class="layui-form-label">提取文件夹</label>
             <div class="layui-input-block">
                 <select name="extract_folder">
@@ -87,23 +82,23 @@
                     <option value="back">提取到最后</option>
                 </select>
             </div>
-        </div> -->
+        </div>
 
-  <!--       <div class="layui-form-item" pane>
+       <div class="layui-form-item" pane>
 			<label class="layui-form-label">启用签名</label>
 		    <div class="layui-input-block">
 				<input type="checkbox" name="enable_sign" lay-skin="switch" title="开关" {{if .storage.EnableSign}}checked{{end}}>
 		    </div>
-		</div> -->
+		</div>
 
-<!-- 		<div class="layui-form-item">
+		<div class="layui-form-item">
 	    	<label class="layui-form-label">根文件夹路径</label>
 	    	<div class="layui-input-block">
                 <input type="text" value="/" name="addition.root_folder_path" class="layui-input" placeholder="根文件夹路径">
             </div>
-	  	</div> -->
+	  	</div>
 
-	  <!-- 	<div class="layui-form-item" pane>
+	  	<div class="layui-form-item" pane>
 			<label class="layui-form-label">缩略图</label>
 		    <div class="layui-input-block">
 				<input type="checkbox" name="addition.thumbnail" lay-skin="switch" title="开关" placeholder="启用缩略图">
@@ -144,7 +139,7 @@
 	    	<div class="layui-input-block">
                 <input type="text" value="" name="addition.recycle_bin_path" class="layui-input" placeholder="回收站的路径，如果空或保留“永久删除”则永久删除">
             </div>
-	  	</div> -->
+	  	</div>
 
         <div class="layui-form-item" style="text-align: center;padding: 10px;">
             <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}">
@@ -164,133 +159,6 @@ var element = layui.element;
 var table = layui.table;
 var laydate = layui.laydate;
 var util = layui.util;
-
-var options = {
-	"local" : [
-		{
-			"tag": "input",
-			"type":"text",
-			"label":"挂载路径",
-			"key": "mount_path",
-			"placeholder":"要挂载到的路径，它是唯一的，不能重复",
-			"default":"",
-		},
-		{
-			"tag": "input",
-			"type":"number",
-			"label":"序号",
-			"key": "order",
-			"placeholder":"用于排序",
-			"default":"0",
-		},
-		{
-			"tag": "textarea",
-			"label":"备注",
-			"key": "remark",
-			"default":"",
-		},
-		{
-			"tag": "select",
-			"label":"WebDAV策略",
-			"key": "webdav_policy",
-			"default":"",
-			"option" :[
-				{"name":"本地代理","value":"native_proxy"},
-				{"name":"使用代理地址","value":"use_proxy_url"}
-			]
-		},
-		{
-			"tag": "textarea",
-			"label":"下载代理URL",
-			"key": "down_proxy_url",
-			"default":"",
-		},
-		{
-			"tag": "select",
-			"label":"排序",
-			"key": "order_by",
-			"option" :[
-				{"name":"选择","value":""},
-				{"name":"名称","value":"name"},
-				{"name":"大小","value":"size"},
-				{"name":"修改时间","value":"mtime"}
-			]
-		},
-		{
-			"tag": "select",
-			"label":"排序方式",
-			"key": "order_direction",
-			"option" :[
-				{"name":"升序","value":"asc"},
-				{"name":"降序","value":"desc"}
-			]
-		},
-		{
-			"tag": "select",
-			"label":"提取文件夹",
-			"key": "extract_folder",
-			"option" :[
-				{"name":"提取到最前","value":"front"},
-				{"name":"提取到最后","value":"back"}
-			]
-		},
-		{
-			"tag": "input_switch",
-			"label":"启用签名",
-			"key": "enable_sign",
-			"checked":false
-		},
-		{
-			"tag": "input",
-			"type":"text",
-			"label":"根文件夹路径",
-			"key": "addition.root_folder_path",
-			"placeholder":"根文件夹路径",
-			"default":"/tmp",
-		},
-		{
-			"tag": "input_switch",
-			"label":"缩略图",
-			"key": "addition.thumbnail",
-			"checked":false
-		},
-		{
-			"tag": "input",
-			"type":"text",
-			"label":"回收站路径",
-			"key": "addition.recycle_bin_path",
-			"placeholder":"回收站的路径，如果空或保留“永久删除”则永久删除",
-			"default":"",
-		},
-		
-	],
-	"s3" : [
-		{
-			"tag": "input",
-			"type":"text",
-			"label":"挂载路径",
-			"key": "mount_path",
-			"placeholder":"要挂载到的路径，它是唯一的，不能重复",
-			"default":"",
-		},
-		{
-			"tag": "input",
-			"type":"text",
-			"label":"挂载路径",
-			"key": "order",
-			"placeholder":"回收站的路径，如果空或保留“永久删除”则永久删除",
-			"default":"0",
-		}
-	],
-};
-
-
-form.on('select(driver)', function(data){
-	var content = Admin.renderFormItemMulti(options, data.value);
-	$('#options').text('').append(content);
-
-	form.render(null, 'storage');
-});
 
 
 form.on('submit(submit_storage)', function(data){
@@ -330,7 +198,7 @@ form.on('submit(submit_storage)', function(data){
         success: function(res) {
         	layer.close(index);
             if (res.code != 200 ){
-                layer.msg(res.message, {icon: 2});
+                layer.msg(res.msg, {icon: 2});
             } else if (res.code == 200){
                 setTimeout(function(){
                     parent.location.reload();

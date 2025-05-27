@@ -2,12 +2,15 @@ package common
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 
 	"ndm/internal/conf"
+	"ndm/internal/utils"
 )
 
 type Resp[T any] struct {
@@ -32,6 +35,11 @@ func CommonVer() map[string]interface{} {
 	data := map[string]interface{}{
 		"title":   "NDM存储管理",
 		"version": conf.App.Version,
+	}
+
+	if !strings.EqualFold(conf.App.RunMode, "prod") {
+		// 开发的时候开启
+		data["version"] = fmt.Sprintf("%s_%s", conf.App.Version, utils.RandString(10))
 	}
 
 	data["admin_path"] = conf.Http.SafePath

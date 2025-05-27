@@ -286,6 +286,65 @@ Admin.prototype.open = function (title,url,w,h,full) {
        layer.full(open);
     }
 };
+
+//Item渲染
+Admin.prototype.renderFormItem = function (obj) {
+    var html = '';
+    for (var oi = 0; oi < obj.length; oi++) {
+        var data = obj[oi];
+        if (data['tag'] == 'input'){
+            html += '<div class="layui-form-item">\
+                <label class="layui-form-label">'+data['label']+'</label>\
+                <div class="layui-input-block">\
+                    <input type="'+data['type']+'" name="'+data['key']+'" value="'+data['default']+'" autocomplete="off" class="layui-input" placeholder="'+data['placeholder']+'">\
+                </div>\
+            </div>';
+        } else if (data['tag'] == 'textarea'){
+            html +=  '<div class="layui-form-item layui-form-text">\
+                <label class="layui-form-label">'+data['label']+'</label>\
+                <div class="layui-input-block">\
+                    <textarea class="layui-textarea" name="'+data['key']+'">'+data['default']+'</textarea>\
+                </div>\
+            </div>';
+        } else if ( data['tag'] == 'select'){
+            var con = '';
+            var option = data['option'];
+            for (var ii = 0; ii < option.length; ii++) {
+                con += '<option value="'+option[ii]['value']+'">'+option[ii]['name']+'</option>';
+            }
+
+            html += '<div class="layui-form-item">\
+                    <label class="layui-form-label">'+data['label']+'</label>\
+                    <div class="layui-input-block">\
+                        <select name="'+data['key']+'">'+con+'</select>\
+                    </div>\
+                </div>';
+        } else if ( data['tag'] == 'input_switch'){
+            html +=  '<div class="layui-form-item" pane>\
+                    <label class="layui-form-label">启用签名</label>\
+                    <div class="layui-input-block">\
+                        <input type="checkbox" name="'+data['key']+'" lay-skin="switch" title="开关" '+((data['checked']) ? 'checked':'')+'>\
+                    </div>\
+                </div>';
+        }
+
+
+
+    }
+
+    return html;
+};
+
+//Item渲染多选
+Admin.prototype.renderFormItemMulti = function (objs, selected) {
+    console.log(objs,selected);
+    console.log(objs[selected]);
+    return this.renderFormItem(objs[selected]);
+};
+
+
+
+
 win.Admin = new Admin();
 ///
 }(window);
