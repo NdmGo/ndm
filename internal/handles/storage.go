@@ -93,7 +93,24 @@ func CreateStorage(c *gin.Context) {
 }
 
 func UpdateStorage(c *gin.Context) {
+	var req model.Storage
+	if err := c.ShouldBind(&req); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
 
+	if strings.EqualFold(req.MountPath, "") {
+		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
+			"id": 0,
+		}, true)
+		return
+	}
+
+	if err := op.UpdateStorage(c, req); err != nil {
+		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
+	} else {
+		common.SuccessResp(c, gin.H{})
+	}
 }
 
 func DeleteStorage(c *gin.Context) {

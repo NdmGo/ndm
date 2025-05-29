@@ -109,7 +109,7 @@ func initRuoteApi(r *gin.Engine) {
 
 	storage := api.Group("/storage")
 	storage.GET("/list", handles.StoragesList)
-	storage.POST("/edit", handles.CreateStorage)
+	storage.POST("/update", handles.UpdateStorage)
 	storage.POST("/create", handles.CreateStorage)
 	storage.POST("/delete", handles.DeleteStorage)
 	storage.POST("/trigger_disable", handles.TriggerDisabledStorage)
