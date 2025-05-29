@@ -13,6 +13,7 @@ import (
 	"ndm/internal/db"
 	"ndm/internal/model"
 	"ndm/internal/op"
+	"ndm/pkg/utils"
 )
 
 func StoragesPage(c *gin.Context) {
@@ -36,6 +37,15 @@ func StoragesEditPage(c *gin.Context) {
 	if err == nil {
 		data["storage"] = storage
 	}
+
+	driverName := storage.Driver
+	driverNew, err := op.GetDriver(driverName)
+	storageDriver := driverNew()
+
+	storageDriver.SetStorage(*storage)
+	driverStorage := storageDriver.GetStorage()
+	utils.Json.UnmarshalFromString(driverStorage.Addition, storageDriver.GetAddition())
+	data["addition"] = storageDriver.GetAddition()
 
 	tpl_name := fmt.Sprintf("storage_edit_%s.tmpl", storage.Driver)
 	c.HTML(http.StatusOK, tpl_name, data)
@@ -61,6 +71,8 @@ func CreateStorage(c *gin.Context) {
 		common.ErrorResp(c, err, 400)
 		return
 	}
+
+	fmt.Println(req)
 
 	if strings.EqualFold(req.MountPath, "") {
 		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
