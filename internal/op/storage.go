@@ -210,25 +210,25 @@ func UpdateStorage(ctx context.Context, storage model.Storage) error {
 	if err != nil {
 		return errors.WithMessage(err, "failed update storage in database")
 	}
-	if storage.Disabled {
-		return nil
-	}
-	storageDriver, err := GetStorageByMountPath(oldStorage.MountPath)
-	if oldStorage.MountPath != storage.MountPath {
-		// mount path renamed, need to drop the storage
-		storagesMap.Delete(oldStorage.MountPath)
-	}
-	if err != nil {
-		return errors.WithMessage(err, "failed get storage driver")
-	}
-	err = storageDriver.Drop(ctx)
-	if err != nil {
-		return errors.Wrapf(err, "failed drop storage")
-	}
+	// if storage.Disabled {
+	// 	return nil
+	// }
+	// storageDriver, err := GetStorageByMountPath(oldStorage.MountPath)
+	// if oldStorage.MountPath != storage.MountPath {
+	// 	// mount path renamed, need to drop the storage
+	// 	storagesMap.Delete(oldStorage.MountPath)
+	// }
+	// if err != nil {
+	// 	return errors.WithMessage(err, "failed get storage driver")
+	// }
+	// err = storageDriver.Drop(ctx)
+	// if err != nil {
+	// 	return errors.Wrapf(err, "failed drop storage")
+	// }
 
-	err = initStorage(ctx, storage, storageDriver)
-	go callStorageHooks("update", storageDriver)
-	log.Debugf("storage %+v is update", storageDriver)
+	// err = initStorage(ctx, storage, storageDriver)
+	// go callStorageHooks("update", storageDriver)
+	// log.Debugf("storage %+v is update", storageDriver)
 	return err
 }
 
