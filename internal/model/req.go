@@ -1,8 +1,9 @@
 package model
 
 type PageReq struct {
-	Page int `json:"page" form:"page"`
-	Size int `json:"size" form:"size"`
+	Page   int    `json:"page" form:"page"`
+	Size   int    `json:"size" form:"size"`
+	Driver string `json:"driver" form:"driver"`
 }
 
 const MaxUint = ^uint(0)
