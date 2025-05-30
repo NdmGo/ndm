@@ -25,17 +25,29 @@
 
                 <div class="layui-inline select100 mr0">
                     <div class="layui-input-inline h30">
-                        <select name="zd">
-                            <option value="name">名称</option>
+                        <select name="driver">
+                            <option value="">所有存储</option>
+                            <option value="local">本机存储</option>
+                            <option value="s3">对象存储</option>
                         </select>
                     </div>
                 </div>
+
+                <!--                 
+                <div class="layui-inline select100 mr0">
+                    <div class="layui-input-inline h30">
+                        <select name="zd">
+                            <option value="">选择</option>
+                        </select>
+                    </div>
+                </div>           
 
                 <div class="layui-inline mr0">
                     <div class="layui-input-inline mr0">
                         <input type="text" name="key" placeholder="请输入关键字" autocomplete="off" class="layui-input h30" value="">
                     </div>
-                </div>
+                </div> 
+                -->
 
                 <div class="layui-inline mr0">
                     <button class="layui-btn layui-btn-sm" id="table-sreach" data-id="list" lay-submit lay-filter="table-sreach">
