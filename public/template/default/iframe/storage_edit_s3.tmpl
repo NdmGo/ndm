@@ -30,7 +30,35 @@
 	  	<div class="layui-form-item">
 	    	<label class="layui-form-label">存储桶</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="{{if .addition}}{{.addition.Bucket}}{{end}}" name="bucket" class="layui-input">
+                <input type="text" value="{{if .addition}}{{.addition.Bucket}}{{end}}" name="addition.bucket" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">Endpoint</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="{{if .addition}}{{.addition.Endpoint}}{{end}}" name="addition.endpoint" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">地区</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="{{if .addition}}{{.addition.Region}}{{end}}" name="addition.region" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">访问密钥ID</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="{{if .addition}}{{.addition.AccessKeyID}}{{end}}" name="addition.access_key_id" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">安全访问密钥</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="{{if .addition}}{{.addition.SecretAccessKey}}{{end}}" name="addition.secret_access_key" class="layui-input">
             </div>
 	  	</div>
 
