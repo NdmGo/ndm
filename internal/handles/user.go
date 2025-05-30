@@ -74,6 +74,7 @@ func UpdateUser(c *gin.Context) {
 		common.ErrorResp(c, err, 400)
 		return
 	}
+	// fmt.Println(req)
 	user, err := db.GetUserById(req.ID)
 	if err != nil {
 		common.ErrorResp(c, err, 500)
