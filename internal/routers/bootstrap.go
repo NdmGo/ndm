@@ -97,6 +97,10 @@ func initAdminStaticPage(r *gin.Engine) {
 
 }
 
+func initFs(fs *gin.RouterGroup) {
+	fs.Any("/list", handles.FsList)
+}
+
 func initRuoteApi(r *gin.Engine) {
 
 	api := r.Group(conf.Http.ApiPath)
@@ -107,6 +111,13 @@ func initRuoteApi(r *gin.Engine) {
 	auth := api.Group("/auth")
 	auth.POST("/login", handles.PostLogin)
 
+	user := api.Group("/user")
+	user.GET("/list", handles.ListUsers)
+	user.POST("/create", handles.CreateUser)
+	user.POST("/update", handles.UpdateUser)
+	user.POST("/cancel_2fa", handles.Cancel2FAById)
+	user.POST("/delete", handles.DeleteUser)
+
 	storage := api.Group("/storage")
 	storage.GET("/list", handles.StoragesList)
 	storage.POST("/update", handles.UpdateStorage)
@@ -114,12 +125,7 @@ func initRuoteApi(r *gin.Engine) {
 	storage.POST("/delete", handles.DeleteStorage)
 	storage.POST("/trigger_disable", handles.TriggerDisabledStorage)
 
-	user := api.Group("/user")
-	user.GET("/list", handles.ListUsers)
-	user.POST("/create", handles.CreateUser)
-	user.POST("/update", handles.UpdateUser)
-	user.POST("/cancel_2fa", handles.Cancel2FAById)
-	user.POST("/delete", handles.DeleteUser)
+	initFs(api.Group("/fs"))
 }
 
 func InitRouters() {

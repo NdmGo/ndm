@@ -15,6 +15,11 @@ import (
 	// "ndm/internal/op"
 )
 
+func Auth(c *gin.Context) {
+	token := c.GetHeader("Authorization")
+	c.Next()
+}
+
 func PageNoAuth(c *gin.Context) {
 	url := fmt.Sprintf("%s", conf.Http.SafePath)
 
@@ -29,7 +34,7 @@ func PageNoAuth(c *gin.Context) {
 		c.Next()
 		return
 	}
-
+	0
 	_, err = db.GetUserByName(userClaims.Username)
 	if err != nil {
 		c.Next()
