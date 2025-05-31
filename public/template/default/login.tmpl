@@ -58,10 +58,12 @@ form.on('submit(ndm-login)', function(d){
         data: JSON.stringify(d.field),
         dataType: 'json',
         success: function(res) {
+            console.log(res);
             if (res.code != 200 ){
-                layer.msg(res.message, {icon: 2});
+                layer.msg(res.msg, {icon: 2});
             } else if (res.code == 200){
                 $.cookie("token", res.data.token, { expires: 7, path: '/'});
+                localStorage.setItem('token', res.data.token);
                 layer.msg("登录成功", {icon: 1});
                 setTimeout(function(){
                     location.href = "{{.admin_path}}";

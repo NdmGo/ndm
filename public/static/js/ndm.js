@@ -52,6 +52,7 @@ laytpl.config({open: '{@', close: '@}'});
 // 设置请求默认值
 $.ajaxSetup({
     beforeSend: function (xhr) {
+        console.log("ddddd ajaxSetup");
         // 将token塞进Header里
         xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
         xhr.setRequestHeader('Powered-By', 'NDM');

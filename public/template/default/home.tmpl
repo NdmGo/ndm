@@ -1,11 +1,15 @@
 {{template "front_header.tmpl" .}}
 
 
-<div class="header">
-	<div>
-		<h2 style="margin-top: 20px;">文件浏览</h2>
-		
+
+<div class="layui-container">
+    <div class="header">
+		<h2 style="padding: 20px;text-align: center;">NDM存储管理</h2>
 	</div>
+</div>
+
+<div class="layui-container">
+    <div id="list" class="bgw divtable"></div>
 </div>
 
 
@@ -16,6 +20,46 @@
         </div>
     </div>
 </div>
+
+<script>
+layui.use(function(){
+///
+var layer = layui.layer;
+var form = layui.form;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+table.render({
+    elem: '#list',
+    url: '{{.api_path}}/storage/list',
+    request: {
+        pageName: 'page',
+        limitName: 'size'
+    },
+    defaultToolbar: [],
+    title: '数据表',
+    cols: [[
+        {field:'mount_path', title:'名称'},
+        {field:'order', title:'序号'},
+        {field:'remark', title:'备注', width:180},
+    ]],
+    page: true,
+    where:[],
+});
+
+// refresh
+$("#refresh").click(function(){
+    table.reload("list");
+});
+
+
+// 添加
+
+///
+});
+</script>
+
 
 
 {{template "front_footer.tmpl" .}}
