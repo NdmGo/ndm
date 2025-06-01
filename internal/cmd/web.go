@@ -30,7 +30,7 @@ func runWeb(c *cli.Context) error {
 		db.InitDb()
 		userdata.InitAdmin("admin", "admin")
 	}
-
+	routers.LoadStorages()
 	routers.InitRouters()
 	return nil
 }

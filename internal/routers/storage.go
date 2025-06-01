@@ -2,12 +2,13 @@ package routers
 
 import (
 	"context"
+	// "fmt"
 
-	// "ndm/internal/conf"
 	"ndm/internal/db"
 	"ndm/internal/model"
 	"ndm/internal/op"
 	"ndm/pkg/utils"
+	// log "github.com/sirupsen/logrus"
 )
 
 func LoadStorages() {
@@ -15,6 +16,7 @@ func LoadStorages() {
 	if err != nil {
 		utils.Log.Fatalf("failed get enabled storages: %+v", err)
 	}
+
 	go func(storages []model.Storage) {
 		for i := range storages {
 			err := op.LoadStorage(context.Background(), storages[i])
