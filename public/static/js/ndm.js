@@ -36,6 +36,12 @@ function array2arr(sa){
     return t;
 }
 
+// .config({
+//   headers: {
+//     'Authorization': 'Bearer ' + localStorage.getItem('token'),
+//     'X-Powered-By': 'NDM'
+//   }
+// })
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
 var $ = layui.$;
@@ -328,9 +334,6 @@ Admin.prototype.renderFormItem = function (obj) {
                     </div>\
                 </div>';
         }
-
-
-
     }
 
     return html;

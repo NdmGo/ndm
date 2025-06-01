@@ -22,23 +22,63 @@
 </div>
 
 <script>
-layui.use(function(){
+
+layui.config({
+	headers: {
+    	'X-Client-Type': 'web',
+    	'X-Client-Version': '1.0.0'
+  	}
+});
+
+layui.use(['layer','form','element','jquery','table','laydate','util'],function(){
 ///
+var $ = layui.$;
 var layer = layui.layer;
 var form = layui.form;
 var table = layui.table;
 var laydate = layui.laydate;
 var util = layui.util;
 
+
+$.ajaxSetup({
+	beforeSend: function (xhr) {
+        console.log("ddddd ajaxSetup");
+        // 将token塞进Header里
+        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+        xhr.setRequestHeader('Powered-By', 'NDM');
+    },
+});
+
+layui.table.set({
+  	request: {
+	    headers: {
+	      'X-Table-Request': 'true11'
+	    },
+	    pageName: 'page',
+	    limitName: 'size'
+  	},
+	response: {
+	    statusName: 'code',
+	    statusCode: 200,
+	    msgName: 'message',
+	    countName: 'total',
+	    dataName: 'data'
+	}
+});
+
 table.render({
+	headers: {
+      'Authorization': localStorage.getItem('token')
+    },
     elem: '#list',
-    url: '{{.api_path}}/storage/list',
+    url: '{{.api_path}}/fs/list',
     request: {
         pageName: 'page',
         limitName: 'size'
     },
     defaultToolbar: [],
     title: '数据表',
+    method: 'post',
     cols: [[
         {field:'mount_path', title:'名称'},
         {field:'order', title:'序号'},

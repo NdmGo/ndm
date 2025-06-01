@@ -13,10 +13,49 @@ import (
 	"ndm/internal/db"
 	// "ndm/internal/model"
 	// "ndm/internal/op"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func Auth(c *gin.Context) {
-	// token := c.GetHeader("Authorization")
+	token := c.GetHeader("Authorization")
+
+	userClaims, err := common.ParseToken(token)
+	if err != nil {
+		common.ErrorResp(c, err, 401)
+		c.Abort()
+		return
+	}
+
+	user, err := db.GetUserByName(userClaims.Username)
+	if err != nil {
+		common.ErrorResp(c, err, 401)
+		c.Abort()
+		return
+	}
+
+	// validate password timestamp
+	if userClaims.PwdTS != user.PwdTS {
+		common.ErrorStrResp(c, "Password has been changed, login please", 401)
+		c.Abort()
+		return
+	}
+	if user.Disabled {
+		common.ErrorStrResp(c, "Current user is disabled, replace please", 401)
+		c.Abort()
+		return
+	}
+
+	now_time := time.Now().Unix()
+	token_expire_time := userClaims.RegisteredClaims.ExpiresAt.Unix()
+	if now_time > token_expire_time {
+		common.ErrorStrResp(c, "Login has expired, login please", 401)
+		c.Abort()
+		return
+	}
+
+	c.Set("user", user)
+	log.Debugf("use login token: %+v", user)
 	c.Next()
 }
 

@@ -12,6 +12,7 @@ import (
 	// "ndm/internal/db"
 	"ndm/internal/model"
 	// "ndm/internal/op"
+	"ndm/internal/fs"
 	"ndm/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -67,6 +68,14 @@ func FsList(c *gin.Context) {
 		common.ErrorResp(c, err, 403)
 		return
 	}
+	reqPath = "/zzzkan"
+	objs, err := fs.List(c, reqPath, &fs.ListArgs{Refresh: req.Refresh})
+	if err != nil {
+		common.ErrorResp(c, err, 500)
+		return
+	}
+
+	fmt.Println(user, objs)
 
 	fmt.Println(req)
 	fmt.Println(reqPath)

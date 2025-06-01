@@ -68,6 +68,7 @@ func InstallConf(data map[string]string) error {
 
 	api_path := fmt.Sprintf("/api_%s", utils.RandString(6))
 	File.Section("http").Key("api_path").SetValue(api_path)
+	File.Section("http").Key("temp_dir").SetValue("/temp")
 	File.Section("http").Key("debug").SetValue("false")
 
 	if strings.EqualFold(data["type"], "mysql") {
