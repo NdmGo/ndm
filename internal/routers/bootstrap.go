@@ -14,7 +14,6 @@ import (
 	"ndm/internal/logs"
 	"ndm/internal/middlewates"
 	// "ndm/internal/utils"
-	"ndm/internal/common"
 	"ndm/public"
 )
 
@@ -36,13 +35,15 @@ func ndmStatic(r *gin.Engine, noRoute func(handlers ...gin.HandlerFunc)) {
 		r.StaticFS(fmt.Sprintf("/%s/", folders[i]), http.FS(sub))
 	}
 
-	noRoute(func(c *gin.Context) {
-		c.Header("Content-Type", "text/html")
-		c.Status(200)
-		_, _ = c.Writer.WriteString("not find")
-		c.Writer.Flush()
-		c.Writer.WriteHeaderNow()
-	})
+	// noRoute(func(c *gin.Context) {
+	// 	c.Header("Content-Type", "text/html")
+	// 	c.Status(200)
+	// 	_, _ = c.Writer.WriteString("not find")
+	// 	c.Writer.Flush()
+	// 	c.Writer.WriteHeaderNow()
+	// })
+
+	noRoute(handles.HomePage)
 }
 
 func initStaticFunc(r *gin.Engine) {
@@ -60,10 +61,6 @@ func initStaticFunc(r *gin.Engine) {
 }
 
 func initAdminStaticPage(r *gin.Engine) {
-	//static file
-	ndmStatic(r, func(handlers ...gin.HandlerFunc) {
-		r.NoRoute(handlers...)
-	})
 
 	initStaticFunc(r)
 	g := r.Group(conf.Http.SafePath)
@@ -79,7 +76,7 @@ func initAdminStaticPage(r *gin.Engine) {
 	gnoauth.GET("/login", handles.LoginPage)
 
 	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth, middlewates.SysIsInstalled)
-	gauth.GET("/", handles.IndexPage)
+	gauth.GET("/", handles.AdminPage)
 	gauth.GET("/storage", handles.StoragesPage)
 	gauth.GET("/storage/create", handles.StoragesCreatePage)
 	gauth.GET("/storage/edit", handles.StoragesEditPage)
@@ -94,6 +91,11 @@ func initAdminStaticPage(r *gin.Engine) {
 	gauth.GET("/setting", handles.SettingPage)
 	gauth.GET("/task", handles.TaskPage)
 	gauth.GET("/plugins", handles.PluginsPage)
+
+	//static file
+	ndmStatic(r, func(handlers ...gin.HandlerFunc) {
+		r.NoRoute(handlers...)
+	})
 
 }
 
@@ -138,10 +140,7 @@ func InitRouters() {
 	r := gin.Default()
 
 	home := r.Group("", middlewates.SysIsInstalled)
-	home.GET("/", func(c *gin.Context) {
-		data := common.CommonVer()
-		c.HTML(http.StatusOK, "home.tmpl", data)
-	})
+	home.GET("/", handles.HomePage)
 
 	r.SetTrustedProxies(nil)
 	initAdminStaticPage(r)
