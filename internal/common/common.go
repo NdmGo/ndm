@@ -2,6 +2,7 @@ package common
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -45,6 +46,11 @@ func CommonVer() map[string]interface{} {
 	data["admin_path"] = conf.Http.SafePath
 	data["api_path"] = conf.Http.ApiPath
 	return data
+}
+
+func ToJson(v interface{}) (d string) {
+	rdata, _ := json.MarshalIndent(v, "", "  ")
+	return string(rdata)
 }
 
 // ErrorResp is used to return error response

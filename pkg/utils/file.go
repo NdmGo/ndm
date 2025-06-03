@@ -140,11 +140,11 @@ func CreateTempFile(r io.Reader, size int64) (*os.File, error) {
 
 // GetFileType get file type
 func GetFileType(filename string) int {
-	// ext := strings.ToLower(Ext(filename))
+	ext := strings.ToLower(Ext(filename))
 	//
-	//	if SliceContains(conf.SlicesMap[conf.AudioTypes], ext) {
-	//		return conf.AUDIO
-	//	}
+	if SliceContains(conf.SlicesMap[conf.AudioTypes], ext) {
+		return conf.AUDIO
+	}
 	//
 	//	if SliceContains(conf.SlicesMap[conf.VideoTypes], ext) {
 	//		return conf.VIDEO
@@ -161,12 +161,12 @@ func GetFileType(filename string) int {
 	return conf.UNKNOWN
 }
 
-// func GetObjType(filename string, isDir bool) int {
-// 	if isDir {
-// 		return conf.FOLDER
-// 	}
-// 	return GetFileType(filename)
-// }
+func GetObjType(filename string, isDir bool) int {
+	if isDir {
+		return conf.FOLDER
+	}
+	return GetFileType(filename)
+}
 
 var extraMimeTypes = map[string]string{
 	".apk": "application/vnd.android.package-archive",

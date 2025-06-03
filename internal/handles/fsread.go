@@ -68,16 +68,67 @@ func FsList(c *gin.Context) {
 		common.ErrorResp(c, err, 403)
 		return
 	}
-	reqPath = "/zzzkan"
+	// reqPath = "/"
 	objs, err := fs.List(c, reqPath, &fs.ListArgs{Refresh: req.Refresh})
 	if err != nil {
 		common.ErrorResp(c, err, 500)
 		return
 	}
 
-	fmt.Println(user, objs)
-
-	fmt.Println(req)
+	fmt.Println(common.ToJson(objs), err)
 	fmt.Println(reqPath)
 
+	total, objs := pagination(objs, &req.PageReq)
+	provider := "unknown"
+
+	storage, err := fs.GetStorage(reqPath, &fs.GetStoragesArgs{})
+	if err == nil {
+		provider = storage.GetStorage().Driver
+	}
+
+	common.SuccessResp(c, FsListResp{
+		Content: toObjsResp(objs, reqPath),
+		Total:   int64(total),
+		// Readme: getReadme(meta, reqPath),
+		// Header: getHeader(meta, reqPath),
+		// Write:    user.CanWrite() || common.CanWrite(meta, reqPath),
+		Provider: provider,
+	})
+
+}
+
+func pagination(objs []model.Obj, req *model.PageReq) (int, []model.Obj) {
+	pageIndex, pageSize := req.Page, req.Size
+	total := len(objs)
+	start := (pageIndex - 1) * pageSize
+	if start > total {
+		return total, []model.Obj{}
+	}
+	end := start + pageSize
+	if end > total {
+		end = total
+	}
+	return total, objs[start:end]
+}
+
+func toObjsResp(objs []model.Obj, parent string) []ObjResp {
+	var resp []ObjResp
+	for _, obj := range objs {
+		// thumb, _ := model.GetThumb(obj)
+		resp = append(resp, ObjResp{
+			Id:          obj.GetID(),
+			Path:        obj.GetPath(),
+			Name:        obj.GetName(),
+			Size:        obj.GetSize(),
+			IsDir:       obj.IsDir(),
+			Modified:    obj.ModTime(),
+			Created:     obj.CreateTime(),
+			HashInfoStr: obj.GetHash().String(),
+			HashInfo:    obj.GetHash().Export(),
+			// Sign:        common.Sign(obj, parent, encrypt),
+			// Thumb: thumb,
+			Type: utils.GetObjType(obj.GetName(), obj.IsDir()),
+		})
+	}
+	return resp
 }

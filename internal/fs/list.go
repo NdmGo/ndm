@@ -8,7 +8,7 @@ import (
 	"ndm/internal/op"
 	"ndm/pkg/utils"
 
-	// "github.com/pkg/errors"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -16,12 +16,14 @@ import (
 func list(ctx context.Context, path string, args *ListArgs) ([]model.Obj, error) {
 	// meta, _ := ctx.Value("meta").(*model.Meta)
 	// user, _ := ctx.Value("user").(*model.User)
-	// virtualFiles := op.GetStorageVirtualFilesByPath(path)
+	virtualFiles := op.GetStorageVirtualFilesByPath(path)
 	storage, actualPath, err := op.GetStorageAndActualPath(path)
 
 	// if err != nil && len(virtualFiles) == 0 {
 	// 	return nil, errors.WithMessage(err, "failed get storage")
 	// }
+
+	fmt.Println(virtualFiles)
 
 	fmt.Println(storage, actualPath, err)
 
@@ -31,13 +33,14 @@ func list(ctx context.Context, path string, args *ListArgs) ([]model.Obj, error)
 			ReqPath: path,
 			Refresh: args.Refresh,
 		})
+
 		if err != nil {
 			if !args.NoLog {
 				log.Errorf("fs/list: %+v", err)
 			}
-			// if len(virtualFiles) == 0 {
-			// 	return nil, errors.WithMessage(err, "failed get objs")
-			// }
+			if len(virtualFiles) == 0 {
+				return nil, errors.WithMessage(err, "failed get objs")
+			}
 		}
 	}
 
@@ -45,7 +48,9 @@ func list(ctx context.Context, path string, args *ListArgs) ([]model.Obj, error)
 	// if whetherHide(user, meta, path) {
 	// 	om.InitHideReg(meta.Hide)
 	// }
-	objs := om.Merge(_objs)
+	objs := om.Merge(_objs, virtualFiles...)
+
+	fmt.Println("list:", objs)
 	return objs, nil
 }
 
