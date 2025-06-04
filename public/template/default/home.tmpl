@@ -57,15 +57,15 @@ $.post('{{.api_path}}/fs/list', function(data){
 
         for (var i = 0; i < list.length; i++) {
             body += '<tr style="border: 0 none;">';
-            body += '<td>'+list[i]['name']+'</td>';
+            body += '<td>'+'<span class="ico ico-folder"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
 
             if (list[i]['is_dir']){
-                body += '<td style="text-align:right;">-</td>';
+                body += '<td style="text-align:right;"><a class="text">-</a></td>';
             } else {
-                body += '<td style="text-align:right;">'+list[i]['size']+'</td>';
+                body += '<td style="text-align:right;"><a class="text">'+list[i]['size']+'</a></td>';
             }
             
-            body += '<td style="text-align:right;">'+isoTimeFormat(list[i]['modified'])+'</td>';
+            body += '<td style="text-align:right;"><a class="text">'+isoTimeFormat(list[i]['modified'])+'</a></td>';
             body += '</tr>';
         }
 
