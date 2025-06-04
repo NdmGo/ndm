@@ -4,11 +4,11 @@
 
 <div class="layui-container">
     <div class="header">
-		<h2 style="padding: 20px;text-align: center;">NDM存储管理</h2>
-	</div>
+        <h2 style="padding: 20px;text-align: center;">NDM存储管理</h2>
+    </div>
 </div>
 
-<div class="layui-container">
+<div class="layui-container" style="width:70%;min-width: 500px;">
     <div id="list" class="bgw divtable"></div>
 </div>
 
@@ -16,20 +16,12 @@
 <div class="layui-container">
     <div class="layui-row">
         <div class="layui-col-md12">
-            <table id="list" lay-filter="ndm-list"></table>
+            <table id="list2" lay-filter="ndm-list"></table>
         </div>
     </div>
 </div>
 
 <script>
-
-layui.config({
-	headers: {
-    	'X-Client-Type': 'web',
-    	'X-Client-Version': '1.0.0'
-  	}
-});
-
 layui.use(['layer','form','element','jquery','table','laydate','util'],function(){
 ///
 var $ = layui.$;
@@ -40,58 +32,88 @@ var laydate = layui.laydate;
 var util = layui.util;
 
 
-$.ajaxSetup({
-	beforeSend: function (xhr) {
-        console.log("ddddd ajaxSetup");
-        // 将token塞进Header里
-        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-        xhr.setRequestHeader('Powered-By', 'NDM');
-    },
+// layui.table.set({
+//      request: {
+//      headers: {
+//        'X-Table-Request': 'true11'
+//      },
+//      pageName: 'page',
+//      limitName: 'size'
+//      },
+//  response: {
+//      statusName: 'code',
+//      statusCode: 200,
+//      msgName: 'message',
+//      countName: 'total',
+//      dataName: 'data'
+//  }
+// });
+
+$.post('{{.api_path}}/fs/list', function(data){
+
+    var body = '';
+    if (data.code==200){
+        var list = data['data']['content'];
+
+        for (var i = 0; i < list.length; i++) {
+            body += '<tr style="border: 0 none;">';
+            body += '<td>'+list[i]['name']+'</td>';
+
+            if (list[i]['is_dir']){
+                body += '<td style="text-align:right;">-</td>';
+            } else {
+                body += '<td style="text-align:right;">'+list[i]['size']+'</td>';
+            }
+            
+            body += '<td style="text-align:right;">'+isoTimeFormat(list[i]['modified'])+'</td>';
+            body += '</tr>';
+        }
+
+    } else {
+
+    }
+
+    var content = '<div class="divtable">\
+                    <table class="table table-hover" width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 0 none;">\
+                    <thead>\
+                        <tr>\
+                            <td style="width:50%;">名称</td>\
+                            <td style="width:20%;text-align:right;">大小</td>\
+                            <td style="width:30%;text-align:right;">时间</td>\
+                        </tr>\
+                    </thead>\
+                    <tbody>'+body+'<tbody>\
+                    </table>\
+                </div>';
+    $('#list').html(content);
 });
 
-layui.table.set({
-  	request: {
-	    headers: {
-	      'X-Table-Request': 'true11'
-	    },
-	    pageName: 'page',
-	    limitName: 'size'
-  	},
-	response: {
-	    statusName: 'code',
-	    statusCode: 200,
-	    msgName: 'message',
-	    countName: 'total',
-	    dataName: 'data'
-	}
-});
+// table.render({
+//  headers: {
+//       'Authorization': localStorage.getItem('token')
+//     },
+//     elem: '#list2',
+//     url: '{{.api_path}}/fs/list',
+//     request: {
+//         pageName: 'page',
+//         limitName: 'size'
+//     },
+//     defaultToolbar: [],
+//     title: '数据表',
+//     method: 'post',
+//     cols: [[
+//         {field:'mount_path', title:'名称'},
+//         {field:'order', title:'序号'},
+//         {field:'remark', title:'备注', width:180},
+//     ]],
+//     page: true,
+//     where:[],
+// });
 
-table.render({
-	headers: {
-      'Authorization': localStorage.getItem('token')
-    },
-    elem: '#list',
-    url: '{{.api_path}}/fs/list',
-    request: {
-        pageName: 'page',
-        limitName: 'size'
-    },
-    defaultToolbar: [],
-    title: '数据表',
-    method: 'post',
-    cols: [[
-        {field:'mount_path', title:'名称'},
-        {field:'order', title:'序号'},
-        {field:'remark', title:'备注', width:180},
-    ]],
-    page: true,
-    where:[],
-});
-
-// refresh
-$("#refresh").click(function(){
-    table.reload("list");
-});
+// // refresh
+// $("#refresh").click(function(){
+//     table.reload("list");
+// });
 
 
 // 添加

@@ -36,12 +36,26 @@ function array2arr(sa){
     return t;
 }
 
-// .config({
-//   headers: {
-//     'Authorization': 'Bearer ' + localStorage.getItem('token'),
-//     'X-Powered-By': 'NDM'
-//   }
-// })
+function isoTimeFormat(isoDateStr){
+    // const isoDateStr = "2025-05-30T00:51:42.721+08:00";
+
+    // 1. 解析 ISO 时间字符串
+    const date = new Date(isoDateStr);
+
+    // 2. 提取年月日时分秒
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 0-11 → 补0
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    // 3. 组合成目标格式
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    // console.log(formattedDate); // 输出: "2025-05-30 00:51:42"
+    return formattedDate
+}
+
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
 var $ = layui.$;
@@ -56,11 +70,10 @@ var laytpl = layui.laytpl;
 laytpl.config({open: '{@', close: '@}'});
 
 // 设置请求默认值
+
 $.ajaxSetup({
     beforeSend: function (xhr) {
-        console.log("ddddd ajaxSetup");
-        // 将token塞进Header里
-        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
         xhr.setRequestHeader('Powered-By', 'NDM');
     },
     complete: function (xhr) {
@@ -73,7 +86,6 @@ $.ajaxSetup({
         // }
     },
 });
-
 
 //监听table表单搜索
 form.on('submit(table-sreach)', function (data) {

@@ -236,4 +236,8 @@ div {
     border-bottom: 2px solid #20a53a;
 }
 
+#list td{
+    border: 0px;
+}
+
 

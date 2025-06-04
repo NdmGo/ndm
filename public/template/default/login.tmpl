@@ -58,7 +58,7 @@ form.on('submit(ndm-login)', function(d){
         data: JSON.stringify(d.field),
         dataType: 'json',
         success: function(res) {
-            console.log(res);
+            // console.log(res);
             if (res.code != 200 ){
                 layer.msg(res.msg, {icon: 2});
             } else if (res.code == 200){
