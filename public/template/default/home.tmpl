@@ -49,14 +49,22 @@ var util = layui.util;
 //  }
 // });
 
-$.post('{{.api_path}}/fs/list', function(data){
+var args = {
+    page: 1,
+    password : "",
+    path : location.pathname,
+    per_page: 0,
+    refresh: false,
+}
+
+$.post('{{.api_path}}/fs/list', args, function(data){
 
     var body = '';
     if (data.code==200){
         var list = data['data']['content'];
 
         for (var i = 0; i < list.length; i++) {
-            body += '<tr style="border: 0 none;">';
+            body += '<tr style="border: 0 none;" file="'+location.pathname+"/"+list[i]['name']+'" >';
             body += '<td>'+'<span class="ico ico-folder"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
 
             if (list[i]['is_dir']){
@@ -89,8 +97,11 @@ $.post('{{.api_path}}/fs/list', function(data){
 
 
     $('#list tr').click(function(){
+        // console.log($(this));
+        var fname = $(this).attr("file");
+        // console.log(fname);
+        location.href = fname;
 
-        
     });
 });
 
