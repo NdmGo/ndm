@@ -245,6 +245,16 @@ div {
 }
 
 
+.layui-breadcrumb-ndm span[lay-separator] {
+    margin: 0 10px;
+    color: #999;
+}
+
+.layui-breadcrumb-ndm a {
+    color: #999 !important;
+}
+
+
 #list td{
     border: 0px;
     text-decoration: none;

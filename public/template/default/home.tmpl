@@ -10,11 +10,9 @@
 
 <div class="layui-container" style="width:70%;min-width: 500px;">
     <div id="nav">
-        <span class="layui-breadcrumb">
+        <span class="layui-breadcrumb-ndm" lay-filter="ndm-nav">
             <a href="/">🏠主页</a>
-            <a href="">国际新闻</a>
-            <a href="">亚太地区</a>
-            <a><cite>正文</cite></a>
+            <span class="other"></span>
         </span>
     </div>
     <div id="list" class="bgw divtable"></div>
@@ -40,33 +38,35 @@ var laydate = layui.laydate;
 var util = layui.util;
 
 
-// layui.table.set({
-//      request: {
-//      headers: {
-//        'X-Table-Request': 'true11'
-//      },
-//      pageName: 'page',
-//      limitName: 'size'
-//      },
-//  response: {
-//      statusName: 'code',
-//      statusCode: 200,
-//      msgName: 'message',
-//      countName: 'total',
-//      dataName: 'data'
-//  }
-// });
 
-var args = {
-    page: 1,
-    password : "",
-    path : location.pathname,
-    per_page: 0,
-    refresh: false,
+function makeBreadcrumb(){
+    var path = location.pathname;
+    if (path == '') {
+        return;
+    }
+
+    var parr = path.split("/");
+    parr.shift();
+
+    var con = '';
+    var parr_len = parr.length;
+    for (var i = 0; i < parr.length; i++) {
+        var nparr = parr.slice(0,i+1);
+        var url = '/'+nparr.join('/');
+        con += '<span lay-separator="">/</span><a href="'+url+'">'+parr[i]+'</a>';
+    }
+    $('.layui-breadcrumb-ndm .other').html(con);
 }
 
 
-function renderList(){
+function renderList(req_path){
+    var args = {
+        page: 1,
+        password : "",
+        path : req_path,
+        per_page: 0,
+        refresh: false,
+    }
 
     var content = '<div class="divtable">\
             <table class="table table-hover" width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 0 none;">\
@@ -74,7 +74,7 @@ function renderList(){
                 <tr>\
                     <td style="width:50%;">名称</td>\
                     <td style="width:20%;text-align:right;">大小</td>\
-                    <td style="width:30%;text-align:right;">时间</td>\
+                    <td style="width:30%;text-align:right;">修改时间</td>\
                 </tr>\
             </thead>\
             <tbody></tbody>\
@@ -85,6 +85,8 @@ function renderList(){
     var loadT = layer.msg('正在获取...', { icon: 16, time: 0, shade: 0.3 });
     $.post('{{.api_path}}/fs/list', args, function(data){
         layer.close(loadT);
+
+        makeBreadcrumb();
 
         var body = '';
         if (data.code==200){
@@ -123,13 +125,15 @@ function renderList(){
         $('#list tr').click(function(){
             var fname = $(this).attr("file");
             if (fname){
-                location.href = fname;
+                window.history.pushState({}, '', fname);
+                renderList(fname);
+                // location.href = fname;
             }
         });
     });
 }
 
-renderList();
+renderList(location.pathname);
 
 
 
