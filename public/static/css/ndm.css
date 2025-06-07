@@ -254,6 +254,11 @@ div {
     color: #999 !important;
 }
 
+.layui-breadcrumb-ndm span {
+    color: #999 !important;
+    cursor:pointer;
+}
+
 
 #list td{
     border: 0px;

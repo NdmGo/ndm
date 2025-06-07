@@ -53,11 +53,27 @@ function makeBreadcrumb(){
     for (var i = 0; i < parr.length; i++) {
         var nparr = parr.slice(0,i+1);
         var url = '/'+nparr.join('/');
-        con += '<span lay-separator="">/</span><a href="'+url+'">'+parr[i]+'</a>';
+        con += '<span lay-separator="">/</span><span path="'+url+'">'+parr[i]+'</span>';
     }
     $('.layui-breadcrumb-ndm .other').html(con);
+
+    $('.layui-breadcrumb-ndm .other span').click(function(){
+        var path = $(this).attr("path");
+        window.history.pushState({}, '', path);
+        renderList(path);
+    });
 }
 
+
+function renderInfo(req_path){
+    var args = {
+        password : "",
+        path : req_path,
+    }
+    $.post('{{.api_path}}/fs/get', args, function(data){
+        console.log(data);
+    });
+}
 
 function renderList(req_path){
     var args = {
@@ -133,6 +149,7 @@ function renderList(req_path){
     });
 }
 
+renderInfo(location.pathname);
 renderList(location.pathname);
 
 ///
