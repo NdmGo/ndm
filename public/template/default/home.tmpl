@@ -41,7 +41,8 @@ var util = layui.util;
 
 function makeBreadcrumb(){
     var path = location.pathname;
-    if (path == '') {
+
+    if (path == '' || path == '/') {
         return;
     }
 
