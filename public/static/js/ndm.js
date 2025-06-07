@@ -36,6 +36,17 @@ function array2arr(sa){
     return t;
 }
 
+function toSize(a) {
+    var d = [" B", " KB", " MB", " GB", " TB", " PB"];
+    var e = 1024;
+    for(var b = 0; b < d.length; b++) {
+        if(a < e) {
+            return(b == 0 ? a : a.toFixed(2)) + d[b]
+        }
+        a /= e;
+    }
+}
+
 function isoTimeFormat(isoDateStr){
     // const isoDateStr = "2025-05-30T00:51:42.721+08:00";
 
