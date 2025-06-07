@@ -101,6 +101,7 @@ func initAdminStaticPage(r *gin.Engine) {
 
 func initFs(fs *gin.RouterGroup) {
 	fs.Any("/list", handles.FsList)
+	fs.Any("/get", handles.FsGet)
 }
 
 func initRuoteApi(r *gin.Engine) {

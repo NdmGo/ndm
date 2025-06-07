@@ -5,14 +5,16 @@ import (
 	"fmt"
 	// "net/http"
 	// "strconv"
-	// "strings"
+	// stdpath "path"
+	"strings"
 	"time"
 
 	"ndm/internal/common"
 	// "ndm/internal/db"
+	"ndm/internal/fs"
 	"ndm/internal/model"
 	// "ndm/internal/op"
-	"ndm/internal/fs"
+	"ndm/internal/sign"
 	"ndm/pkg/utils"
 
 	"github.com/gin-gonic/gin"
@@ -131,4 +133,117 @@ func toObjsResp(objs []model.Obj, parent string) []ObjResp {
 		})
 	}
 	return resp
+}
+
+type FsGetReq struct {
+	Path     string `json:"path" form:"path"`
+	Password string `json:"password" form:"password"`
+}
+
+type FsGetResp struct {
+	ObjResp
+	RawURL   string    `json:"raw_url"`
+	Readme   string    `json:"readme"`
+	Header   string    `json:"header"`
+	Provider string    `json:"provider"`
+	Related  []ObjResp `json:"related"`
+}
+
+func FsGet(c *gin.Context) {
+	var req FsGetReq
+	if err := c.ShouldBind(&req); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	user := c.MustGet("user").(*model.User)
+	reqPath, err := user.JoinPath(req.Path)
+	if err != nil {
+		common.ErrorResp(c, err, 403)
+		return
+	}
+
+	obj, err := fs.Get(c, reqPath, &fs.GetArgs{})
+	if err != nil {
+		common.ErrorResp(c, err, 500)
+		return
+	}
+	var rawURL string
+
+	storage, err := fs.GetStorage(reqPath, &fs.GetStoragesArgs{})
+	provider := "unknown"
+	if err == nil {
+		provider = storage.Config().Name
+	}
+
+	if !obj.IsDir() {
+		if err != nil {
+			common.ErrorResp(c, err, 500)
+			return
+		}
+
+		if storage.Config().MustProxy() || storage.GetStorage().WebProxy {
+			query := ""
+			// if isEncrypt(meta, reqPath) || setting.GetBool(conf.SignAll) {
+			query = "?sign=" + sign.Sign(reqPath)
+			// }
+			if storage.GetStorage().DownProxyUrl != "" {
+				rawURL = fmt.Sprintf("%s%s?sign=%s",
+					strings.Split(storage.GetStorage().DownProxyUrl, "\n")[0],
+					utils.EncodePath(reqPath, true),
+					sign.Sign(reqPath))
+			} else {
+				rawURL = fmt.Sprintf("%s/p%s%s",
+					common.GetApiUrl(c.Request),
+					utils.EncodePath(reqPath, true),
+					query)
+			}
+		} else {
+			// file have raw url
+			if url, ok := model.GetUrl(obj); ok {
+				rawURL = url
+			} else {
+				// if storage is not proxy, use raw url by fs.Link
+				link, _, err := fs.Link(c, reqPath, model.LinkArgs{
+					IP:       c.ClientIP(),
+					Header:   c.Request.Header,
+					HttpReq:  c.Request,
+					Redirect: true,
+				})
+				if err != nil {
+					common.ErrorResp(c, err, 500)
+					return
+				}
+				rawURL = link.URL
+			}
+		}
+	}
+
+	// var related []model.Obj
+	// parentPath := stdpath.Dir(reqPath)
+	// sameLevelFiles, err := fs.List(c, parentPath, &fs.ListArgs{})
+	// if err == nil {
+	// 	related = filterRelated(sameLevelFiles, obj)
+	// }
+	// parentMeta, _ := op.GetNearestMeta(parentPath)
+	common.SuccessResp(c, FsGetResp{
+		ObjResp: ObjResp{
+			Id:          obj.GetID(),
+			Path:        obj.GetPath(),
+			Name:        obj.GetName(),
+			Size:        obj.GetSize(),
+			IsDir:       obj.IsDir(),
+			Modified:    obj.ModTime(),
+			Created:     obj.CreateTime(),
+			HashInfoStr: obj.GetHash().String(),
+			HashInfo:    obj.GetHash().Export(),
+			// Sign:        common.Sign(obj, parentPath, isEncrypt(meta, reqPath)),
+			Type: utils.GetFileType(obj.GetName()),
+		},
+		RawURL: rawURL,
+		// Readme:   getReadme(meta, reqPath),
+		// Header:   getHeader(meta, reqPath),
+		Provider: provider,
+		// Related:  toObjsResp(related, parentPath, isEncrypt(parentMeta, parentPath)),
+	})
 }

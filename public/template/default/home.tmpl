@@ -41,7 +41,6 @@ var util = layui.util;
 
 function makeBreadcrumb(){
     var path = location.pathname;
-
     if (path == '' || path == '/') {
         return;
     }
@@ -86,7 +85,6 @@ function renderList(req_path){
     var loadT = layer.msg('正在获取...', { icon: 16, time: 0, shade: 0.3 });
     $.post('{{.api_path}}/fs/list', args, function(data){
         layer.close(loadT);
-
         makeBreadcrumb();
 
         var body = '';
@@ -107,7 +105,8 @@ function renderList(req_path){
                     body += '<td>'+'<span class="ico ico-file"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
                 }
 
-                if (list[i]['is_dir'] || list[i]['size']==0){
+                // || list[i]['size']==0
+                if (list[i]['is_dir']){
                     body += '<td style="text-align:right;"><a class="text">-</a></td>';
                 } else {
                     body += '<td style="text-align:right;"><a class="text">'+toSize(list[i]['size'])+'</a></td>';
@@ -135,38 +134,6 @@ function renderList(req_path){
 }
 
 renderList(location.pathname);
-
-
-
-// table.render({
-//  headers: {
-//       'Authorization': localStorage.getItem('token')
-//     },
-//     elem: '#list2',
-//     url: '{{.api_path}}/fs/list',
-//     request: {
-//         pageName: 'page',
-//         limitName: 'size'
-//     },
-//     defaultToolbar: [],
-//     title: '数据表',
-//     method: 'post',
-//     cols: [[
-//         {field:'mount_path', title:'名称'},
-//         {field:'order', title:'序号'},
-//         {field:'remark', title:'备注', width:180},
-//     ]],
-//     page: true,
-//     where:[],
-// });
-
-// // refresh
-// $("#refresh").click(function(){
-//     table.reload("list");
-// });
-
-
-// 添加
 
 ///
 });
