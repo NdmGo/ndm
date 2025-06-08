@@ -5,12 +5,12 @@ import (
 	"net/http"
 	stdpath "path"
 	"strings"
-	// "ndm/internal/conf"
+
+	"ndm/internal/conf"
 )
 
 func GetApiUrl(r *http.Request) string {
-	api := "123"
-	// api := conf.Conf.SiteURL
+	api := conf.Http.SiteURL
 	if strings.HasPrefix(api, "http") {
 		return strings.TrimSuffix(api, "/")
 	}

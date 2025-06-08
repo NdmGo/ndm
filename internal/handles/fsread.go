@@ -176,12 +176,13 @@ func FsGet(c *gin.Context) {
 		provider = storage.Config().Name
 	}
 
+	fmt.Println("FsGet:obj.IsDir():", obj.IsDir())
 	if !obj.IsDir() {
 		if err != nil {
 			common.ErrorResp(c, err, 500)
 			return
 		}
-
+		fmt.Println("FsGet:", storage.Config().MustProxy(), storage.GetStorage().WebProxy)
 		if storage.Config().MustProxy() || storage.GetStorage().WebProxy {
 			query := ""
 			// if isEncrypt(meta, reqPath) || setting.GetBool(conf.SignAll) {
@@ -198,10 +199,12 @@ func FsGet(c *gin.Context) {
 					utils.EncodePath(reqPath, true),
 					query)
 			}
+			fmt.Println("....rawURL:", rawURL)
 		} else {
 			// file have raw url
 			if url, ok := model.GetUrl(obj); ok {
 				rawURL = url
+
 			} else {
 				// if storage is not proxy, use raw url by fs.Link
 				link, _, err := fs.Link(c, reqPath, model.LinkArgs{
@@ -210,12 +213,15 @@ func FsGet(c *gin.Context) {
 					HttpReq:  c.Request,
 					Redirect: true,
 				})
+				fmt.Println("link:", link)
 				if err != nil {
 					common.ErrorResp(c, err, 500)
 					return
 				}
 				rawURL = link.URL
 			}
+
+			fmt.Println("rawURL:", rawURL)
 		}
 	}
 

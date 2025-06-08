@@ -136,6 +136,7 @@ var (
 		Debug          bool
 		TokenExpiresIn int64
 		TempDir        string
+		SiteURL        string `json:"site_url" env:"SITE_URL"`
 	}
 
 	// log
