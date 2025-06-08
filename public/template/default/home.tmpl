@@ -60,7 +60,7 @@ function makeBreadcrumb(){
     $('.layui-breadcrumb-ndm .other span').click(function(){
         var path = $(this).attr("path");
         window.history.pushState({}, '', path);
-        renderList(path);
+        renderInfo(path);
     });
 }
 
@@ -87,9 +87,9 @@ function renderInfo(req_path){
 function renderSingleFile(data){
     console.log(data);
 
-    var body = '<div style="text-align:center;width:320px;height:240px;margin:0 auto;padding:24px 0 24px 0;font-size:14px;">\
+    var body = '<div style="text-align:center;height:300px;margin:0 auto;padding:24px 0 24px 0;font-size:14px;">\
         <div class="logo"><i class="layui-icon layui-icon-file" style="font-size: 100px;"></i></div>\
-        <div class="name" style="color:#20134b;font-size:20px;">'+data.name+'</div>\
+        <div class="name" style="color:#20134b;font-size:20px;overflow-wrap:break-word;">'+data.name+'</div>\
         <div class="info" style="color:#7e868c;font-size:12px;padding-top:10px;">'+toSize(data.size)+"·"+isoTimeFormat(data['modified'])+'</div>\
         <div class="func" style="color:#7e868c;font-size:12px;padding-top:10px;"></div>\
     </div>';

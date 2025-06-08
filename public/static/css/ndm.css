@@ -245,6 +245,10 @@ div {
 }
 
 
+.layui-breadcrumb-ndm{
+    overflow-wrap:break-word;
+}
+
 .layui-breadcrumb-ndm span[lay-separator] {
     margin: 0 10px;
     color: #999;
