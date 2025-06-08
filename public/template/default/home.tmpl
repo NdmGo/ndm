@@ -85,7 +85,6 @@ function renderInfo(req_path){
 
 
 function renderSingleFile(data){
-    console.log(data);
 
     var body = '<div style="text-align:center;height:300px;margin:0 auto;padding:24px 0 24px 0;font-size:14px;">\
         <div class="logo"><i class="layui-icon layui-icon-file" style="font-size: 100px;"></i></div>\
@@ -176,7 +175,6 @@ function renderList(req_path){
                     body += '<td>'+'<span class="ico ico-file"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
                 }
 
-                // || list[i]['size']==0
                 if (list[i]['is_dir']){
                     body += '<td style="text-align:right;"><a class="text">-</a></td>';
                 } else {
@@ -191,7 +189,6 @@ function renderList(req_path){
             body += '<tr><td colspan="3" style="text-align: center;">'+data['msg']+'</td></tr>';
         }
 
-        // console.log(body);
         $('#list tbody').html(body);
         $('#list tr').click(function(){
             var fname = $(this).attr("file");
@@ -209,7 +206,5 @@ renderInfo(location.pathname);
 ///
 });
 </script>
-
-
 
 {{template "front_footer.tmpl" .}}
