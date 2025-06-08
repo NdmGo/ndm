@@ -208,6 +208,25 @@ Admin = function(){
 Admin.prototype.init = function () {
 };
 
+
+Admin.prototype.Copy = function (text) {
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        var successful = document.execCommand('copy');
+        if(successful) {
+            layer.msg('复制成功');
+        } else {
+            layer.msg('复制失败');
+        }
+    } catch (err) {
+        layer.msg('复制错误: ' + err);
+    }
+    document.body.removeChild(textarea);
+};
+
 Admin.prototype.getRand = function(_id){
     var rand = Math.random().toString(36).substr(2)+Math.random().toString(36).substr(5);
     $('#'+_id).val(rand);

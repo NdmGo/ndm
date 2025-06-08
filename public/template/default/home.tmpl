@@ -91,10 +91,45 @@ function renderSingleFile(data){
         <div class="logo"><i class="layui-icon layui-icon-file" style="font-size: 100px;"></i></div>\
         <div class="name" style="color:#20134b;font-size:20px;overflow-wrap:break-word;">'+data.name+'</div>\
         <div class="info" style="color:#7e868c;font-size:12px;padding-top:10px;">'+toSize(data.size)+"·"+isoTimeFormat(data['modified'])+'</div>\
-        <div class="func" style="color:#7e868c;font-size:12px;padding-top:10px;"></div>\
+        <div class="func" style="color:#7e868c;font-size:12px;padding-top:20px;">\
+            <div class="layui-btn layui-btn-primary layui-border-green copy">复制链接</div>\
+            <div class="layui-btn layui-btn-primary layui-border-red download">下载</div>\
+            <div class="layui-btn layui-btn-primary layui-border-black qrcode">二维码</div>\
+        </div>\
     </div>';
 
     $('#list').html(body);
+
+
+    $("#list .func .copy").click(function(){
+        Admin.Copy(data.raw_url);
+    });
+
+    $("#list .func .qrcode").click(function(e){
+        e.stopPropagation();
+        // layer.closeAll();
+        layer.closeAll('tips');
+
+
+        layer.tips('<canvas id="qrcode" height="150" width="150" style="height: 150px; width: 150px;"></canvas>',
+            this,{
+                tips: [1, '#fff'],
+                time: 100000, 
+                area: 'auto',
+                success: function(layero){
+                    layero.find('.layui-tips').css('padding', '10px');
+                    $('#qrcode').qrcode({width: 130,height: 130,text: "size doesn't matter"});
+                }
+            }
+        );
+
+        
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.layui-tips').length) {
+                layer.closeAll('tips');
+            }
+        });
+    });
 }
 
 function renderList(req_path){
