@@ -79,6 +79,8 @@ function renderInfo(req_path){
             } else {
                 renderSingleFile(data.data);
             }
+        } else if(data.code == 401){
+            layer.msg(data.msg);
         }
     });
 }
@@ -201,6 +203,9 @@ function renderList(req_path){
 }
 
 renderInfo(location.pathname);
+$(window).on('popstate', function() {
+    renderInfo(location.pathname);
+});
 
 
 ///
