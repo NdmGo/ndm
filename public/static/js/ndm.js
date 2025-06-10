@@ -47,6 +47,20 @@ function toSize(a) {
     }
 }
 
+function toTrim(x) {
+    return x.replace(/^\s+|\s+$/gm,'');
+}
+
+function inArray(f, arr){
+    for (var i = 0; i < arr.length; i++) {
+        if (f == arr[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 function isoTimeFormat(isoDateStr){
     // const isoDateStr = "2025-05-30T00:51:42.721+08:00";
 
@@ -65,6 +79,26 @@ function isoTimeFormat(isoDateStr){
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     // console.log(formattedDate); // 输出: "2025-05-30 00:51:42"
     return formattedDate
+}
+
+function getExtName(fileName){
+    var extArr = fileName.split(".");
+    var extLastName = extArr[extArr.length - 1];
+    return extLastName;
+}
+
+function isImageFile(ext){
+    if (inArray(ext,['png','jpeg','jpg','gif','webp','bmp','ico'])){
+        return true;
+    }
+    return false;
+}
+
+function isCodeFile(ext){
+    if (inArray(ext,['html','htm','php','txt','md','js','css','scss','json','c','h','pl','py','java','log','conf','sh','json','ini', 'yaml'])){
+        return true;
+    }
+    return false;
 }
 
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {

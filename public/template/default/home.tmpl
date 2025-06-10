@@ -72,12 +72,19 @@ function renderInfo(req_path){
     }
     makeBreadcrumb();
     $.post('{{.api_path}}/fs/get', args, function(data){
-        console.log(data);
         if (data.code == 200) {
             if (data.data.is_dir){
                 renderList(req_path);
             } else {
-                renderSingleFile(data.data);
+                console.log(data);
+                var ext_name = getExtName(data.data.name);
+                console.log('ext_name',ext_name);
+                if (isCodeFile(ext_name)){
+                    console.log("ccc");
+                    renderEditFile(data.data);
+                } else {
+                    renderDownload(data.data);
+                }
             }
         } else if(data.code == 401){
             layer.msg(data.msg);
@@ -86,7 +93,49 @@ function renderInfo(req_path){
 }
 
 
-function renderSingleFile(data){
+function renderEditFile(data){
+
+    var body = '<div style="min-height:300px;margin:0 auto;padding:0px;">\
+        <textarea id="edit_file" style="width:100%;margin:0 auto;line-height: 1.8;position: relative;top: 10px;" ></textarea>\
+    </div>';
+
+    $('#list').html(body);
+    $("#edit_file").text("111");
+
+    $.get(data.raw_url, function(data) {
+        console.log(data);
+    },'json');
+
+
+    code_mirror = CodeMirror.fromTextArea(document.getElementById("edit_file"), {
+        extraKeys: {
+            "Ctrl-F": "findPersistent",
+            "Ctrl-H": "replaceAll",
+            "Ctrl-S": function() {
+                // $("#edit_file").text(code_mirror.getValue());
+            },
+            "Cmd-S":function() {
+                // $("#edit_file").text(code_mirror.getValue());
+            },
+        },
+        mode: 'text/x-ttcn-asn',
+        lineNumbers: true,
+        matchBrackets: true,
+        matchtags: true,
+        autoMatchParens: true
+    });
+    // code_mirror.focus();
+
+    // var q = $(window).height() * 0.9;
+    // code_mirror.setSize("auto", q - 150);
+    // $(window).resize(function(){
+    //     var q = $(window).height() * 0.9;
+    //     code_mirror.setSize("auto", q - 150);
+    // }); 
+
+}
+
+function renderDownload(data){
 
     var body = '<div style="text-align:center;height:300px;margin:0 auto;padding:24px 0 24px 0;font-size:14px;">\
         <div class="logo"><i class="layui-icon layui-icon-file" style="font-size: 100px;"></i></div>\
