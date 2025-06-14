@@ -134,8 +134,10 @@ func initRuoteApi(r *gin.Engine) {
 
 	downloadLimiter := middlewares.DownloadRateLimiter(stream.ClientDownloadLimit)
 	signCheck := middlewares.Down(sign.Verify)
-	g.GET("/d/*path", signCheck, downloadLimiter, handles.Down)
-	g.GET("/p/*path", signCheck, downloadLimiter, handles.Proxy)
+	r.GET("/d/*path", signCheck, downloadLimiter, handles.Down)
+	r.GET("/p/*path", signCheck, downloadLimiter, handles.Proxy)
+	r.HEAD("/d/*path", signCheck, handles.Down)
+	r.HEAD("/p/*path", signCheck, handles.Proxy)
 
 	initFs(auth.Group("/fs"))
 }
@@ -151,8 +153,9 @@ func InitRouters() {
 	home.GET("/", handles.HomePage)
 
 	r.SetTrustedProxies(nil)
-	initAdminStaticPage(r)
+
 	initRuoteApi(r)
+	initAdminStaticPage(r)
 
 	r.Run(fmt.Sprintf(":%d", conf.Http.Port))
 }
