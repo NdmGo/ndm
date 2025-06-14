@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"ndm/internal/conf"
 	"ndm/internal/db"
 	"ndm/internal/driver"
 	"ndm/internal/errs"
@@ -362,6 +363,21 @@ func GetBalancedStorage(path string) driver.Driver {
 		balanceMap.Store(virtualPath, i)
 		return storages[i]
 	}
+}
+
+func IsStorageSignEnabled(rawPath string) bool {
+	storage := GetBalancedStorage(rawPath)
+	return storage != nil && storage.GetStorage().EnableSign
+}
+
+func ShouldProxy(storage driver.Driver, filename string) bool {
+	if storage.Config().MustProxy() || storage.GetStorage().WebProxy {
+		return true
+	}
+	if utils.SliceContains(conf.SlicesMap[conf.ProxyTypes], utils.Ext(filename)) {
+		return true
+	}
+	return false
 }
 
 func TriggerDisabledStorageById(ctx context.Context, id int64) error {

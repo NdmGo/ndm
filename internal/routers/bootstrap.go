@@ -12,7 +12,9 @@ import (
 	"ndm/internal/conf"
 	"ndm/internal/handles"
 	"ndm/internal/logs"
-	"ndm/internal/middlewates"
+	"ndm/internal/middlewares"
+	"ndm/internal/sign"
+	"ndm/internal/stream"
 	// "ndm/internal/utils"
 	"ndm/public"
 )
@@ -72,10 +74,10 @@ func initAdminStaticPage(r *gin.Engine) {
 	g.POST("/install_step1", handles.PostInstallStep1Page)
 
 	// Admin Page
-	gnoauth := r.Group(conf.Http.SafePath, middlewates.SysIsInstalled, middlewates.PageNoAuth)
+	gnoauth := r.Group(conf.Http.SafePath, middlewares.SysIsInstalled, middlewares.PageNoAuth)
 	gnoauth.GET("/login", handles.LoginPage)
 
-	gauth := r.Group(conf.Http.SafePath, middlewates.PageAuth, middlewates.SysIsInstalled)
+	gauth := r.Group(conf.Http.SafePath, middlewares.PageAuth, middlewares.SysIsInstalled)
 	gauth.GET("/", handles.AdminPage)
 	gauth.GET("/storage", handles.StoragesPage)
 	gauth.GET("/storage/create", handles.StoragesCreatePage)
@@ -107,7 +109,7 @@ func initFs(fs *gin.RouterGroup) {
 func initRuoteApi(r *gin.Engine) {
 
 	g := r.Group(conf.Http.ApiPath)
-	auth := g.Group("", middlewates.Auth)
+	auth := g.Group("", middlewares.Auth)
 
 	g.Any("/ping", func(c *gin.Context) {
 		c.String(200, "pong")
@@ -130,6 +132,11 @@ func initRuoteApi(r *gin.Engine) {
 	storage.POST("/delete", handles.DeleteStorage)
 	storage.POST("/trigger_disable", handles.TriggerDisabledStorage)
 
+	downloadLimiter := middlewares.DownloadRateLimiter(stream.ClientDownloadLimit)
+	signCheck := middlewares.Down(sign.Verify)
+	g.GET("/d/*path", signCheck, downloadLimiter, handles.Down)
+	g.GET("/p/*path", signCheck, downloadLimiter, handles.Proxy)
+
 	initFs(auth.Group("/fs"))
 }
 
@@ -140,7 +147,7 @@ func InitRouters() {
 
 	r := gin.Default()
 
-	home := r.Group("", middlewates.SysIsInstalled)
+	home := r.Group("", middlewares.SysIsInstalled)
 	home.GET("/", handles.HomePage)
 
 	r.SetTrustedProxies(nil)
