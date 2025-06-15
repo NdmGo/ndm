@@ -37,8 +37,6 @@ var table = layui.table;
 var laydate = layui.laydate;
 var util = layui.util;
 
-
-
 function makeBreadcrumb(){
     var path = location.pathname;
     if (path == '' || path == '/') {
@@ -77,11 +75,13 @@ function renderInfo(req_path){
                 renderList(req_path);
             } else {
                 console.log(data);
-                var ext_name = getExtName(data.data.name);
-                console.log('ext_name',ext_name);
+                var ext_name = getFileExtension(data.data.name);
                 if (isCodeFile(ext_name)){
-                    console.log("ccc");
                     renderEditFile(data.data);
+                } else if (isVideoFile(ext_name)){
+                    renderVideo(data.data);
+                } else if (isImageFile(ext_name)){
+                    renderImage(data.data);
                 } else {
                     renderDownload(data.data);
                 }
@@ -92,76 +92,26 @@ function renderInfo(req_path){
     });
 }
 
+function renderImage(data){
+    var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_image" style="height:300px;align-items:center;justify-content:center;display: flex;"></div>\
+    </div>';
 
-function getFileTypeFormat(b){
-    console.log(b);
-    switch(b) {
-        case "html":
-            var j = {
-                name: "htmlmixed",
-                scriptTypes: [{
-                    matches: /\/x-handlebars-template|\/x-mustache/i,
-                    mode: null
-                }, {
-                    matches: /(text|application)\/(x-)?vb(a|script)/i,
-                    mode: "vbscript"
-                }]
-            };
-            d = j;
-            break;
-        case "htm":
-            var j = {
-                name: "htmlmixed",
-                scriptTypes: [{
-                    matches: /\/x-handlebars-template|\/x-mustache/i,
-                    mode: null
-                }, {
-                    matches: /(text|application)\/(x-)?vb(a|script)/i,
-                    mode: "vbscript"
-                }]
-            };
-            d = j;
-            break;
-        case "js":
-            d = "text/javascript";
-            break;
-        case "json":
-            d = "application/ld+json";
-            break;
-        case "css":
-            d = "text/css";
-            break;
-        case "php":
-            d = "application/x-httpd-php";
-            break;
-        case "py":
-            d = "text/x-cython";
-        case "sh":
-            d = "shell";
-        case "tpl":
-            d = "application/x-httpd-php";
-            break;
-        case "xml":
-            d = "application/xml";
-            break;
-        case "sql":
-            d = "text/x-sql";
-            break;
-        case "conf":
-            d = "text/x-nginx-conf";
-            break;
-        default:
-            var j = {
-                name: "htmlmixed",
-                scriptTypes: [
-                    {matches: /\/x-handlebars-template|\/x-mustache/i,mode: null}, 
-                    {matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"}
-                ]
-            };
-            d = j;
-    }
-    return d;
+    $('#list').html(body);
+
+    var image = '<img style="max-width:100%;" src="'+data.raw_url+'"/>';
+    $('#ndm_image').html(image);
 }
+
+function renderVideo(data){
+    var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_image" style="height:300px;align-items:center;justify-content:center;display: flex;"></div>\
+    </div>';
+
+    $('#list').html(body);
+
+    var image = '<img style="max-width:100%;" src="'+data.raw_url+'"/>';
+    $('#ndm_image').html(image);
+}
+
 
 function renderEditFile(data){
 
