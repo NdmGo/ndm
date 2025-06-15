@@ -100,14 +100,9 @@ function renderEditFile(data){
     </div>';
 
     $('#list').html(body);
-    $("#edit_file").text("111");
+    // $("#edit_file").text("测试");
 
-    $.get(data.raw_url, function(data) {
-        console.log(data);
-    },'json');
-
-
-    code_mirror = CodeMirror.fromTextArea(document.getElementById("edit_file"), {
+    var editor = CodeMirror.fromTextArea(document.getElementById("edit_file"), {
         extraKeys: {
             "Ctrl-F": "findPersistent",
             "Ctrl-H": "replaceAll",
@@ -124,8 +119,14 @@ function renderEditFile(data){
         matchtags: true,
         autoMatchParens: true
     });
-    // code_mirror.focus();
+    // editor.focus();
 
+    
+    $.get(data.raw_url, function(data ,status) {
+        editor.setValue(data);
+    },'text');
+
+    
     // var q = $(window).height() * 0.9;
     // code_mirror.setSize("auto", q - 150);
     // $(window).resize(function(){
