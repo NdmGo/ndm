@@ -87,6 +87,11 @@ function getExtName(fileName){
     return extLastName;
 }
 
+function getFileExtension(filename) {
+    return filename.split('.').pop();
+}
+
+
 function isImageFile(ext){
     if (inArray(ext,['png','jpeg','jpg','gif','webp','bmp','ico'])){
         return true;
