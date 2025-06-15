@@ -81,6 +81,75 @@ function isoTimeFormat(isoDateStr){
     return formattedDate
 }
 
+function getFileTypeFormat(b){
+    switch(b) {
+        case "html":
+            var j = {
+                name: "htmlmixed",
+                scriptTypes: [{
+                    matches: /\/x-handlebars-template|\/x-mustache/i,
+                    mode: null
+                }, {
+                    matches: /(text|application)\/(x-)?vb(a|script)/i,
+                    mode: "vbscript"
+                }]
+            };
+            d = j;
+            break;
+        case "htm":
+            var j = {
+                name: "htmlmixed",
+                scriptTypes: [{
+                    matches: /\/x-handlebars-template|\/x-mustache/i,
+                    mode: null
+                }, {
+                    matches: /(text|application)\/(x-)?vb(a|script)/i,
+                    mode: "vbscript"
+                }]
+            };
+            d = j;
+            break;
+        case "js":
+            d = "text/javascript";
+            break;
+        case "json":
+            d = "application/ld+json";
+            break;
+        case "css":
+            d = "text/css";
+            break;
+        case "php":
+            d = "application/x-httpd-php";
+            break;
+        case "py":
+            d = "text/x-cython";
+        case "sh":
+            d = "shell";
+        case "tpl":
+            d = "application/x-httpd-php";
+            break;
+        case "xml":
+            d = "application/xml";
+            break;
+        case "sql":
+            d = "text/x-sql";
+            break;
+        case "conf":
+            d = "text/x-nginx-conf";
+            break;
+        default:
+            var j = {
+                name: "htmlmixed",
+                scriptTypes: [
+                    {matches: /\/x-handlebars-template|\/x-mustache/i,mode: null}, 
+                    {matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"}
+                ]
+            };
+            d = j;
+    }
+    return d;
+}
+
 function getExtName(fileName){
     var extArr = fileName.split(".");
     var extLastName = extArr[extArr.length - 1];
@@ -94,6 +163,20 @@ function getFileExtension(filename) {
 
 function isImageFile(ext){
     if (inArray(ext,['png','jpeg','jpg','gif','webp','bmp','ico'])){
+        return true;
+    }
+    return false;
+}
+
+function isVideoFile(ext){
+    if (inArray(ext,['mp4','avi','mov','mkv','wmv','flv', 'webm','m4v','mpeg','3gp','ts','rmvb','rm','m2ts'])){
+        return true;
+    }
+    return false;
+}
+
+function isM3u8File(ext){
+    if (inArray(ext,['m3u8'])){
         return true;
     }
     return false;
