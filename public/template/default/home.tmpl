@@ -72,7 +72,7 @@ function renderSelect(file_type, src_data){
     } else if (isVideoFile(file_type)) {
         option = "<option value='video' selected>Video</option>" + option;
     } else if (isM3u8File(file_type)) {
-        option = "<option value='m3u8' selected>M3u8</option>" + option;
+        option = "<option value='m3u8' selected>M3U8</option>" + option;
     } else if (isImageFile(file_type)) {
         option = "<option value='image' selected>Image</option>" + option;
     } else {
@@ -80,7 +80,6 @@ function renderSelect(file_type, src_data){
         // return;
     }
 
-    console.log(option);
     $('#multiple_choice select').html(option);
     $('#multiple_choice').css('display', "block");
     form.render();
