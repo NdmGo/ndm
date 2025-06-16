@@ -1,15 +1,3 @@
-/* 检查并修复自定义 CSS 覆盖 */
-.CodeMirror pre {
-  /* 不要设置固定颜色，否则会覆盖语法高亮 */
-  /* color: inherit !important; */
-}
-
-/* 正确自定义特定语法元素颜色 */
-.cm-s-default .cm-property {
-  color: #905 !important;
-}
-
-
 .center{
     display: flex;
 }

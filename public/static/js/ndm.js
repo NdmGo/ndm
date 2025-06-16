@@ -169,7 +169,7 @@ function isImageFile(ext){
 }
 
 function isVideoFile(ext){
-    if (inArray(ext,['mp4','avi','mov','mkv','wmv','flv', 'webm','m4v','mpeg','3gp','ts','rmvb','rm','m2ts'])){
+    if (inArray(ext,['mp4','avi','mov','mkv','wmv','flv', 'webm','m4v','mpeg','3gp','rmvb','rm','m2ts'])){
         return true;
     }
     return false;

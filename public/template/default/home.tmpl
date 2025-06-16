@@ -80,6 +80,8 @@ function renderInfo(req_path){
                     renderEditFile(data.data);
                 } else if (isVideoFile(ext_name)){
                     renderVideo(data.data);
+                } else if (isM3u8File(ext_name)){
+                    renderM3u8(data.data);
                 } else if (isImageFile(ext_name)){
                     renderImage(data.data);
                 } else {
@@ -103,13 +105,49 @@ function renderImage(data){
 }
 
 function renderVideo(data){
-    var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_image" style="height:300px;align-items:center;justify-content:center;display: flex;"></div>\
+    var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_video" style="height:300px;width:100%;"></div>\
     </div>';
 
     $('#list').html(body);
+    var art = new Artplayer({
+        container: '#ndm_video',
+        url: data.raw_url,
+        autoSize: true,
+        fullscreen: true,
+        fullscreenWeb: true,
+        autoOrientation: true,
+  });
+}
 
-    var image = '<img style="max-width:100%;" src="'+data.raw_url+'"/>';
-    $('#ndm_image').html(image);
+function renderM3u8(data){
+    var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_video" style="height:300px;width:100%;"></div>\
+    </div>';
+
+    $('#list').html(body);
+    const dp = new DPlayer({
+    container: document.getElementById('ndm_video'),
+        preload:'auto',
+        theme: '#FADFA3',
+        hotkey: true,
+        mutex: true,
+        autoplay:true,
+        lang:'zh-cn',
+        screenshot:true,
+        chromecast:true,
+        airplay:true,
+        video: {
+            type: 'auto',
+            url: data.raw_url,
+            type: 'customHls',
+            customType: {
+            customHls: function (video, player) {
+                    const hls = new Hls();
+                    hls.loadSource(video.src);
+                    hls.attachMedia(video);
+                },
+            },
+        }
+    });
 }
 
 
