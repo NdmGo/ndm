@@ -15,17 +15,19 @@
             <span class="other"></span>
         </span>
     </div>
-    <div id="list" class="bgw divtable"></div>
-</div>
-
-
-<div class="layui-container">
-    <div class="layui-row">
-        <div class="layui-col-md12">
-            <table id="list2" lay-filter="ndm-list"></table>
+    
+    <div class="bgw divtable" style="padding:0.5rem;">
+        <div class="layui-form">
+            <div id="multiple_choice" class="layui-form-item" style="display: none;">
+                <select name="look_method" lay-filter="look_method">
+                    <option value="downlaod">Downlaod</option>
+                </select>
+            </div>
         </div>
+        <div id="list"></div>
     </div>
 </div>
+
 
 <script>
 layui.use(['layer','form','element','jquery','table','laydate','util'],function(){
@@ -62,6 +64,28 @@ function makeBreadcrumb(){
     });
 }
 
+function renderSelect(file_type){
+    // console.log("file_type:",file_type);
+    var option = "<option value='downlaod'>Downlaod</option>";
+    if (isCodeFile(file_type)){
+        option = "<option value='text_editor' selected>Text Editor</option>" + option;
+    } else if (isVideoFile(file_type)) {
+        option = "<option value='video' selected>Video</option>" + option;
+    } else if (isM3u8File(file_type)) {
+        option = "<option value='m3u8' selected>M3u8</option>" + option;
+    } else if (isImageFile(file_type)) {
+        option = "<option value='image' selected>Image</option>" + option;
+    } else {
+        closeSelect();
+    }
+    $('#multiple_choice selected').html(option);
+    $('#multiple_choice').css('display', "block");
+}
+
+function closeSelect(){
+    $('#multiple_choice').css('display', "none");
+}
+
 
 function renderInfo(req_path){
     var args = {
@@ -73,9 +97,11 @@ function renderInfo(req_path){
         if (data.code == 200) {
             if (data.data.is_dir){
                 renderList(req_path);
+                closeSelect();
             } else {
                 console.log(data);
                 var ext_name = getFileExtension(data.data.name);
+                renderSelect(data.data);
                 if (isCodeFile(ext_name)){
                     renderEditFile(data.data);
                 } else if (isVideoFile(ext_name)){
@@ -85,6 +111,7 @@ function renderInfo(req_path){
                 } else if (isImageFile(ext_name)){
                     renderImage(data.data);
                 } else {
+                    closeSelect();
                     renderDownload(data.data);
                 }
             }
@@ -107,7 +134,7 @@ function renderImage(data){
 function renderVideo(data){
     var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_video" style="height:300px;width:100%;"></div>\
     </div>';
-
+    console.log(data);
     $('#list').html(body);
     var art = new Artplayer({
         container: '#ndm_video',
