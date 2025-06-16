@@ -189,6 +189,25 @@ function isCodeFile(ext){
     return false;
 }
 
+
+function filterAddition(name , val){
+    if (name == 'show_hidden') {
+        if (val == 'on'){
+            return true;
+        } else {
+            return false;
+        }
+    } else if (name == 'enable_sign') {
+        if (val == 'on'){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+
+
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
 var $ = layui.$;

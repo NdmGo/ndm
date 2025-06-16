@@ -54,10 +54,9 @@
             <label class="layui-form-label">排序</label>
             <div class="layui-input-block">
                 <select name="order_by">
-                	<option value="">选择</option>
-                    <option value="name">名称</option>
-                    <option value="size">大小</option>
-                    <option value="mtime">修改时间</option>
+                    <option value="name" {{if .storage}}{{if eq .storage.OrderBy "name"}}selected{{end}}{{end}}>名称</option>
+                    <option value="size" {{if .storage}}{{if eq .storage.OrderBy "size"}}selected{{end}}{{end}}>大小</option>
+                    <option value="mtime" {{if .storage}}{{if eq .storage.OrderBy "mtime"}}selected{{end}}{{end}}>修改时间</option>
                 </select>
             </div>
         </div>
@@ -66,9 +65,8 @@
             <label class="layui-form-label">排序方式</label>
             <div class="layui-input-block">
                 <select name="order_direction">
-                	<option value="">选择</option>
-                    <option value="asc">升序</option>
-                    <option value="desc">降序</option>
+                    <option value="asc" {{if .storage}}{{if eq .storage.OrderDirection "asc"}}selected{{end}}{{end}}>升序</option>
+                    <option value="desc" {{if .storage}}{{if eq .storage.OrderDirection "asc"}}selected{{end}}{{end}}>降序</option>
                 </select>
             </div>
         </div>
@@ -77,9 +75,8 @@
             <label class="layui-form-label">提取文件夹</label>
             <div class="layui-input-block">
                 <select name="extract_folder">
-                    <option value="">选择</option>
-                    <option value="front">提取到最前</option>
-                    <option value="back">提取到最后</option>
+                    <option value="front" {{if .storage}}{{if eq .storage.ExtractFolder "front"}}selected{{end}}{{end}}>提取到最前</option>
+                    <option value="back" {{if .storage}}{{if eq .storage.ExtractFolder "front"}}selected{{end}}{{end}}>提取到最后</option>
                 </select>
             </div>
         </div>
@@ -116,7 +113,7 @@
 	  	<div class="layui-form-item">
 	    	<label class="layui-form-label">回收站路径</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="" name="addition.recycle_bin_path" class="layui-input" placeholder="回收站的路径，如果空或保留“永久删除”则永久删除">
+                <input type="text" value="{{if .addition}}{{if eq .addition.RecycleBinPath ""}}{{end}}delete permanently{{end}}" name="addition.recycle_bin_path" class="layui-input" placeholder="回收站的路径，如果空或保留“永久删除”则永久删除">
             </div>
 	  	</div>
 
@@ -138,25 +135,6 @@ var element = layui.element;
 var table = layui.table;
 var laydate = layui.laydate;
 var util = layui.util;
-
-
-function filterAddition(name , val){
-	if (name == 'show_hidden') {
-		if (val == 'on'){
-			return true;
-		} else {
-			return false;
-		}
-	} else if (name == 'enable_sign') {
-		if (val == 'on'){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	return false;
-}
-
 
 form.on('submit(submit_storage)', function(data){
 	var index = layer.load();
@@ -187,6 +165,10 @@ form.on('submit(submit_storage)', function(data){
 			}
 			delete data.field[d];
 		}
+	}
+
+	if (!('show_hidden' in data.field['addition'])){
+		data.field['addition']['show_hidden'] = false;
 	}
 
 	data.field['addition'] = JSON.stringify(data.field['addition']);

@@ -77,8 +77,8 @@ func FsList(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(common.ToJson(objs), err)
-	fmt.Println(reqPath)
+	// fmt.Println(common.ToJson(objs), err)
+	// fmt.Println(reqPath)
 
 	total, objs := pagination(objs, &req.PageReq)
 	provider := "unknown"
