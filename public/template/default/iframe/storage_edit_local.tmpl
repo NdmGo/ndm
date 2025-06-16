@@ -37,8 +37,8 @@
             <label class="layui-form-label">WebDAV策略</label>
             <div class="layui-input-block">
                 <select name="webdav_policy">
-                    <option value="native_proxy">本地代理</option>
-                    <option value="use_proxy_url">使用代理地址</option>
+                    <option value="native_proxy" {{if .storage}}{{if eq .storage.WebdavPolicy "native_proxy"}}selected{{end}}{{end}}>本地代理</option>
+                    <option value="use_proxy_url" {{if .storage}}{{if eq .storage.WebdavPolicy "use_proxy_url"}}selected{{end}}{{end}}>使用代理地址</option>
                 </select>
             </div>
         </div>
