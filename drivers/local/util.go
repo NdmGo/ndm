@@ -7,14 +7,13 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
+	// "strings"
 
-	"github.com/disintegration/imaging"
+	// "github.com/disintegration/imaging"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
-
-	"ndm/internal/conf"
-	"ndm/internal/model"
-	"ndm/pkg/utils"
+	// "ndm/internal/conf"
+	// "ndm/internal/model"
+	// "ndm/pkg/utils"
 )
 
 func isSymlinkDir(f fs.FileInfo, path string) bool {
@@ -60,53 +59,4 @@ func readDir(dirname string) ([]fs.FileInfo, error) {
 	}
 	sort.Slice(list, func(i, j int) bool { return list[i].Name() < list[j].Name() })
 	return list, nil
-}
-
-func (d *Local) getThumb(file model.Obj) (*bytes.Buffer, *string, error) {
-	fullPath := file.GetPath()
-	thumbPrefix := "ndm_thumb_"
-	thumbName := thumbPrefix + utils.GetMD5EncodeStr(fullPath) + ".png"
-	if d.ThumbCacheFolder != "" {
-		// skip if the file is a thumbnail
-		if strings.HasPrefix(file.GetName(), thumbPrefix) {
-			return nil, &fullPath, nil
-		}
-		thumbPath := filepath.Join(d.ThumbCacheFolder, thumbName)
-		if utils.Exists(thumbPath) {
-			return nil, &thumbPath, nil
-		}
-	}
-	var srcBuf *bytes.Buffer
-	if utils.GetFileType(file.GetName()) == conf.VIDEO {
-		videoBuf, err := GetSnapshot(fullPath, 10)
-		if err != nil {
-			return nil, nil, err
-		}
-		srcBuf = videoBuf
-	} else {
-		imgData, err := os.ReadFile(fullPath)
-		if err != nil {
-			return nil, nil, err
-		}
-		imgBuf := bytes.NewBuffer(imgData)
-		srcBuf = imgBuf
-	}
-
-	image, err := imaging.Decode(srcBuf, imaging.AutoOrientation(true))
-	if err != nil {
-		return nil, nil, err
-	}
-	thumbImg := imaging.Resize(image, 144, 0, imaging.Lanczos)
-	var buf bytes.Buffer
-	err = imaging.Encode(&buf, thumbImg, imaging.PNG)
-	if err != nil {
-		return nil, nil, err
-	}
-	if d.ThumbCacheFolder != "" {
-		err = os.WriteFile(filepath.Join(d.ThumbCacheFolder, thumbName), buf.Bytes(), 0666)
-		if err != nil {
-			return nil, nil, err
-		}
-	}
-	return &buf, nil, nil
 }

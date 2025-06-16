@@ -169,7 +169,7 @@ function renderM3u8(data){
     $('#list').html(body);
     const dp = new DPlayer({
     container: document.getElementById('ndm_video'),
-        preload:'auto',
+        preload:'metadata',
         theme: '#FADFA3',
         hotkey: true,
         mutex: true,

@@ -99,30 +99,9 @@
 	  	</div>
 
 	  	<div class="layui-form-item" pane>
-			<label class="layui-form-label">缩略图</label>
-		    <div class="layui-input-block">
-				<input type="checkbox" name="addition.thumbnail" lay-skin="switch" title="开关" placeholder="启用缩略图">
-		    </div>
-		</div>
-
-		<div class="layui-form-item">
-	    	<label class="layui-form-label">缩略图缓存文件夹</label>
-	    	<div class="layui-input-block">
-                <input type="text" value="/" name="addition.thumb_cache_folder" class="layui-input" placeholder="">
-            </div>
-	  	</div>
-
-	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">缩略图并发数</label>
-	    	<div class="layui-input-block">
-                <input type="number" value="16" name="addition.thumb_concurrency" class="layui-input" placeholder="同时生成缩略图的数量。这控制了可以并行生成多少缩略图。">
-            </div>
-	  	</div>
-
-	  	<div class="layui-form-item" pane>
 			<label class="layui-form-label">显示隐藏</label>
 		    <div class="layui-input-block">
-				<input type="checkbox" name="addition.show_hidden" lay-skin="switch" title="开关" placeholder="显示隐藏目录以及文件">
+				<input type="checkbox" name="addition.show_hidden" lay-skin="switch" title="开关" placeholder="显示隐藏目录以及文件"  {{if .addition}}{{if .addition.ShowHidden}}checked{{end}}{{end}}>
 		    </div>
 		</div>
 
@@ -130,7 +109,7 @@
 		<div class="layui-form-item">
 	    	<label class="layui-form-label">创建文件夹权限</label>
 	    	<div class="layui-input-block">
-                <input type="text" value="" name="addition.mkdir_perm" class="layui-input">
+                <input type="text" value="{{if .addition}}{{.addition.MkdirPerm}}{{else}}777{{end}}" name="addition.mkdir_perm" class="layui-input">
             </div>
 	  	</div>
 
@@ -161,6 +140,24 @@ var laydate = layui.laydate;
 var util = layui.util;
 
 
+function filterAddition(name , val){
+	if (name == 'show_hidden') {
+		if (val == 'on'){
+			return true;
+		} else {
+			return false;
+		}
+	} else if (name == 'enable_sign') {
+		if (val == 'on'){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return false;
+}
+
+
 form.on('submit(submit_storage)', function(data){
 	var index = layer.load();
 	var intarr = ['order','id'];
@@ -168,21 +165,25 @@ form.on('submit(submit_storage)', function(data){
 		if ($.inArray(d, intarr)!==-1){
 			data.field[d] = parseInt(data.field[d]);
 		} else if (d === 'enable_sign'){
-			if (data.field[d] == 'on'){
-				data.field[d] = true;
-			} else {
-				data.field[d] = false;
-			}
-		} else if ( d.indexOf(".") > -1){
+			data.field[d] = filterAddition('enable_sign',data.field[d]);
+		}  else if ( d.indexOf(".") > -1){
 			var t = d.split(".");
-			var name = t[0];
-			var val = t[1];
+			var addition_pre = t[0];
+			var name = t[1];
 
-			if (name in data.field){
-				data.field[name][val] = data.field[d];
-			} else{
-				data.field[name] = {};
-				data.field[name][val] = data.field[d];
+			if (addition_pre in data.field){
+				if (name == 'show_hidden'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else {
+					data.field[addition_pre][name] = data.field[d];
+				}
+			} else {
+				data.field[addition_pre] = {};
+				if (name == 'show_hidden'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else {
+					data.field[addition_pre][name] = data.field[d];
+				}
 			}
 			delete data.field[d];
 		}

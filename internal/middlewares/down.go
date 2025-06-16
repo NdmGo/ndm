@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"strings"
 
 	"ndm/internal/conf"
@@ -47,7 +48,9 @@ func needSign(path string) bool {
 	if op.IsStorageSignEnabled(path) {
 		return true
 	}
-	return true
+
+	fmt.Println("needSign:", path)
+	return false
 }
 
 func needSignBak(meta *model.Meta, path string) bool {

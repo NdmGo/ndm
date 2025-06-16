@@ -1,12 +1,12 @@
 package local
 
 import (
-	"bytes"
+	// "bytes"
 	"context"
 	"errors"
 	"fmt"
 	"io/fs"
-	"net/http"
+	// "net/http"
 	"os"
 	stdpath "path"
 	"path/filepath"
@@ -19,12 +19,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	_ "golang.org/x/image/webp"
 
-	"ndm/internal/common"
-	"ndm/internal/conf"
+	// "ndm/internal/common"
+	// "ndm/internal/conf"
 	"ndm/internal/driver"
 	"ndm/internal/errs"
 	"ndm/internal/model"
-	"ndm/internal/sign"
+	// "ndm/internal/sign"
 	"ndm/pkg/utils"
 )
 
@@ -32,10 +32,6 @@ type Local struct {
 	model.Storage
 	Addition
 	mkdirPerm int32
-
-	// zero means no limit
-	thumbConcurrency int
-	thumbTokenBucket TokenBucket
 }
 
 func (d *Local) Config() driver.Config {
@@ -61,24 +57,6 @@ func (d *Local) Init(ctx context.Context) error {
 			return err
 		}
 		d.Addition.RootFolderPath = abs
-	}
-	if d.ThumbCacheFolder != "" && !utils.Exists(d.ThumbCacheFolder) {
-		err := os.MkdirAll(d.ThumbCacheFolder, os.FileMode(d.mkdirPerm))
-		if err != nil {
-			return err
-		}
-	}
-	if d.ThumbConcurrency != "" {
-		v, err := strconv.ParseUint(d.ThumbConcurrency, 10, 32)
-		if err != nil {
-			return err
-		}
-		d.thumbConcurrency = int(v)
-	}
-	if d.thumbConcurrency == 0 {
-		d.thumbTokenBucket = NewNopTokenBucket()
-	} else {
-		d.thumbTokenBucket = NewStaticTokenBucketWithMigration(d.thumbTokenBucket, d.thumbConcurrency)
 	}
 	return nil
 }
@@ -108,15 +86,6 @@ func (d *Local) List(ctx context.Context, dir model.Obj, args model.ListArgs) ([
 	return files, nil
 }
 func (d *Local) FileInfoToObj(ctx context.Context, f fs.FileInfo, reqPath string, fullPath string) model.Obj {
-	thumb := ""
-	if d.Thumbnail {
-		typeName := utils.GetFileType(f.Name())
-		if typeName == conf.IMAGE || typeName == conf.VIDEO {
-			thumb = common.GetApiUrl(common.GetHttpReq(ctx)) + stdpath.Join("/d", reqPath, f.Name())
-			thumb = utils.EncodePath(thumb, true)
-			thumb += "?type=thumb&sign=" + sign.Sign(stdpath.Join(reqPath, f.Name()))
-		}
-	}
 	isFolder := f.IsDir() || isSymlinkDir(f, fullPath)
 	var size int64
 	if !isFolder {
@@ -138,9 +107,6 @@ func (d *Local) FileInfoToObj(ctx context.Context, f fs.FileInfo, reqPath string
 			Size:     size,
 			IsFolder: isFolder,
 			Ctime:    ctime,
-		},
-		Thumbnail: model.Thumbnail{
-			Thumbnail: thumb,
 		},
 	}
 	return &file
@@ -194,37 +160,13 @@ func (d *Local) Get(ctx context.Context, path string) (model.Obj, error) {
 func (d *Local) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*model.Link, error) {
 	fullPath := file.GetPath()
 	var link model.Link
-	if args.Type == "thumb" && utils.Ext(file.GetName()) != "svg" {
-		var buf *bytes.Buffer
-		var thumbPath *string
-		err := d.thumbTokenBucket.Do(ctx, func() error {
-			var err error
-			buf, thumbPath, err = d.getThumb(file)
-			return err
-		})
-		if err != nil {
-			return nil, err
-		}
-		link.Header = http.Header{
-			"Content-Type": []string{"image/png"},
-		}
-		if thumbPath != nil {
-			open, err := os.Open(*thumbPath)
-			if err != nil {
-				return nil, err
-			}
-			link.MFile = open
-		} else {
-			link.MFile = model.NewNopMFile(bytes.NewReader(buf.Bytes()))
-			//link.Header.Set("Content-Length", strconv.Itoa(buf.Len()))
-		}
-	} else {
-		open, err := os.Open(fullPath)
-		if err != nil {
-			return nil, err
-		}
-		link.MFile = open
+
+	open, err := os.Open(fullPath)
+	if err != nil {
+		return nil, err
 	}
+	link.MFile = open
+
 	return &link, nil
 }
 

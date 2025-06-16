@@ -367,6 +367,7 @@ func GetBalancedStorage(path string) driver.Driver {
 
 func IsStorageSignEnabled(rawPath string) bool {
 	storage := GetBalancedStorage(rawPath)
+	// fmt.Println("storage.GetStorage().EnableSign:", storage.GetStorage().EnableSign)
 	return storage != nil && storage.GetStorage().EnableSign
 }
 
