@@ -94,7 +94,7 @@ function renderSelect(file_type, src_data){
             renderM3u8(src_data);
         } else if (data.value == 'video'){
             renderVideo(src_data);
-        } else if (data.value == 'text'){
+        } else if (data.value == 'text_editor'){
             renderEditFile(src_data);
         }
     });
@@ -152,7 +152,6 @@ function renderImage(data){
 function renderVideo(data){
     var body = '<div style="min-height:300px;margin:0 auto;padding:0px;"><div id="ndm_video" style="height:300px;width:100%;"></div>\
     </div>';
-    console.log(data);
     $('#list').html(body);
     var art = new Artplayer({
         container: '#ndm_video',
