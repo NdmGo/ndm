@@ -16,7 +16,7 @@
         </span>
     </div>
     
-    <div class="bgw divtable" style="padding:0.5rem;">
+    <div class="bgw divtable" style="padding:1rem;">
         <div class="layui-form">
             <div id="multiple_choice" class="layui-form-item" style="display: none;">
                 <select name="look_method" lay-filter="look_method">
@@ -64,8 +64,8 @@ function makeBreadcrumb(){
     });
 }
 
-function renderSelect(file_type){
-    // console.log("file_type:",file_type);
+function renderSelect(file_type, src_data){
+    console.log("file_type:",file_type);
     var option = "<option value='downlaod'>Downlaod</option>";
     if (isCodeFile(file_type)){
         option = "<option value='text_editor' selected>Text Editor</option>" + option;
@@ -77,9 +77,27 @@ function renderSelect(file_type){
         option = "<option value='image' selected>Image</option>" + option;
     } else {
         closeSelect();
+        // return;
     }
-    $('#multiple_choice selected').html(option);
+
+    console.log(option);
+    $('#multiple_choice select').html(option);
     $('#multiple_choice').css('display', "block");
+    form.render();
+
+    form.on('select(look_method)', function(data){
+        if (data.value == 'downlaod'){
+            renderDownload(src_data);
+        } else if (data.value == 'image'){
+            renderImage(src_data);
+        } else if (data.value == 'm3u8'){
+            renderM3u8(src_data);
+        } else if (data.value == 'video'){
+            renderVideo(src_data);
+        } else if (data.value == 'text'){
+            renderEditFile(src_data);
+        }
+    });
 }
 
 function closeSelect(){
@@ -101,7 +119,7 @@ function renderInfo(req_path){
             } else {
                 console.log(data);
                 var ext_name = getFileExtension(data.data.name);
-                renderSelect(data.data);
+                renderSelect(ext_name, data.data);
                 if (isCodeFile(ext_name)){
                     renderEditFile(data.data);
                 } else if (isVideoFile(ext_name)){
