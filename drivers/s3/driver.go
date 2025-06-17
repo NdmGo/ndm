@@ -98,7 +98,6 @@ func (d *S3) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*mo
 		input.ResponseContentDisposition = &disposition
 	}
 
-	fmt.Println("input:", input)
 	req, _ := d.linkClient.GetObjectRequest(input)
 	var link model.Link
 	var err error
@@ -113,9 +112,6 @@ func (d *S3) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*mo
 			link.URL = strings.Replace(link.URL, "/"+d.Bucket, "", 1)
 		}
 	} else {
-
-		// fmt.Println(filename, op.ShouldProxy(d, filename))
-		// fmt.Println("d.SignURLExpire:", d.SignURLExpire)
 		if op.ShouldProxy(d, filename) {
 			err = req.Sign()
 			link.URL = req.HTTPRequest.URL.String()
