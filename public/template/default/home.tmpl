@@ -65,7 +65,7 @@ function makeBreadcrumb(){
 }
 
 function renderSelect(file_type, src_data){
-    console.log("file_type:",file_type);
+    // console.log("file_type:",file_type);
     var option = "<option value='downlaod'>Downlaod</option>";
     if (isCodeFile(file_type)){
         option = "<option value='text_editor' selected>Text Editor</option>" + option;
@@ -116,7 +116,7 @@ function renderInfo(req_path){
                 renderList(req_path);
                 closeSelect();
             } else {
-                console.log(data);
+                // console.log(data);
                 var ext_name = getFileExtension(data.data.name);
                 renderSelect(ext_name, data.data);
                 if (isCodeFile(ext_name)){
