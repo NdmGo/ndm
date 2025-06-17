@@ -243,11 +243,15 @@ function renderDownload(data){
     $('#list').html(body);
 
 
-    $("#list .func .copy").click(function(){
+    $("#list .copy").click(function(){
         Admin.Copy(data.raw_url);
     });
 
-    $("#list .func .qrcode").click(function(e){
+    $("#list .download").click(function(){
+        window.open(data.raw_url);
+    });
+
+    $("#list .qrcode").click(function(e){
         e.stopPropagation();
         if ($('#qrcode').length>0){
             layer.closeAll('tips');
