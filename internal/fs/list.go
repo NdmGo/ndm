@@ -22,9 +22,6 @@ func list(ctx context.Context, path string, args *ListArgs) ([]model.Obj, error)
 		return nil, errors.WithMessage(err, "failed get storage")
 	}
 
-	// fmt.Println(virtualFiles)
-	// fmt.Println(storage, actualPath, err)
-
 	var _objs []model.Obj
 	if storage != nil {
 		_objs, err = op.List(ctx, storage, actualPath, model.ListArgs{

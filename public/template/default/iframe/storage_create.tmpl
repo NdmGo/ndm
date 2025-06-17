@@ -82,7 +82,6 @@ var options = {
 			"label":"排序",
 			"key": "order_by",
 			"option" :[
-				{"name":"选择","value":""},
 				{"name":"名称","value":"name"},
 				{"name":"大小","value":"size"},
 				{"name":"修改时间","value":"mtime"}
@@ -162,6 +161,40 @@ var options = {
 			"default":"0",
 		},
 		{
+			"tag": "textarea",
+			"label":"备注",
+			"key": "remark",
+			"default":"",
+		},
+		{
+			"tag": "select",
+			"label":"排序",
+			"key": "order_by",
+			"option" :[
+				{"name":"名称","value":"name"},
+				{"name":"大小","value":"size"},
+				{"name":"修改时间","value":"mtime"}
+			]
+		},
+		{
+			"tag": "select",
+			"label":"排序方式",
+			"key": "order_direction",
+			"option" :[
+				{"name":"升序","value":"asc"},
+				{"name":"降序","value":"desc"}
+			]
+		},
+		{
+			"tag": "select",
+			"label":"提取文件夹",
+			"key": "extract_folder",
+			"option" :[
+				{"name":"提取到最前","value":"front"},
+				{"name":"提取到最后","value":"back"}
+			]
+		},
+		{
 			"tag": "input",
 			"type":"text",
 			"label":"根文件夹路径",
@@ -210,10 +243,12 @@ var options = {
 			"default":"",
 		},
 		{
-			"tag": "textarea",
-			"label":"备注",
-			"key": "remark",
-			"default":"",
+			"tag": "input",
+			"type":"number",
+			"label":"签名链接有效期",
+			"key": "addition.sign_url_expire",
+			"placeholder":"",
+			"default":4,
 		},
 	],
 };

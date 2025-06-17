@@ -12,6 +12,7 @@ import (
 
 	"ndm/internal/driver"
 	"ndm/internal/model"
+	"ndm/internal/op"
 	"ndm/internal/stream"
 	"ndm/pkg/cron"
 
@@ -96,6 +97,8 @@ func (d *S3) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*mo
 	if d.CustomHost == "" {
 		input.ResponseContentDisposition = &disposition
 	}
+
+	fmt.Println("input:", input)
 	req, _ := d.linkClient.GetObjectRequest(input)
 	var link model.Link
 	var err error
@@ -110,13 +113,16 @@ func (d *S3) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*mo
 			link.URL = strings.Replace(link.URL, "/"+d.Bucket, "", 1)
 		}
 	} else {
-		// if common.ShouldProxy(d, filename) {
-		// 	err = req.Sign()
-		// 	link.URL = req.HTTPRequest.URL.String()
-		// 	link.Header = req.HTTPRequest.Header
-		// } else {
-		// 	link.URL, err = req.Presign(time.Hour * time.Duration(d.SignURLExpire))
-		// }
+
+		fmt.Println(filename, op.ShouldProxy(d, filename))
+		fmt.Println("d.SignURLExpire:", d.SignURLExpire)
+		if op.ShouldProxy(d, filename) {
+			// 	err = req.Sign()
+			// 	link.URL = req.HTTPRequest.URL.String()
+			// 	link.Header = req.HTTPRequest.Header
+		} else {
+			link.URL, err = req.Presign(time.Hour * time.Duration(d.SignURLExpire))
+		}
 	}
 	if err != nil {
 		return nil, err
