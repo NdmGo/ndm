@@ -114,12 +114,12 @@ func (d *S3) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*mo
 		}
 	} else {
 
-		fmt.Println(filename, op.ShouldProxy(d, filename))
-		fmt.Println("d.SignURLExpire:", d.SignURLExpire)
+		// fmt.Println(filename, op.ShouldProxy(d, filename))
+		// fmt.Println("d.SignURLExpire:", d.SignURLExpire)
 		if op.ShouldProxy(d, filename) {
-			// 	err = req.Sign()
-			// 	link.URL = req.HTTPRequest.URL.String()
-			// 	link.Header = req.HTTPRequest.Header
+			err = req.Sign()
+			link.URL = req.HTTPRequest.URL.String()
+			link.Header = req.HTTPRequest.Header
 		} else {
 			link.URL, err = req.Presign(time.Hour * time.Duration(d.SignURLExpire))
 		}
