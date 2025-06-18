@@ -117,6 +117,18 @@
             </div>
 	  	</div>
 
+	  	<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+       		<legend style="font-size: 12px;">同步配置</legend>
+        </fieldset>
+
+        <div class="layui-form-item">
+			<label class="layui-form-label">启用同步</label>
+		    <div class="layui-input-block">
+				<input type="checkbox" name="enable_sync" lay-skin="switch" title="开关" {{if .addition.EnableSync}}checked{{end}}>
+		    </div>
+		</div>
+
+
         <div class="layui-form-item" style="text-align: center;padding: 10px;">
             <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}">
             <button class="layui-btn layui-btn-sm" lay-filter="submit_storage" lay-submit>保存</button>
