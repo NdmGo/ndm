@@ -37,14 +37,6 @@ func ndmStatic(r *gin.Engine, noRoute func(handlers ...gin.HandlerFunc)) {
 		r.StaticFS(fmt.Sprintf("/%s/", folders[i]), http.FS(sub))
 	}
 
-	// noRoute(func(c *gin.Context) {
-	// 	c.Header("Content-Type", "text/html")
-	// 	c.Status(200)
-	// 	_, _ = c.Writer.WriteString("not find")
-	// 	c.Writer.Flush()
-	// 	c.Writer.WriteHeaderNow()
-	// })
-
 	noRoute(handles.HomePage)
 }
 
