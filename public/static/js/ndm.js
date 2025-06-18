@@ -510,12 +510,16 @@ Admin.prototype.renderFormItem = function (obj) {
                     </div>\
                 </div>';
         } else if ( data['tag'] == 'input_switch'){
-            html +=  '<div class="layui-form-item" pane>\
+            html +=  '<div class="layui-form-item">\
                     <label class="layui-form-label">启用签名</label>\
                     <div class="layui-input-block">\
                         <input type="checkbox" name="'+data['key']+'" lay-skin="switch" title="开关" '+((data['checked']) ? 'checked':'')+'>\
                     </div>\
                 </div>';
+        } else if ( data['tag'] == 'line'){
+            html +=  '<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">\
+                    <legend style="font-size: 12px;">'+data['title']+'</legend>\
+                </fieldset>';
         }
     }
 
