@@ -81,14 +81,19 @@ table.render({
     title: '数据表',
     cols: [[
         {field:'mount_path', title:'挂载路径', width:200},
-        {field:'driver', title:'驱动', width:60},
-        {field:'order', title:'序号', width:60},
-        {field:'remark', title:'备注', width:180},
-        {field:'status', title:'状态'},
+        {field:'driver', title:'驱动', width:100},
+        {field:'order', title:'序号', width:100},
+        {field:'remark', title:'备注'},
+        {field:'status', title:'状态',width:100},
+        {field:'remark', title:'模式', toolbar: '#modeTpl'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
     ]],
     page: true,
     where:[],
+    done: function(res){
+        console.log(res);
+    }
+
 });
 
 // refresh
@@ -112,6 +117,15 @@ $("#refresh").click(function(){
 </script>
 
 
+
+<script type="text/html" id="modeTpl">
+    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id={@d.id@}',800,480)">编辑</a>
+    {@# if(d.disabled == 1){ @}
+    <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已禁用</a>
+    {@# }else{ @}
+    <a class="layui-btn layui-btn-xs" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已启用</a>
+    {@# } @}
+</script>
 
 <script type="text/html" id="cmdTpl">
     <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id={@d.id@}',800,480)">编辑</a>
