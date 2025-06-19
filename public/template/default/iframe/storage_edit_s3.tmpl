@@ -139,7 +139,7 @@
         <div class="layui-form-item">
 			<label class="layui-form-label">启用备份</label>
 		    <div class="layui-input-block">
-				<input type="checkbox" name="enable_backup" lay-skin="switch" title="开关" {{if .addition.EnableBackup}}checked{{end}}>
+				<input type="checkbox" name="addition.enable_backup" lay-skin="switch" title="开关" {{if .addition.EnableBackup}}checked{{end}}>
 		    </div>
 		</div>
 
@@ -149,10 +149,6 @@
                 <input name="addition.backup_dir" type="text" value="{{if .addition}}{{.addition.BackupDir}}{{end}}"  class="layui-input">
             </div>
 	  	</div>
-
-
-
-        
 
         <div class="layui-form-item" style="text-align: center;padding: 10px;">
             <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}">
@@ -188,12 +184,13 @@ form.on('submit(submit_storage)', function(data){
 			var addition_pre = t[0];
 			var name = t[1];
 
-			// console.log(addition_pre, name, data.field[d])
 			if (addition_pre in data.field){
 				if (name == 'show_hidden'){
 					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
 				} else if (name == 'sign_url_expire'){
 					data.field[addition_pre][name] = parseInt(data.field[d]);
+				} else if (name == 'enable_backup'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
 				} else {
 					data.field[addition_pre][name] = data.field[d];
 				}
@@ -203,6 +200,8 @@ form.on('submit(submit_storage)', function(data){
 					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
 				} else if (name == 'sign_url_expire'){
 					data.field[addition_pre][name] = parseInt(data.field[d]);
+				} else if (name == 'enable_backup'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
 				} else {
 					data.field[addition_pre][name] = data.field[d];
 				}

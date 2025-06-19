@@ -25,7 +25,7 @@ type Addition struct {
 	AddFilenameToDisposition bool   `json:"add_filename_to_disposition" help:"Add filename to Content-Disposition header."`
 
 	// backup
-	EnableBackup bool   `json:"enable_backup"`
+	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"false"`
 	BackupDir    string `json:"backup_dir"`
 }
 

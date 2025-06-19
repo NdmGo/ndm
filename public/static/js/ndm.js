@@ -203,6 +203,12 @@ function filterAddition(name , val){
         } else {
             return false;
         }
+    } else if (name == 'enable_backup') {
+        if (val == 'on'){
+            return true;
+        } else {
+            return false;
+        }
     }
     return false;
 }
@@ -528,8 +534,6 @@ Admin.prototype.renderFormItem = function (obj) {
 
 //Item渲染多选
 Admin.prototype.renderFormItemMulti = function (objs, selected) {
-    console.log(objs,selected);
-    console.log(objs[selected]);
     return this.renderFormItem(objs[selected]);
 };
 
