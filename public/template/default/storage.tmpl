@@ -85,7 +85,7 @@ table.render({
         {field:'order', title:'序号', width:100},
         {field:'remark', title:'备注'},
         {field:'status', title:'状态',width:70},
-        {field:'remark', title:'模式', toolbar: '#modeTpl',width:170},
+        {title:'模式', toolbar: '#modeTpl',width:200},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
     ]],
     page: true,
@@ -129,9 +129,9 @@ $("#refresh").click(function(){
 
 <script type="text/html" id="modeTpl">
 
-    {@# if( d.addtion && 'enable_sync' in d.addtion && d.addtion.enable_sync){ @}
+    {@# if( isSupportEnableSync(d) ){ @}
     <a class="layui-btn layui-btn-xs">同步</a>
-    {@# } else if( d.addtion && 'enable_backup' in d.addtion && d.addtion.enable_backup){ @}
+    {@# } else if( isSupportEnableBackup(d) ){ @}
     <a class="layui-btn layui-btn-xs">备份</a>
     {@# } else { @}
     <a class="layui-btn layui-btn-xs">无</a>

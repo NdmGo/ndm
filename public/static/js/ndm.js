@@ -214,6 +214,14 @@ function filterAddition(name , val){
 }
 
 
+function isSupportEnableSync(d){
+    return d.addition && 'enable_sync' in d.addition && d.addition.enable_sync;
+}
+
+function isSupportEnableBackup(d){
+    return d.addition && 'enable_backup' in d.addition && d.addition.enable_backup;
+}
+
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
 var $ = layui.$;
