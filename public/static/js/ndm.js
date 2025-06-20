@@ -209,6 +209,12 @@ function filterAddition(name , val){
         } else {
             return false;
         }
+    } else if (name == 'enable_sync') {
+        if (val == 'on'){
+            return true;
+        } else {
+            return false;
+        }
     }
     return false;
 }
