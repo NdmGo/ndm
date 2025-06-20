@@ -141,6 +141,16 @@ var options = {
 			"placeholder":"回收站的路径，如果空或保留“永久删除”则永久删除",
 			"default":"",
 		},
+		{
+			"tag": "line",
+			"title":"同步设置",
+		},
+		{
+			"tag": "input_switch",
+			"label":"启用同步",
+			"key": "addition.enable_sync",
+			"checked":false
+		},
 		
 	],
 	"s3" : [
@@ -271,6 +281,12 @@ var options = {
 		{
 			"tag": "line",
 			"title":"备份设置",
+		},
+		{
+			"tag": "input_switch",
+			"label":"启用备份",
+			"key": "addition.enable_backup",
+			"checked":false
 		},
 		{
 			"tag": "input",
