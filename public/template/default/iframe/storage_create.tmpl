@@ -203,12 +203,22 @@ var options = {
 			]
 		},
 		{
+			"tag": "input_switch",
+			"label":"启用签名",
+			"key": "enable_sign",
+			"checked":false
+		},
+		{
 			"tag": "input",
 			"type":"text",
 			"label":"根文件夹路径",
 			"key": "addition.root_folder_path",
 			"placeholder":"",
 			"default":"/",
+		},
+		{
+			"tag": "line",
+			"title":"R2设置",
 		},
 		{
 			"tag": "input",
@@ -262,6 +272,14 @@ var options = {
 			"tag": "line",
 			"title":"备份设置",
 		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"备份目录",
+			"key": "addition.backup_dir",
+			"placeholder":"",
+			"default":"",
+		},
 	],
 };
 
@@ -286,24 +304,48 @@ form.on('submit(submit_storage)', function(data){
 		if ($.inArray(d, intarr)!==-1){
 			data.field[d] = parseInt(data.field[d]);
 		} else if (d === 'enable_sign'){
-			if (data.field[d] == 'on'){
-				data.field[d] = true;
-			} else {
-				data.field[d] = false;
-			}
+			data.field[d] = filterAddition('enable_sign',data.field[d]);
 		} else if ( d.indexOf(".") > -1){
 			var t = d.split(".");
 			var name = t[0];
 			var val = t[1];
 
-			if (name in data.field){
-				data.field[name][val] = data.field[d];
-			} else{
-				data.field[name] = {};
-				data.field[name][val] = data.field[d];
+			if (addition_pre in data.field){
+				if (name == 'show_hidden'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else if (name == 'sign_url_expire'){
+					data.field[addition_pre][name] = parseInt(data.field[d]);
+				} else if (name == 'enable_backup'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else if (name == 'enable_sync'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else {
+					data.field[addition_pre][name] = data.field[d];
+				}
+			} else {
+				data.field[addition_pre] = {};
+				if (name == 'show_hidden'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else if (name == 'sign_url_expire'){
+					data.field[addition_pre][name] = parseInt(data.field[d]);
+				} else if (name == 'enable_backup'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else if (name == 'enable_sync'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else {
+					data.field[addition_pre][name] = data.field[d];
+				}
 			}
 			delete data.field[d];
 		}
+	}
+
+	if (!('show_hidden' in data.field['addition'])){
+		data.field['addition']['show_hidden'] = false;
+	}
+
+	if (!('sign_url_expire' in data.field['addition'])){
+		data.field['sign_url_expire']['sign_url_expire'] = 4;
 	}
 
 	data.field['addition'] = JSON.stringify(data.field['addition']);
