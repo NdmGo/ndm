@@ -20,7 +20,7 @@
 	  	</div>
 
         <div class="layui-form-item" style="text-align: center;padding: 10px;">
-            <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}">
+            <!-- <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}"> -->
             <button class="layui-btn layui-btn-sm" lay-filter="submit_storage" lay-submit>保存</button>
             <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
         </div>
@@ -459,7 +459,7 @@ form.on('submit(submit_storage)', function(data){
 			data.field[d] = parseInt(data.field[d]);
 		} else if ( d.indexOf(".") > -1){
 			var t = d.split(".");
-			var name = t[0];
+			var addition_pre = t[0];
 			var val = t[1];
 
 			if (addition_pre in data.field){
