@@ -531,7 +531,7 @@ Admin.prototype.renderFormItem = function (obj) {
                 </div>';
         } else if ( data['tag'] == 'input_switch'){
             html +=  '<div class="layui-form-item">\
-                    <label class="layui-form-label">启用签名</label>\
+                    <label class="layui-form-label">'+data['label']+'</label>\
                     <div class="layui-input-block">\
                         <input type="checkbox" name="'+data['key']+'" lay-skin="switch" title="开关" '+((data['checked']) ? 'checked':'')+'>\
                     </div>\

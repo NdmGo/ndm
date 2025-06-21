@@ -1,0 +1,251 @@
+{{template "header_head.tmpl" .}}
+
+<div class="layui-fluid" style="background-color: white;padding: 20px;">
+    <form class="layui-form layui-form-pane" lay-filter="storage" id="storage_edit" action="{{.api_path}}/storage/update" method="POST">
+
+    	<div class="layui-form-item" id="driver">
+	    	<label class="layui-form-label">驱动</label>
+	    	<div class="layui-input-block">
+                <select name="driver" lay-filter="driver">
+                    <option value="ftp">FTP存储</option>
+                </select>
+            </div>
+	  	</div>
+
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">挂载路径</label>
+	    	<div class="layui-input-block">
+                <input type="mount_path" name="mount_path" value="{{if .storage}}{{.storage.MountPath}}{{end}}" autocomplete="off" class="layui-input" placeholder="要挂载到的路径，它是唯一的，不能重复">
+            </div>
+	  	</div>
+
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">序号</label>
+	    	<div class="layui-input-block">
+                <input type="number" value="{{if .storage}}{{.storage.Order}}{{end}}" name="order" class="layui-input" placeholder="用于排序">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item layui-form-text">
+			<label class="layui-form-label">备注</label>
+			<div class="layui-input-block">
+				<textarea placeholder="备注" class="layui-textarea" name="remark">{{if .storage}}{{.storage.Remark}}{{end}}</textarea>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">缓存过期时间</label>
+	    	<div class="layui-input-block">
+                <input type="number" value="{{if .storage}}{{.storage.CacheExpiration}}{{end}}" name="cache_expiration" class="layui-input" placeholder="此存储的缓存过期时间(分钟)">
+            </div>
+	  	</div>
+
+		<div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <select name="order_by">
+                    <option value="name" {{if .storage}}{{if eq .storage.OrderBy "name"}}selected{{end}}{{end}}>名称</option>
+                    <option value="size" {{if .storage}}{{if eq .storage.OrderBy "size"}}selected{{end}}{{end}}>大小</option>
+                    <option value="mtime" {{if .storage}}{{if eq .storage.OrderBy "mtime"}}selected{{end}}{{end}}>修改时间</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序方式</label>
+            <div class="layui-input-block">
+                <select name="order_direction">
+                    <option value="asc" {{if .storage}}{{if eq .storage.OrderDirection "asc"}}selected{{end}}{{end}}>升序</option>
+                    <option value="desc" {{if .storage}}{{if eq .storage.OrderDirection "asc"}}selected{{end}}{{end}}>降序</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">提取文件夹</label>
+            <div class="layui-input-block">
+                <select name="extract_folder">
+                    <option value="front" {{if .storage}}{{if eq .storage.ExtractFolder "front"}}selected{{end}}{{end}}>提取到最前</option>
+                    <option value="back" {{if .storage}}{{if eq .storage.ExtractFolder "front"}}selected{{end}}{{end}}>提取到最后</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+			<label class="layui-form-label">启用签名</label>
+		    <div class="layui-input-block">
+				<input type="checkbox" name="enable_sign" lay-skin="switch" title="开关" {{if .storage.EnableSign}}checked{{end}}>
+		    </div>
+		</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">根文件夹路径</label>
+	    	<div class="layui-input-block">
+                <input type="text" value="{{if .addition}}{{.addition.RootFolderPath}}{{end}}" name="addition.root_folder_path" class="layui-input" placeholder="根文件夹路径">
+            </div>
+	  	</div>
+
+	  	<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+       		<legend style="font-size: 12px;">S3配置</legend>
+        </fieldset>
+
+	  	<!-- {{.storage.Addition}} -->
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">存储桶</label>
+	    	<div class="layui-input-block">
+                <input name="addition.bucket" type="text" value="{{if .addition}}{{.addition.Bucket}}{{end}}" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">Endpoint</label>
+	    	<div class="layui-input-block">
+                <input name="addition.endpoint" type="text" value="{{if .addition}}{{.addition.Endpoint}}{{end}}" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">地区</label>
+	    	<div class="layui-input-block">
+                <input name="addition.region" type="text" value="{{if .addition}}{{.addition.Region}}{{end}}" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">访问密钥ID</label>
+	    	<div class="layui-input-block">
+                <input name="addition.access_key_id" type="text" value="{{if .addition}}{{.addition.AccessKeyID}}{{end}}"  class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">安全访问密钥</label>
+	    	<div class="layui-input-block">
+                <input name="addition.secret_access_key" type="text" value="{{if .addition}}{{.addition.SecretAccessKey}}{{end}}" class="layui-input">
+            </div>
+	  	</div>
+
+	  	<div class="layui-form-item">
+	    	<label class="layui-form-label">签名链接有效期</label>
+	    	<div class="layui-input-block">
+                <input name="addition.sign_url_expire" type="number" value="{{if .addition}}{{.addition.SignURLExpire}}{{end}}"  class="layui-input">
+            </div>
+	  	</div>
+
+	  	<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+       		<legend style="font-size: 12px;">备份配置</legend>
+        </fieldset>
+
+        <div class="layui-form-item">
+			<label class="layui-form-label">启用备份</label>
+		    <div class="layui-input-block">
+				<input type="checkbox" name="addition.enable_backup" lay-skin="switch" title="开关" {{if .addition.EnableBackup}}checked{{end}}>
+		    </div>
+		</div>
+
+        <div class="layui-form-item">
+	    	<label class="layui-form-label">备份目录</label>
+	    	<div class="layui-input-block">
+                <input name="addition.backup_dir" type="text" value="{{if .addition}}{{.addition.BackupDir}}{{end}}"  class="layui-input">
+            </div>
+	  	</div>
+
+        <div class="layui-form-item" style="text-align: center;padding: 10px;">
+            <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}">
+            <button class="layui-btn layui-btn-sm" lay-filter="submit_storage" lay-submit>保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+        </div>
+    </form>
+</div>
+
+<script>
+layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
+///
+var $ = layui.$;
+var layer = layui.layer;
+var form = layui.form;
+var element = layui.element;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+form.on('submit(submit_storage)', function(data){
+	var index = layer.load();
+	var intarr = ['order','id'];
+	for (var d in data.field) {
+		if ($.inArray(d, intarr)!==-1){
+			data.field[d] = parseInt(data.field[d]);
+		} else if (d === 'enable_sign'){
+			data.field[d] = filterAddition('enable_sign',data.field[d]);
+		} else if (d === 'cache_expiration'){
+			data.field[d] = parseInt(data.field[d]);
+		} else if ( d.indexOf(".") > -1){
+			var t = d.split(".");
+			var addition_pre = t[0];
+			var name = t[1];
+
+			if (addition_pre in data.field){
+				if (name == 'show_hidden'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else if (name == 'sign_url_expire'){
+					data.field[addition_pre][name] = parseInt(data.field[d]);
+				} else if (name == 'enable_backup'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else {
+					data.field[addition_pre][name] = data.field[d];
+				}
+			} else {
+				data.field[addition_pre] = {};
+				if (name == 'show_hidden'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else if (name == 'sign_url_expire'){
+					data.field[addition_pre][name] = parseInt(data.field[d]);
+				} else if (name == 'enable_backup'){
+					data.field[addition_pre][name] = filterAddition(name,data.field[d]);
+				} else {
+					data.field[addition_pre][name] = data.field[d];
+				}
+			}
+			delete data.field[d];
+		}
+	}
+
+	if (!('show_hidden' in data.field['addition'])){
+		data.field['addition']['show_hidden'] = false;
+	}
+
+	if (!('sign_url_expire' in data.field['addition'])){
+		data.field['sign_url_expire']['sign_url_expire'] = 4;
+	}
+
+	data.field['addition'] = JSON.stringify(data.field['addition']);
+	$.ajax({
+        type: "POST",
+        headers: {'Content-Type': 'application/json'},
+        url: data.form.action,
+        data: JSON.stringify(data.field),
+        dataType: 'json',
+        success: function(res) {
+        	layer.close(index);
+            if (res.code != 200 ){
+                layer.msg(res.msg, {icon: 2});
+            } else if (res.code == 200){
+            	showMsg(res.msg, function(){
+	                parent.location.reload();
+	            },{icon: 1});
+            } else {
+                layer.msg("访问异常!", {icon: 2});
+            }
+        },
+        error:function(e){
+        	layer.close(index);
+            layer.msg(e, {icon: 2});
+        }
+    });
+    return false;
+});
+///
+});
+</script>
+</body>
+</html>

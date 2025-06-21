@@ -7,14 +7,15 @@ require (
 	github.com/alist-org/alist/v3 v3.42.0
 	github.com/alist-org/times v0.0.0-20240721124654-efa0c7d3ad92
 	github.com/aws/aws-sdk-go v1.55.5
+	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/bodgit/sevenzip v1.6.0
 	github.com/deckarep/golang-set/v2 v2.7.0
-	github.com/disintegration/imaging v1.6.2
 	github.com/dlclark/regexp2 v1.11.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-webauthn/webauthn v0.11.2
 	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/google/uuid v1.6.0
+	github.com/jlaffaye/ftp v0.2.0
 	github.com/json-iterator/go v1.1.12
 	github.com/kdomanski/iso9660 v0.4.0
 	github.com/maruel/natural v1.1.1
@@ -24,6 +25,7 @@ require (
 	github.com/otiai10/copy v1.14.0
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1
+	github.com/pkg/sftp v1.13.6
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0
@@ -33,6 +35,7 @@ require (
 	github.com/yeka/zip v0.0.0-20231116150916-03d6312748a9
 	github.com/yuin/goldmark v1.4.13
 	go4.org v0.0.0-20230225012048-214862532bf5
+	golang.org/x/crypto v0.31.0
 	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
 	golang.org/x/image v0.19.0
 	golang.org/x/oauth2 v0.25.0
@@ -89,6 +92,7 @@ require (
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
+	github.com/kr/fs v0.1.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -113,7 +117,6 @@ require (
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xhofe/gsync v0.0.0-20230917091818-2111ceb38a25 // indirect
 	golang.org/x/arch v0.12.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect

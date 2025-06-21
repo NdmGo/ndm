@@ -10,6 +10,7 @@
                 	<option value="">选择</option>
                     <option value="local" >本机存储</option>
                     <option value="s3">对象存储</option>
+                    <option value="ftp">FTP存储</option>
                 </select>
             </div>
 	  	</div>
@@ -296,6 +297,139 @@ var options = {
 			"placeholder":"",
 			"default":"",
 		},
+	],
+	"ftp" : [
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"挂载路径",
+			"key": "mount_path",
+			"placeholder":"要挂载到的路径，它是唯一的，不能重复",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"number",
+			"label":"序号",
+			"key": "order",
+			"placeholder":"用于排序",
+			"default":"0",
+		},
+		{
+			"tag": "textarea",
+			"label":"备注",
+			"key": "remark",
+			"default":"",
+		},
+		{
+			"tag": "select",
+			"label":"WebDAV策略",
+			"key": "webdav_policy",
+			"default":"",
+			"option" :[
+				{"name":"本地代理","value":"native_proxy"},
+				{"name":"使用代理地址","value":"use_proxy_url"}
+			]
+		},
+		{
+			"tag": "textarea",
+			"label":"下载代理URL",
+			"key": "down_proxy_url",
+			"default":"",
+		},
+		{
+			"tag": "select",
+			"label":"排序",
+			"key": "order_by",
+			"option" :[
+				{"name":"名称","value":"name"},
+				{"name":"大小","value":"size"},
+				{"name":"修改时间","value":"mtime"}
+			]
+		},
+		{
+			"tag": "select",
+			"label":"排序方式",
+			"key": "order_direction",
+			"option" :[
+				{"name":"升序","value":"asc"},
+				{"name":"降序","value":"desc"}
+			]
+		},
+		{
+			"tag": "select",
+			"label":"提取文件夹",
+			"key": "extract_folder",
+			"option" :[
+				{"name":"提取到最前","value":"front"},
+				{"name":"提取到最后","value":"back"}
+			]
+		},
+		{
+			"tag": "input_switch",
+			"label":"启用签名",
+			"key": "enable_sign",
+			"checked":false
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"根文件夹路径",
+			"key": "addition.root_folder_path",
+			"placeholder":"根文件夹路径",
+			"default":"/tmp",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"地址",
+			"key": "addition.address",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"用户",
+			"key": "addition.username",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"password",
+			"label":"密码",
+			"key": "addition.password",
+			"placeholder":"",
+			"default":"",
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"回收站路径",
+			"key": "addition.recycle_bin_path",
+			"placeholder":"回收站的路径，如果空或保留“永久删除”则永久删除",
+			"default":"",
+		},
+		{
+			"tag": "line",
+			"title":"本地备份设置",
+		},
+		{
+			"tag": "input_switch",
+			"label":"启动备份",
+			"key": "addition.enable_sync",
+			"checked":false
+		},
+		{
+			"tag": "input",
+			"type":"text",
+			"label":"备份目录",
+			"key": "addition.backup_dir",
+			"placeholder":"",
+			"default":"",
+		},
+		
 	],
 };
 
