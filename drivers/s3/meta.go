@@ -26,7 +26,7 @@ type Addition struct {
 
 	// backup
 	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"false"`
-	BackupDir    string `json:"backup_dir"`
+	BackupDir    string `json:"backup_dir" default:"" required:"false"`
 }
 
 func init() {

@@ -59,7 +59,7 @@ form.on('submit(submit_storage)', function(data){
 	}
 
 	if (!('sign_url_expire' in data.field['addition'])){
-		data.field['sign_url_expire']['sign_url_expire'] = 4;
+		data.field['addition']['sign_url_expire'] = 4;
 	}
 
 	data.field['addition'] = JSON.stringify(data.field['addition']);

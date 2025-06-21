@@ -13,10 +13,14 @@ type Addition struct {
 	Passphrase string `json:"passphrase"`
 	driver.RootPath
 	IgnoreSymlinkError bool `json:"ignore_symlink_error" default:"false" info:"Ignore symlink error"`
+
+	// backup
+	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"false"`
+	BackupDir    string `json:"backup_dir" default:"" required:"false"`
 }
 
 var config = driver.Config{
-	Name:        "SFTP",
+	Name:        "sftp",
 	LocalSort:   true,
 	OnlyLocal:   true,
 	DefaultRoot: "/",

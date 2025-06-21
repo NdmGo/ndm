@@ -29,6 +29,10 @@ type Addition struct {
 	Username string `json:"username" required:"true"`
 	Password string `json:"password" required:"true"`
 	driver.RootPath
+
+	// backup
+	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"false"`
+	BackupDir    string `json:"backup_dir" default:"" required:"false"`
 }
 
 var config = driver.Config{

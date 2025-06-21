@@ -308,28 +308,32 @@ function renderList(req_path){
         if (data.code==200){
             var list = data['data']['content'];
 
-            for (var i = 0; i < list.length; i++) {
+            if (list){
+                for (var i = 0; i < list.length; i++) {
 
-                if (location.pathname == "/"){
-                    body += '<tr style="border: 0 none;" file="/'+list[i]['name']+'" >';
-                } else {
-                    body += '<tr style="border: 0 none;" file="'+location.pathname+"/"+list[i]['name']+'" >';
-                }
-                
-                if (list[i]['is_dir']){
-                    body += '<td>'+'<span class="ico ico-folder"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
-                } else {
-                    body += '<td>'+'<span class="ico ico-file"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
-                }
+                    if (location.pathname == "/"){
+                        body += '<tr style="border: 0 none;" file="/'+list[i]['name']+'" >';
+                    } else {
+                        body += '<tr style="border: 0 none;" file="'+location.pathname+"/"+list[i]['name']+'" >';
+                    }
+                    
+                    if (list[i]['is_dir']){
+                        body += '<td>'+'<span class="ico ico-folder"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
+                    } else {
+                        body += '<td>'+'<span class="ico ico-file"></span>'+'<a class="text">'+list[i]['name']+'</a></td>';
+                    }
 
-                if (list[i]['is_dir']){
-                    body += '<td style="text-align:right;"><a class="text">-</a></td>';
-                } else {
-                    body += '<td style="text-align:right;"><a class="text">'+toSize(list[i]['size'])+'</a></td>';
+                    if (list[i]['is_dir']){
+                        body += '<td style="text-align:right;"><a class="text">-</a></td>';
+                    } else {
+                        body += '<td style="text-align:right;"><a class="text">'+toSize(list[i]['size'])+'</a></td>';
+                    }
+                    
+                    body += '<td style="text-align:right;"><a class="text">'+isoTimeFormat(list[i]['modified'])+'</a></td>';
+                    body += '</tr>';
                 }
-                
-                body += '<td style="text-align:right;"><a class="text">'+isoTimeFormat(list[i]['modified'])+'</a></td>';
-                body += '</tr>';
+            } else {
+                body += '<tr><td colspan="3" style="text-align: center;">无文件</td></tr>';
             }
 
         } else {
