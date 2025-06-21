@@ -15,7 +15,7 @@ type Addition struct {
 	IgnoreSymlinkError bool `json:"ignore_symlink_error" default:"false" info:"Ignore symlink error"`
 
 	// backup
-	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"false"`
+	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"true"`
 	BackupDir    string `json:"backup_dir" default:"" required:"false"`
 }
 
