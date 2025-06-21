@@ -7,7 +7,7 @@
 	    	<label class="layui-form-label">驱动</label>
 	    	<div class="layui-input-block">
                 <select name="driver" lay-filter="driver">
-                    <option value="s3">对象存储</option>
+                    <option value="ftp">FTP存储</option>
                 </select>
             </div>
 	  	</div>
@@ -86,51 +86,31 @@
 	  	</div>
 
 	  	<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
-       		<legend style="font-size: 12px;">S3配置</legend>
+       		<legend style="font-size: 12px;">FTP配置</legend>
         </fieldset>
 
-	  	<!-- {{.storage.Addition}} -->
+
 	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">存储桶</label>
+	    	<label class="layui-form-label">地址</label>
 	    	<div class="layui-input-block">
-                <input name="addition.bucket" type="text" value="{{if .addition}}{{.addition.Bucket}}{{end}}" class="layui-input">
+                <input name="addition.address" type="text" value="{{if .addition}}{{.addition.Address}}{{end}}" class="layui-input">
             </div>
 	  	</div>
 
 	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">Endpoint</label>
+	    	<label class="layui-form-label">用户</label>
 	    	<div class="layui-input-block">
-                <input name="addition.endpoint" type="text" value="{{if .addition}}{{.addition.Endpoint}}{{end}}" class="layui-input">
+                <input name="addition.username" type="text" value="{{if .addition}}{{.addition.Username}}{{end}}"  class="layui-input">
             </div>
 	  	</div>
 
 	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">地区</label>
+	    	<label class="layui-form-label">密码</label>
 	    	<div class="layui-input-block">
-                <input name="addition.region" type="text" value="{{if .addition}}{{.addition.Region}}{{end}}" class="layui-input">
+                <input name="addition.password" type="text" value="{{if .addition}}{{.addition.Password}}{{end}}" class="layui-input">
             </div>
 	  	</div>
 
-	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">访问密钥ID</label>
-	    	<div class="layui-input-block">
-                <input name="addition.access_key_id" type="text" value="{{if .addition}}{{.addition.AccessKeyID}}{{end}}"  class="layui-input">
-            </div>
-	  	</div>
-
-	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">安全访问密钥</label>
-	    	<div class="layui-input-block">
-                <input name="addition.secret_access_key" type="text" value="{{if .addition}}{{.addition.SecretAccessKey}}{{end}}" class="layui-input">
-            </div>
-	  	</div>
-
-	  	<div class="layui-form-item">
-	    	<label class="layui-form-label">签名链接有效期</label>
-	    	<div class="layui-input-block">
-                <input name="addition.sign_url_expire" type="number" value="{{if .addition}}{{.addition.SignURLExpire}}{{end}}"  class="layui-input">
-            </div>
-	  	</div>
 
 	  	<fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
        		<legend style="font-size: 12px;">备份配置</legend>
