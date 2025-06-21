@@ -453,7 +453,7 @@ form.on('submit(submit_storage)', function(data){
 	for (var d in data.field) {
 		if ($.inArray(d, intarr)!==-1){
 			data.field[d] = parseInt(data.field[d]);
-		} else if (d == 'enable_sign'){
+		} else if (d === 'enable_sign'){
 			data.field[d] = filterAddition('enable_sign',data.field[d]);
 		} else if (d === 'cache_expiration'){
 			data.field[d] = parseInt(data.field[d]);
