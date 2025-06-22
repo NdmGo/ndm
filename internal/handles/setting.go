@@ -1,7 +1,7 @@
 package handles
 
 import (
-	// "fmt"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,5 +14,10 @@ import (
 
 func SettingPage(c *gin.Context) {
 	data := common.CommonVer()
+
+	action := c.Param("action")
+	fmt.Println(action)
+
+	data["setting_page"] = action
 	c.HTML(http.StatusOK, "setting.tmpl", data)
 }
