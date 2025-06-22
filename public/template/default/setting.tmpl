@@ -16,8 +16,8 @@
 
         <div class="tab-box bgw mtb5">
             <div class="tab">
-                <div class="tab-item {{if or (eq .setting_page "") (eq .setting_page "index")}}active{{end}}"><a href="{{.admin_path}}/setting/index">全局</a></div>
-                <div class="tab-item {{if eq .setting_page "state"}}active{{end}}" ><a href="{{.admin_path}}/setting/state">运行状态</a></div>
+                <div class="tab-item {{if or (eq .setting_page "") (eq .setting_page "index")}}active{{end}}" go_url="{{.admin_path}}/setting/index">全局</div>
+                <div class="tab-item {{if eq .setting_page "state"}}active{{end}}" go_url="{{.admin_path}}/setting/state">运行状态</div>
             </div>
         </div>
 
@@ -31,15 +31,26 @@
     </div>
 </div>
 
-<!-- body 末尾处引入 layui -->
 <script>
-layui.use(function(){
-    var layer = layui.layer;
-    var form = layui.form;
-    var laydate = layui.laydate;
-    var util = layui.util;
+layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
+///
+var $ = layui.$;
+var layer = layui.layer;
+var form = layui.form;
+var element = layui.element;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
 
-    layer.msg('Hello World', {icon: 6});
+
+$(".tab-item").click(function(){
+    var go_url = $(this).attr('go_url');
+    if (go_url !== ''){
+        location.href = go_url;
+    }
+});
+
+///
 });
 </script>
 
