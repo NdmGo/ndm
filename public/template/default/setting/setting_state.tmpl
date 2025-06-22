@@ -1,79 +1,154 @@
+<form class="layui-form layui-form-pane">
 
-<form class="layui-form layui-form-pane" action="">
-    <div class="layui-form-item">
-    <label class="layui-form-label">长输入框</label>
-    <div class="layui-input-block">
-      <input type="text" name="title" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input">
-    </div>
-    </div>
-    <div class="layui-form-item">
-    <div class="layui-inline">
-      <label class="layui-form-label">日期选择</label>
-      <div class="layui-input-block">
-        <input type="text" name="date" id="date1" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-    <div class="layui-inline">
-      <label class="layui-form-label">行内表单</label>
-      <div class="layui-input-inline">
-        <input type="text" name="number" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-    </div>
-    <div class="layui-form-item">
-    <label class="layui-form-label">密码框</label>
-    <div class="layui-input-inline">
-      <input type="password" name="password" placeholder="请输入" lay-verify="required" autocomplete="off" class="layui-input">
-    </div>
-    <div class="layui-form-mid layui-text-em">请务必填写用户名</div>
-    </div>
-    <div class="layui-form-item">
-    <div class="layui-inline">
-      <label class="layui-form-label">范围</label>
-      <div class="layui-input-inline" style="width: 100px;">
-        <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
-      </div>
-      <div class="layui-form-mid">-</div>
-      <div class="layui-input-inline" style="width: 100px;">
-        <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-    </div>
-    <div class="layui-form-item">
-    <label class="layui-form-label">选择框</label>
-    <div class="layui-input-inline">
-      <select name="interest" lay-filter="aihao">
-        <option value=""></option>
-        <option value="0">写作</option>
-        <option value="1" selected>阅读</option>
-        <option value="2">游戏</option>
-        <option value="3">音乐</option>
-        <option value="4">旅行</option>
-      </select>
-    </div>
-    </div>
-     <div class="layui-form-item" pane>
-    <label class="layui-form-label">开关-默认开</label>
-    <div class="layui-input-block">
-      <input type="checkbox" checked name="open" lay-skin="switch" lay-filter="switchTest" title="开关">
-    </div>
-    </div>
-    <div class="layui-form-item" pane>
-    <label class="layui-form-label">单选框</label>
-    <div class="layui-input-block">
-      <input type="radio" name="sex" value="男" title="男" checked>
-      <input type="radio" name="sex" value="女" title="女">
-      <input type="radio" name="sex" value="禁" title="禁用" disabled>
-    </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-    <label class="layui-form-label">文本域</label>
-    <div class="layui-input-block">
-      <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
-    </div>
-    </div>
-     <div class="layui-form-item">
-    <button class="layui-btn" lay-submit lay-filter="demo2">确认</button>
-    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </div>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="150">
+        </colgroup>
+        <tbody>
+            <tr>
+                <td>服务运行时间</td>
+                <td>{{.sys_state.Uptime}}</td>
+            </tr>
+            <tr>
+                <td>当前 Goroutines 数量</td>
+                <td>{{.sys_state.NumGoroutine}}</td>
+            </tr>
+            <tr>
+                <td>内存相关</td>
+                <td>值</td>
+            </tr>
+            <tr>
+                <td>当前内存使用量</td>
+                <td>{{.sys_state.MemAllocated}}</td>
+            </tr>
+            <tr>
+                <td>所有被分配的内存</td>
+                <td>{{.sys_state.MemTotal}}</td>
+            </tr>
+            <tr>
+                <td>内存占用量</td>
+                <td>{{.sys_state.MemSys}}</td>
+            </tr>
+            <tr>
+                <td>指针查找次数</td>
+                <td>{{.sys_state.Lookups}}</td>
+            </tr>
+
+            <tr>
+                <td>Heap内存相关</td>
+                <td>值</td>
+            </tr>
+
+            <tr>
+                <td>当前 Heap 内存使用量</td>
+                <td>{{.sys_state.HeapAlloc}}</td>
+            </tr>
+
+            <tr>
+                <td>Heap 内存占用量</td>
+                <td>{{.sys_state.HeapSys}}</td>
+            </tr>
+
+            <tr>
+                <td>Heap 内存空闲量</td>
+                <td>{{.sys_state.HeapIdle}}</td>
+            </tr>
+
+            <tr>
+                <td>正在使用的 Heap 内存</td>
+                <td>{{.sys_state.HeapInuse}}</td>
+            </tr>
+
+            <tr>
+                <td>被释放的 Heap 内存</td>
+                <td>{{.sys_state.HeapReleased}}</td>
+            </tr>
+
+            <tr>
+                <td>Heap 对象数量</td>
+                <td>{{.sys_state.HeapObjects}}</td>
+            </tr>
+
+            <tr>
+                <td>Stack内存相关</td>
+                <td>值</td>
+            </tr>
+
+            <tr>
+                <td>启动 Stack 使用量</td>
+                <td>{{.sys_state.StackInuse}}</td>
+            </tr>
+
+            <tr>
+                <td>被分配的 Stack 内存</td>
+                <td>{{.sys_state.StackSys}}</td>
+            </tr>
+
+            <tr>
+                <td>MSpan 结构内存使用量</td>
+                <td>{{.sys_state.MSpanInuse}}</td>
+            </tr>
+
+            <tr>
+                <td>被分配的 MSpan 结构内存</td>
+                <td>{{.sys_state.HeapSys}}</td>
+            </tr>
+
+            <tr>
+                <td>MCache 结构内存使用量</td>
+                <td>{{.sys_state.MCacheInuse}}</td>
+            </tr>
+
+            <tr>
+                <td>被分配的 MCache 结构内存</td>
+                <td>{{.sys_state.MCacheSys}}</td>
+            </tr>
+
+            <tr>
+                <td>被分配的剖析哈希表内存</td>
+                <td>{{.sys_state.BuckHashSys}}</td>
+            </tr>
+
+            <tr>
+                <td>被分配的 GC 元数据内存</td>
+                <td>{{.sys_state.GCSys}}</td>
+            </tr>
+
+            <tr>
+                <td>其它被分配的系统内存</td>
+                <td>{{.sys_state.OtherSys}}</td>
+            </tr>
+
+            <tr>
+                <td>GC相关</td>
+                <td>值</td>
+            </tr>
+
+            <tr>
+                <td>下次 GC 内存回收量</td>
+                <td>{{.sys_state.NextGC}}</td>
+            </tr>
+
+            <tr>
+                <td>距离上次 GC 时间</td>
+                <td>{{.sys_state.LastGC}}</td>
+            </tr>
+
+            <tr>
+                <td>GC 暂停时间总量</td>
+                <td>{{.sys_state.PauseTotalNs}}</td>
+            </tr>
+
+            <tr>
+                <td>上次 GC 暂停时间</td>
+                <td>{{.sys_state.PauseNs}}</td>
+            </tr>
+
+            <tr>
+                <td>GC 执行次数</td>
+                <td>{{.sys_state.NumGC}}</td>
+            </tr>
+        </tbody>
+    </table>
 </form>
