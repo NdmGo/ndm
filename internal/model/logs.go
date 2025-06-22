@@ -1,9 +1,7 @@
 package model
 
 import (
-	// "fmt"
 	"time"
-	// "ndm/internal/utils"
 )
 
 type Logs struct {
@@ -11,12 +9,4 @@ type Logs struct {
 	Type     string    `json:"type"`                 //
 	Content  string    `json:"content"`              //
 	Modified time.Time `json:"modified"`
-}
-
-func (s *Logs) GetLogs() *Logs {
-	return s
-}
-
-func (s *Logs) SetLogs(logs Logs) {
-	*s = logs
 }
