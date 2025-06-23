@@ -28,7 +28,7 @@ func LogsList(c *gin.Context) {
 		return
 	}
 
-	storages, total, err := db.GetStoragesDriver(args.Page, args.Size, args.Driver)
+	storages, total, err := db.GetLogsList(args.Page, args.Size)
 	if err != nil {
 		common.ErrorResp(c, err, 500)
 		return

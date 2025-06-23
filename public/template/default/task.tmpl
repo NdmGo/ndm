@@ -1,5 +1,6 @@
 {{template "header.tmpl" .}}
 
+
 <!-- 内容页 -->
 <div class="main-content">
     <div class="container-fluid" style="padding-top: 4px;">
@@ -13,69 +14,40 @@
             </div>
         </div>
 
-        <div class="bgw divtable" style="padding:8px;font-size:12px;">
-            <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
-                <div class="layui-inline mr0">
-                    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="">添加</button>
-                </div>
-
-                <div class="layui-inline select100 mr0">
-                    <div class="layui-input-inline h30">
-                        <select name="zd">
-                            <option value="name">名称</option>
-                            <option value="author">作者</option>
-                            <option value="id">ID</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="layui-inline mr0">
-                    <div class="layui-input-inline mr0">
-                        <input type="text" name="key" placeholder="请输入关键字" autocomplete="off" class="layui-input h30" value="">
-                    </div>
-                </div>
-
-                <div class="layui-inline mr0">
-                    <button class="layui-btn layui-btn-sm" id="table-sreach" data-id="list" lay-submit lay-filter="table-sreach"><i class="layui-icon">&#xe615;</i>搜索
-                    </button>
-                </div>
+        <div class="tab-box bgw mtb5">
+            <div class="tab">
+                <div class="tab-item {{if or (eq .task_page "") (eq .task_page "index")}}active{{end}}" go_url="{{.admin_path}}/task/cron">定时任务</div>
+                <div class="tab-item {{if eq .task_page "runtime"}}active{{end}}" go_url="{{.admin_path}}/task/runtime">实时任务</div>
             </div>
-            <div id="storage_list" class="bgw divtable"></div>
         </div>
 
+        <div class="bgw" style="padding:8px;font-size:12px;">
+        {{if or (eq .task_page "") (eq .task_page "index") }}
+            {{template "task_index.tmpl" .}}
+        {{else if eq .setting_page "state"}}
+            {{template "task_runtime.tmpl" .}}
+        {{end}}
+        </div>
     </div>
 </div>
 
 <script>
-layui.use(function(){
+layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
 ///
+var $ = layui.$;
 var layer = layui.layer;
 var form = layui.form;
+var element = layui.element;
 var table = layui.table;
 var laydate = layui.laydate;
 var util = layui.util;
 
-table.render({
-    elem: '#storage_list',
-    url: '{{.api_path}}/storage/list',
-    request: {
-        pageName: 'page',
-        limitName: 'size'
-    },
-    defaultToolbar: [],
-    title: '数据表',
-    cols: [[
-        {field:'name', title:'挂载路径', width:200},
-        {field:'name', title:'驱动', width:180},
-        {field:'name', title:'序号', width:180},
-        {field:'name', title:'状态'},
-        {title:'操作', toolbar: '#cmdTpl', fixed: 'right',}
-    ]],
-    page: true,
-    where:[],
+$(".tab-item").click(function(){
+    var go_url = $(this).attr('go_url');
+    if (go_url !== ''){
+        location.href = go_url;
+    }
 });
-    
-
 ///
 });
 </script>

@@ -11,6 +11,33 @@
     <script src="/static/js/jquery-1.10.2.min.js?v={{.version}}"></script>
     <script src="/static/js/jquery.cookie-1.4.1.min.js?v={{.version}}"></script>
     <script src="/static/js/ndm.js?v={{.version}}"></script>
+    <script>
+    layui.use(['jquery'],function() {
+        var $ = layui.$;
 
+        $(window).ready(function(){
+            var thisPath = window.location.pathname.trim()+window.location.search;
+            var path = '{{.admin_path}}';
+            var nav_list = ['storage', 'user', 'plugins', 'task', 'logs', 'setting'];
+
+            var isHasMenu = false;
+            for (var n in nav_list) {
+                var newpath = path+'/'+nav_list[n];
+                if (new RegExp(`^${newpath}`).test(thisPath)) {
+                    isHasMenu = true;
+                    $('.navmenu_'+nav_list[n]).addClass('layui-nav-itemed').css('background-color','#2c3138');
+                    break;
+                }
+            }
+
+            if (!isHasMenu){
+                $('.navmenu_index').addClass('layui-nav-itemed').css('background-color','#2c3138');
+            }
+        });
+    });
+    </script>
 </head>
+
+
+
 

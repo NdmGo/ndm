@@ -8,7 +8,7 @@
                 <i class="layui-icon layui-icon-home ndm-home"></i>
 
                 <div class="ndm-breadcrumb">
-                    <a class="plr10 c4" href="{{.admin_path}}">首页</a>/<span class="plr10 c4">存储管理</span>
+                    <a class="plr10 c4" href="{{.admin_path}}">首页</a>/<span class="plr10 c4">日志管理</span>
                 </div>
             </div>
         </div>
@@ -16,9 +16,8 @@
         <div class="bgw divtable" style="padding:8px;font-size:12px;">
             <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
                 <div class="layui-inline mr0">
-                    <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('添加','{{.admin_path}}/storage/create',800,480)">添加</button>
+                    <button id="clear" class="layui-btn layui-btn-sm layui-bg-blue" lay-event="clear">清空</button>
                 </div>
-
                 <div class="layui-inline mr0">
                     <button id="refresh" class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
                 </div>
@@ -26,29 +25,13 @@
                 <div class="layui-inline select100 mr0">
                     <div class="layui-input-inline h30">
                         <select name="driver">
-                            <option value="">所有存储</option>
-                            <option value="local">本机存储</option>
-                            <option value="s3">对象存储</option>
-                            <option value="ftp">FTP存储</option>
+                            <option value="">所有日志</option>
+                            <option value="notice">提示</option>
+                            <option value="warning">警告</option>
+                            <option value="error">严重</option>
                         </select>
                     </div>
                 </div>
-
-                <!--                 
-                <div class="layui-inline select100 mr0">
-                    <div class="layui-input-inline h30">
-                        <select name="zd">
-                            <option value="">选择</option>
-                        </select>
-                    </div>
-                </div>           
-
-                <div class="layui-inline mr0">
-                    <div class="layui-input-inline mr0">
-                        <input type="text" name="key" placeholder="请输入关键字" autocomplete="off" class="layui-input h30" value="">
-                    </div>
-                </div> 
-                -->
 
                 <div class="layui-inline mr0">
                     <button class="layui-btn layui-btn-sm" id="table-sreach" data-id="list" lay-submit lay-filter="table-sreach">
@@ -73,7 +56,7 @@ var util = layui.util;
 
 table.render({
     elem: '#list',
-    url: '{{.api_path}}/storage/list',
+    url: '{{.api_path}}/logs/list',
     request: {
         pageName: 'page',
         limitName: 'size'
@@ -81,27 +64,13 @@ table.render({
     defaultToolbar: [],
     title: '数据表',
     cols: [[
-        {field:'mount_path', title:'挂载路径', width:200},
-        {field:'driver', title:'驱动', width:100},
-        {field:'order', title:'序号', width:100},
-        {field:'remark', title:'备注'},
-        {field:'status', title:'状态',width:70},
-        {title:'模式', toolbar: '#modeTpl',width:200},
+        {field:'id', title:'ID', width:200},
+        {field:'type', title:'类型', width:100},
+        {field:'content', title:'内容'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
     ]],
     page: true,
     where:[],
-    parseData: function(res){
-        res.data.forEach(function(item){
-            item.addition = JSON.parse(item.addition);
-        });
-        return {
-            "code": res.code,
-            "msg": res.msg,
-            "count": res.count,
-            "data": res.data
-        };
-    },
     done: function(res){
         console.log('done', res);
     }
@@ -120,40 +89,9 @@ $("#refresh").click(function(){
 });
 </script>
 
-<script type="text/html" id="disabledTpl">
-    {@# if(d.disabled){ @}
-    <button type="button" class="layui-btn layui-btn-xs layui-bg-red">否</button>
-    {@# }else{ @}
-    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal">是</button>
-    {@# } @}
-</script>
-
-<script type="text/html" id="modeTpl">
-
-    {@# if( isSupportEnableSync(d) ){ @}
-    <a class="layui-btn layui-btn-xs">同步</a>
-    {@# } else if( isSupportEnableBackup(d) ){ @}
-    <a class="layui-btn layui-btn-xs">备份</a>
-    {@# } else { @}
-    <a class="layui-btn layui-btn-xs">无</a>
-    {@# } @}
-
-    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id={@d.id@}',800,480)">编辑</a>
-    {@# if(d.disabled == 1){ @}
-    <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已禁用</a>
-    {@# }else{ @}
-    <a class="layui-btn layui-btn-xs" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已启用</a>
-    {@# } @}
-</script>
 
 <script type="text/html" id="cmdTpl">
-    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/storage/edit?id={@d.id@}',800,480)">编辑</a>
-    {@# if(d.disabled == 1){ @}
-    <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已禁用</a>
-    {@# }else{ @}
-    <a class="layui-btn layui-btn-xs" onclick="Admin.trigger(this,'{{.api_path}}/storage/trigger_disable','{@d.id@}')">已启用</a>
-    {@# } @}
-    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/storage/delete?id={@d.id@}')">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/logs/delete?id={@d.id@}')">删除</a>
 </script>
 
 

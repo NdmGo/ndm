@@ -14,6 +14,10 @@ import (
 
 func TaskPage(c *gin.Context) {
 	data := common.CommonVer()
+
+	action := c.Param("action")
+	data["task_page"] = action
+
 	c.HTML(http.StatusOK, "task.tmpl", data)
 }
 
