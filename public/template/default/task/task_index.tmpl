@@ -1,8 +1,45 @@
-<form class="layui-form layui-form-pane" action="">
-    <div class="layui-form-item">
-    <label class="layui-form-label">长输入框</label>
-    <div class="layui-input-block">
-        <input type="text" name="title" autocomplete="off" placeholder="请输入" lay-verify="required" class="layui-input">
-    </div>
-    </div>
-</form>
+<div id="list" class="bgw divtable"></div>
+
+<script>
+layui.use(function(){
+///
+var layer = layui.layer;
+var form = layui.form;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+table.render({
+    elem: '#list',
+    url: '{{.api_path}}/logs/list',
+    request: {
+        pageName: 'page',
+        limitName: 'size'
+    },
+    defaultToolbar: [],
+    title: '数据表',
+    cols: [[
+        {field:'id', title:'ID', width:200},
+        {field:'type', title:'类型', width:100},
+        {field:'content', title:'内容'},
+        {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
+    ]],
+    page: true,
+    where:[],
+    done: function(res){
+        console.log('done', res);
+    }
+
+});
+
+$("#refresh").click(function(){
+    table.reload("list");
+});
+
+///
+});
+</script>
+
+<script type="text/html" id="cmdTpl">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/logs/delete?id={@d.id@}')">删除</a>
+</script>
