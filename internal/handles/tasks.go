@@ -1,8 +1,8 @@
 package handles
 
 import (
-	// "fmt"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -68,6 +68,26 @@ func CreateTasks(c *gin.Context) {
 	} else {
 		common.SuccessResp(c, gin.H{"id": id})
 	}
+}
+
+func DoneTasks(c *gin.Context) {
+	var req model.Tasks
+	if err := c.ShouldBind(&req); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	if strings.EqualFold(req.MountPath, "") {
+		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
+			"id": 0,
+		}, true)
+		return
+	}
+
+	task, err := db.GetTasksByMountPath(req.MountPath)
+	fmt.Println(task.ID, err)
+
+	common.ErrorResp(c, errors.New("测试中!"), 500, true)
 }
 
 func DeleteTasks(c *gin.Context) {

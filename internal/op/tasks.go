@@ -30,6 +30,11 @@ func CreateTasks(ctx context.Context, task model.Tasks) (int64, error) {
 	return task.ID, nil
 }
 
+func DoneTasks(ctx context.Context, task model.Tasks) error {
+
+	return nil
+}
+
 func DeleteTasksById(ctx context.Context, id int64) error {
 	_, err := db.GetTasksById(id)
 	if err != nil {
