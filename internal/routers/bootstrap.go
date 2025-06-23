@@ -134,7 +134,7 @@ func initRuoteApi(r *gin.Engine) {
 
 	tasks := g.Group("/tasks")
 	tasks.GET("/list", handles.TasksList)
-	tasks.GET("/create", handles.CreateTasks)
+	tasks.POST("/create", handles.CreateTasks)
 	tasks.POST("/delete", handles.DeleteTasks)
 
 	downloadLimiter := middlewares.DownloadRateLimiter(stream.ClientDownloadLimit)

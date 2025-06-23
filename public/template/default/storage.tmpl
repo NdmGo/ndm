@@ -104,7 +104,7 @@ table.render({
         };
     },
     done: function(res){
-        console.log('done', res);
+        // console.log('done', res);
     }
 
 });
@@ -114,8 +114,34 @@ $("#refresh").click(function(){
     table.reload("list");
 });
 
-function task_create(data){
-    console.log(data);
+function task_create(table_data){
+    var args = {
+        "mount_path": table_data.data['mount_path'],
+        "cron":"0 0 * * 1",
+    }
+
+    var loader = layer.load();
+    $.ajax({
+        type: "POST",
+        headers: {'Content-Type': 'application/json'},
+        url: '{{.api_path}}/tasks/create',
+        data: JSON.stringify(args),
+        dataType: 'json',
+        success: function(data) {
+            layer.close(loader);
+            if (data.code != 200 ){
+                layer.msg(data.msg, {icon: 2});
+            } else if (data.code == 200){
+                layer.msg("执行成功!", {icon: 1});
+            } else {
+                layer.msg("访问异常!", {icon: 2});
+            }
+        },
+        error:function(e){
+            layer.close(loader);
+            layer.msg(e, {icon: 2});
+        }
+    });
 }
 
 

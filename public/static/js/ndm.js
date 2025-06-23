@@ -301,7 +301,7 @@ form.on('submit(submit_save)', function(data){
         success: function(res) {
         	layer.close(index);
             if (res.code != 200 ){
-                layer.msg(res.message, {icon: 2});
+                layer.msg(res.msg, {icon: 2});
             } else if (res.code == 200){
                 setTimeout(function(){
                     parent.location.reload();
