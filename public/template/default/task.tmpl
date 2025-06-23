@@ -16,7 +16,7 @@
 
         <div class="tab-box bgw mtb5">
             <div class="tab">
-                <div class="tab-item {{if or (eq .task_page "") (eq .task_page "index")}}active{{end}}" go_url="{{.admin_path}}/task/cron">定时任务</div>
+                <div class="tab-item {{if or (eq .task_page "") (eq .task_page "index")}}active{{end}}" go_url="{{.admin_path}}/task/index">定时任务</div>
                 <div class="tab-item {{if eq .task_page "runtime"}}active{{end}}" go_url="{{.admin_path}}/task/runtime">实时任务</div>
             </div>
         </div>
