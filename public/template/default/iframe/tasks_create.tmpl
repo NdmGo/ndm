@@ -11,6 +11,13 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label">挂载路径</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" value="{{if .tasks}}{{.tasks.Name}}{{end}}" autocomplete="off" class="layui-input" placeholder="请输入任务名称">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label">任务周期</label>
             <div class="layui-input-block">
                 <input type="text" name="cron" value="{{if .tasks}}{{.tasks.Cron}}{{end}}" autocomplete="off" class="layui-input">
