@@ -1,4 +1,14 @@
+
+<div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
+    <div class="layui-inline mr0">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="Admin.open('创建任务','{{.admin_path}}/tasks/create',800,480)">创建任务</button>
+    </div>
+    <div class="layui-inline mr0">
+        <button id="refresh" class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
+    </div>
+</div>
 <div id="list" class="bgw divtable"></div>
+
 
 <script>
 layui.use(function(){
@@ -11,7 +21,7 @@ var util = layui.util;
 
 table.render({
     elem: '#list',
-    url: '{{.api_path}}/logs/list',
+    url: '{{.api_path}}/tasks/list',
     request: {
         pageName: 'page',
         limitName: 'size'
@@ -19,8 +29,9 @@ table.render({
     defaultToolbar: [],
     title: '数据表',
     cols: [[
-        {field:'id', title:'ID', width:200},
+        {field:'id', title:'任务ID', width:200},
         {field:'type', title:'类型', width:100},
+        {field:'cron', title:'任务', width:200},
         {field:'content', title:'内容'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
     ]],
@@ -41,5 +52,5 @@ $("#refresh").click(function(){
 </script>
 
 <script type="text/html" id="cmdTpl">
-    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/logs/delete?id={@d.id@}')">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/tasks/delete?id={@d.id@}')">删除</a>
 </script>

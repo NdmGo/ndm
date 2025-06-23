@@ -86,8 +86,9 @@ func initAdminStaticPage(r *gin.Engine) {
 	gauth.GET("/setting/:action", handles.SettingPage)
 
 	gauth.GET("/logs", handles.LogsPage)
-	gauth.GET("/task", handles.TaskPage)
-	gauth.GET("/task/:action", handles.TaskPage)
+	gauth.GET("/tasks/create", handles.TasksCreatePage)
+	gauth.GET("/tasks", handles.TasksPage)
+	gauth.GET("/tasks/:action", handles.TasksPage)
 	gauth.GET("/plugins", handles.PluginsPage)
 
 	//static file
@@ -130,6 +131,11 @@ func initRuoteApi(r *gin.Engine) {
 
 	logs := g.Group("/logs")
 	logs.GET("/list", handles.LogsList)
+
+	tasks := g.Group("/tasks")
+	tasks.GET("/list", handles.TasksList)
+	tasks.GET("/create", handles.CreateTasks)
+	tasks.POST("/delete", handles.DeleteTasks)
 
 	downloadLimiter := middlewares.DownloadRateLimiter(stream.ClientDownloadLimit)
 	signCheck := middlewares.Down(sign.Verify)

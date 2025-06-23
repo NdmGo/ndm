@@ -1,0 +1,74 @@
+{{template "header_head.tmpl" .}}
+
+<div class="layui-fluid" style="background-color: white;padding: 20px;">
+    <form class="layui-form layui-form-pane" lay-filter="tasks" id="taskss_edit" action="{{.api_path}}/tasks/{{if .user}}update{{else}}create{{end}}" method="POST">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" value="{{if .tasks}}{{.tasks.Name}}{{end}}" autocomplete="off" class="layui-input" placeholder="请输入任务名称">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务周期</label>
+            <div class="layui-input-block">
+                <input type="text" name="cron" value="{{if .tasks}}{{.tasks.Cron}}{{end}}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center;padding: 10px;">
+            <input type="hidden" name="id" value="{{if .tasks}}{{.tasks.ID}}{{end}}">
+            <button class="layui-btn layui-btn-sm" lay-filter="submit_tasks" lay-submit>保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+        </div>
+    </form>
+</div>
+
+<script>
+layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
+///
+var $ = layui.$;
+var layer = layui.layer;
+var form = layui.form;
+var element = layui.element;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+
+
+form.on('submit(submit_tasks)', function(data){
+    var loader = layer.load();
+    var intarr = ['order','id'];
+    console.log(data);
+    $.ajax({
+        type: "POST",
+        headers: {'Content-Type': 'application/json'},
+        url: data.form.action,
+        data: JSON.stringify(data.field),
+        dataType: 'json',
+        success: function(res) {
+            layer.close(loader);
+            if (res.code != 200 ){
+                layer.msg(res.msg, {icon: 2});
+            } else if (res.code == 200){
+                setTimeout(function(){
+                    parent.location.reload();
+                }, 5000);
+            } else {
+                layer.msg("访问异常!", {icon: 2});
+            }
+        },
+        error:function(e){
+            layer.close(loader);
+            layer.msg(e, {icon: 2});
+        }
+    });
+    return false;
+});
+///
+});
+</script>
+</body>
+</html>
