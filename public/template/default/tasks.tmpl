@@ -33,22 +33,20 @@
 
 <script>
 layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
-///
-var $ = layui.$;
-var layer = layui.layer;
-var form = layui.form;
-var element = layui.element;
-var table = layui.table;
-var laydate = layui.laydate;
-var util = layui.util;
+    var $ = layui.$;
+    var layer = layui.layer;
+    var form = layui.form;
+    var element = layui.element;
+    var table = layui.table;
+    var laydate = layui.laydate;
+    var util = layui.util;
 
-$(".tab-item").click(function(){
-    var go_url = $(this).attr('go_url');
-    if (go_url !== ''){
-        location.href = go_url;
-    }
-});
-///
+    $(".tab-item").click(function(){
+        var go_url = $(this).attr('go_url');
+        if (go_url !== ''){
+            location.href = go_url;
+        }
+    });
 });
 </script>
 

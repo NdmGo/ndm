@@ -26,16 +26,16 @@ table.render({
     defaultToolbar: [],
     title: '数据表',
     cols: [[
-        {field:'id', title:'任务ID', width:200},
-        {field:'mount_path', title:'挂载路径', width:100},
-        {field:'cron', title:'任务周期', width:200},
+        {field:'id', title:'任务ID'},
+        {field:'mount_path', title:'挂载路径'},
+        {field:'cron', title:'任务周期'},
         {field:'content', title:'内容'},
         {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
     ]],
     page: true,
     where:[],
     done: function(res){
-        console.log('done', res);
+        // console.log('done', res);
     }
 
 });

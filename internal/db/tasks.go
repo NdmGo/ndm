@@ -25,6 +25,15 @@ func GetTasksById(id int64) (*model.Tasks, error) {
 	return &task, nil
 }
 
+func GetTasksByMountPath(mount_path string) (*model.Tasks, error) {
+	var task model.Tasks
+	task.MountPath = mount_path
+	if err := db.First(&task).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return &task, nil
+}
+
 func GetTasksList(page, size int) ([]model.Tasks, int64, error) {
 	task := db.Model(&model.Tasks{})
 	var count int64

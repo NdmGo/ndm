@@ -2,8 +2,10 @@ package handles
 
 import (
 	// "fmt"
+	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -45,6 +47,19 @@ func CreateTasks(c *gin.Context) {
 	var req model.Tasks
 	if err := c.ShouldBind(&req); err != nil {
 		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	if strings.EqualFold(req.MountPath, "") {
+		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
+			"id": 0,
+		}, true)
+		return
+	}
+
+	_, err := db.GetTasksByMountPath(req.MountPath)
+	if err == nil {
+		common.ErrorWithDataResp(c, errors.New("任务已经存在!"), 500, gin.H{}, true)
 		return
 	}
 
