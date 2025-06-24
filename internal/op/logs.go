@@ -2,20 +2,11 @@ package op
 
 import (
 	"context"
-	// "fmt"
-	// "sort"
-	// "strings"
 	"time"
 
-	// "ndm/internal/conf"
-	"ndm/internal/db"
-	// "ndm/internal/errs"
-	"ndm/internal/model"
-	// "ndm/pkg/generic_sync"
-	// "ndm/pkg/utils"
-	// mapset "github.com/deckarep/golang-set/v2"
 	"github.com/pkg/errors"
-	// log "github.com/sirupsen/logrus"
+	"ndm/internal/db"
+	"ndm/internal/model"
 )
 
 func AddLogs(ctx context.Context, log model.Logs) (int64, error) {
@@ -25,4 +16,23 @@ func AddLogs(ctx context.Context, log model.Logs) (int64, error) {
 		return log.ID, errors.WithMessage(err, "failed add logs in database")
 	}
 	return log.ID, nil
+}
+
+func AddTypeLogs(ctx context.Context, stype, content string) (int64, error) {
+	var log model.Logs
+	log.Type = stype
+	log.Content = content
+	return AddLogs(ctx, log)
+}
+
+func AddNoticeLogs(ctx context.Context, content string) (int64, error) {
+	return AddTypeLogs(ctx, "notice", content)
+}
+
+func AddWarnLogs(ctx context.Context, content string) (int64, error) {
+	return AddTypeLogs(ctx, "warn", content)
+}
+
+func AddErrorLogs(ctx context.Context, content string) (int64, error) {
+	return AddTypeLogs(ctx, "error", content)
 }
