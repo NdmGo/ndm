@@ -27,8 +27,7 @@ func GetTasksById(id int64) (*model.Tasks, error) {
 
 func GetTasksByMountPath(mount_path string) (*model.Tasks, error) {
 	var task model.Tasks
-	task.MountPath = mount_path
-	if err := db.First(&task).Error; err != nil {
+	if err := db.First(&task, "mount_path = ?", mount_path).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
 	return &task, nil

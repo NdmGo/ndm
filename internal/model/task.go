@@ -9,7 +9,6 @@ type Tasks struct {
 	MountPath string    `json:"mount_path" gorm:"unique"` // must be standardized
 	Cron      string    `json:"cron"`                     //
 	Progress  int64     `json:"progress"`                 //
-	Content   string    `json:"content"`                  //
 	LastDone  string    `json:"last_done"`                // task last done time
 	Modified  time.Time `json:"modified"`
 }

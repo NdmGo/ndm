@@ -21,7 +21,6 @@ import (
 func CreateTasks(ctx context.Context, task model.Tasks) (int64, error) {
 	task.Modified = time.Now()
 	task.Progress = 0
-	task.Content = ""
 	task.LastDone = ""
 	err := db.CreateTasks(&task)
 	if err != nil {
