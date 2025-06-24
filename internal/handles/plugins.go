@@ -8,7 +8,7 @@ import (
 
 	"ndm/internal/common"
 	"ndm/internal/db"
-	// "ndm/internal/model"
+	"ndm/internal/model"
 	// "ndm/internal/op"
 )
 
@@ -17,13 +17,8 @@ func PluginsPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "plugins.tmpl", data)
 }
 
-type PluginsArgs struct {
-	Page int `json:"page" form:"page"`
-	Size int `json:"size" form:"size"`
-}
-
 func PluginsList(c *gin.Context) {
-	var args PluginsArgs
+	var args model.PageReq
 	if err := c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)
 		return
