@@ -90,9 +90,9 @@ func (d *S3) Link(ctx context.Context, file model.Obj, args model.LinkArgs) (*mo
 		disposition = fmt.Sprintf(`attachment; filename="%s"; filename*=UTF-8''%s`, filename, url.PathEscape(filename))
 	}
 	input := &s3.GetObjectInput{
-		Bucket: &d.Bucket,
-		Key:    &path,
-		//ResponseContentDisposition: &disposition,
+		Bucket:                     &d.Bucket,
+		Key:                        &path,
+		ResponseContentDisposition: &disposition,
 	}
 	if d.CustomHost == "" {
 		input.ResponseContentDisposition = &disposition

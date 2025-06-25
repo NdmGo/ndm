@@ -109,6 +109,11 @@ func Key(storage driver.Driver, path string) string {
 
 // List files in storage, not contains virtual file
 func List(ctx context.Context, storage driver.Driver, path string, args model.ListArgs) ([]model.Obj, error) {
+	return StorageList(ctx, storage, path, args, true)
+}
+
+// List files in storage, not contains virtual file
+func StorageList(ctx context.Context, storage driver.Driver, path string, args model.ListArgs, use_cache bool) ([]model.Obj, error) {
 	if storage.Config().CheckStatus && storage.GetStorage().Status != WORK {
 		return nil, errors.Errorf("storage not init: %s", storage.GetStorage().Status)
 	}
@@ -153,13 +158,15 @@ func List(ctx context.Context, storage driver.Driver, path string, args model.Li
 		}
 		model.ExtractFolder(files, storage.GetStorage().ExtractFolder)
 
-		if !storage.Config().NoCache {
-			if len(files) > 0 {
-				log.Debugf("set cache: %s => %+v", key, files)
-				listCache.Set(key, files, cache.WithEx[[]model.Obj](time.Minute*time.Duration(storage.GetStorage().CacheExpiration)))
-			} else {
-				log.Debugf("del cache: %s", key)
-				listCache.Del(key)
+		if use_cache {
+			if !storage.Config().NoCache {
+				if len(files) > 0 {
+					log.Debugf("set cache: %s => %+v", key, files)
+					listCache.Set(key, files, cache.WithEx[[]model.Obj](time.Minute*time.Duration(storage.GetStorage().CacheExpiration)))
+				} else {
+					log.Debugf("del cache: %s", key)
+					listCache.Del(key)
+				}
 			}
 		}
 		return files, nil
@@ -527,7 +534,7 @@ func Put(ctx context.Context, storage driver.Driver, dstDirPath string, file mod
 	// if file exist and size = 0, delete it
 	dstDirPath = utils.FixAndCleanPath(dstDirPath)
 	dstPath := stdpath.Join(dstDirPath, file.GetName())
-	tempName := file.GetName() + ".alist_to_delete"
+	tempName := file.GetName() + "ndm_to_delete"
 	tempPath := stdpath.Join(dstDirPath, tempName)
 	fi, err := GetUnwrap(ctx, storage, dstPath)
 	if err == nil {

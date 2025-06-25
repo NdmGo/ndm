@@ -1,8 +1,7 @@
 package op
 
 import (
-	"context"
-	// "fmt"
+	"fmt"
 	// "sort"
 	// "strings"
 	"time"
@@ -14,11 +13,12 @@ import (
 	// "ndm/pkg/generic_sync"
 	// "ndm/pkg/utils"
 	// mapset "github.com/deckarep/golang-set/v2"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	// log "github.com/sirupsen/logrus"
 )
 
-func CreateTasks(ctx context.Context, task model.Tasks) (int64, error) {
+func CreateTasks(task model.Tasks) (int64, error) {
 	task.Modified = time.Now()
 	task.Progress = 0
 	task.LastDone = ""
@@ -29,12 +29,26 @@ func CreateTasks(ctx context.Context, task model.Tasks) (int64, error) {
 	return task.ID, nil
 }
 
-func DoneTasks(ctx context.Context, task model.Tasks) error {
+func DoneTasks(c *gin.Context, mountPath string) error {
+
+	driver, err := GetStorageByMountPath(mountPath)
+
+	_objs, err := StorageList(c, driver, "/", model.ListArgs{
+		ReqPath: mountPath,
+		Refresh: true,
+	}, false)
+
+	for _, d := range _objs {
+		fmt.Println(d.GetPath())
+	}
+
+	fmt.Println("DoneTasks:", driver, err)
+	fmt.Println("DoneTasks:", _objs, err)
 
 	return nil
 }
 
-func DeleteTasksById(ctx context.Context, id int64) error {
+func DeleteTasksById(id int64) error {
 	_, err := db.GetTasksById(id)
 	if err != nil {
 		return errors.WithMessage(err, "failed get tasks")

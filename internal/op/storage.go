@@ -216,17 +216,17 @@ func UpdateStorage(ctx context.Context, storage model.Storage) error {
 		return nil
 	}
 	storageDriver, err := GetStorageByMountPath(oldStorage.MountPath)
-	// if oldStorage.MountPath != storage.MountPath {
-	// 	// mount path renamed, need to drop the storage
-	// 	storagesMap.Delete(oldStorage.MountPath)
-	// }
-	// if err != nil {
-	// 	return errors.WithMessage(err, "failed get storage driver")
-	// }
-	// err = storageDriver.Drop(ctx)
-	// if err != nil {
-	// 	return errors.Wrapf(err, "failed drop storage")
-	// }
+	if oldStorage.MountPath != storage.MountPath {
+		// mount path renamed, need to drop the storage
+		storagesMap.Delete(oldStorage.MountPath)
+	}
+	if err != nil {
+		return errors.WithMessage(err, "failed get storage driver")
+	}
+	err = storageDriver.Drop(ctx)
+	if err != nil {
+		return errors.Wrapf(err, "failed drop storage")
+	}
 
 	err = initStorage(ctx, storage, storageDriver)
 	go callStorageHooks("update", storageDriver)

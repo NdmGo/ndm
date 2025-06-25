@@ -1,7 +1,6 @@
 package op
 
 import (
-	"context"
 	"time"
 
 	"github.com/pkg/errors"
@@ -9,7 +8,7 @@ import (
 	"ndm/internal/model"
 )
 
-func AddLogs(ctx context.Context, log model.Logs) (int64, error) {
+func AddLogs(log model.Logs) (int64, error) {
 	log.Modified = time.Now()
 	err := db.AddLog(&log)
 	if err != nil {
@@ -18,21 +17,21 @@ func AddLogs(ctx context.Context, log model.Logs) (int64, error) {
 	return log.ID, nil
 }
 
-func AddTypeLogs(ctx context.Context, stype, content string) (int64, error) {
+func AddTypeLogs(stype, content string) (int64, error) {
 	var log model.Logs
 	log.Type = stype
 	log.Content = content
-	return AddLogs(ctx, log)
+	return AddLogs(log)
 }
 
-func AddNoticeLogs(ctx context.Context, content string) (int64, error) {
-	return AddTypeLogs(ctx, "notice", content)
+func AddNoticeLogs(content string) (int64, error) {
+	return AddTypeLogs("notice", content)
 }
 
-func AddWarnLogs(ctx context.Context, content string) (int64, error) {
-	return AddTypeLogs(ctx, "warn", content)
+func AddWarnLogs(content string) (int64, error) {
+	return AddTypeLogs("warn", content)
 }
 
-func AddErrorLogs(ctx context.Context, content string) (int64, error) {
-	return AddTypeLogs(ctx, "error", content)
+func AddErrorLogs(content string) (int64, error) {
+	return AddTypeLogs("error", content)
 }

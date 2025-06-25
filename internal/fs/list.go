@@ -2,7 +2,7 @@ package fs
 
 import (
 	"context"
-	// "fmt"
+	"fmt"
 
 	"ndm/internal/model"
 	"ndm/internal/op"
@@ -23,6 +23,8 @@ func list(ctx context.Context, path string, args *ListArgs) ([]model.Obj, error)
 	}
 
 	var _objs []model.Obj
+
+	fmt.Println("actualPath:", actualPath, "path:", path)
 	if storage != nil {
 		_objs, err = op.List(ctx, storage, actualPath, model.ListArgs{
 			ReqPath: path,

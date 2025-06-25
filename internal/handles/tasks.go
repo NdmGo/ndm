@@ -63,7 +63,7 @@ func CreateTasks(c *gin.Context) {
 		return
 	}
 
-	if id, err := op.CreateTasks(c, req); err != nil {
+	if id, err := op.CreateTasks(req); err != nil {
 		common.ErrorWithDataResp(c, err, 500, gin.H{"id": id}, true)
 	} else {
 		common.SuccessResp(c, gin.H{"id": id})
@@ -87,6 +87,8 @@ func DoneTasks(c *gin.Context) {
 	task, err := db.GetTasksByMountPath(req.MountPath)
 	fmt.Println(task.ID, err)
 
+	op.DoneTasks(c, "/zzzkan")
+
 	common.ErrorResp(c, errors.New("测试中!"), 500, true)
 }
 
@@ -97,7 +99,7 @@ func DeleteTasks(c *gin.Context) {
 		common.ErrorResp(c, err, 400)
 		return
 	}
-	if err := op.DeleteTasksById(c, int64(id)); err != nil {
+	if err := op.DeleteTasksById(int64(id)); err != nil {
 		common.ErrorResp(c, err, 500, true)
 		return
 	}
