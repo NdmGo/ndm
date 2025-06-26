@@ -382,6 +382,14 @@ func ShouldProxy(storage driver.Driver, filename string) bool {
 	return false
 }
 
+func getStoragesRootPath(storage driver.Driver) string {
+	if r, ok := storage.GetAddition().(driver.IRootPath); ok {
+		return r.GetRootPath()
+	}
+	return ""
+
+}
+
 func TriggerDisabledStorageById(ctx context.Context, id int64) error {
 	// trigger the storage in the database
 	if err := db.TriggerDisabledStorageById(id); err != nil {
