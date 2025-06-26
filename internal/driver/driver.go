@@ -78,9 +78,9 @@ type Remove interface {
 	Remove(ctx context.Context, obj model.Obj) error
 }
 
-// type BackupFile interface {
-// 	BackupFile(ctx context.Context, obj model.Obj) error
-// }
+type BackupFile interface {
+	BackupFile(ctx context.Context, obj model.Obj) error
+}
 
 type Put interface {
 	// Put a file (provided as a FileStreamer) into the driver
@@ -139,6 +139,10 @@ type RenameResult interface {
 
 type CopyResult interface {
 	Copy(ctx context.Context, srcObj, dstDir model.Obj) (model.Obj, error)
+}
+
+type BackupFileResult interface {
+	BackupFile(ctx context.Context, obj model.Obj) error
 }
 
 type PutResult interface {
