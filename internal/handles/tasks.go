@@ -78,16 +78,14 @@ func DoneTasks(c *gin.Context) {
 	}
 
 	if strings.EqualFold(req.MountPath, "") {
-		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
-			"id": 0,
-		}, true)
+		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{}, true)
 		return
 	}
 
 	task, err := db.GetTasksByMountPath(req.MountPath)
 	fmt.Println(task.ID, err)
 
-	op.DoneTasks(c, "/zzzkan")
+	op.DoneTasksBackup(c, req.MountPath)
 
 	common.ErrorResp(c, errors.New("测试中!"), 500, true)
 }
