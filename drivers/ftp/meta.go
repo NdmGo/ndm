@@ -24,11 +24,12 @@ func decode(str string, encoding string) string {
 }
 
 type Addition struct {
+	driver.RootPath
+
 	Address  string `json:"address" required:"true"`
 	Encoding string `json:"encoding" required:"true"`
 	Username string `json:"username" required:"true"`
 	Password string `json:"password" required:"true"`
-	driver.RootPath
 
 	// backup
 	EnableBackup bool   `json:"enable_backup" type:"bool" default:"false" required:"false"`
