@@ -27,3 +27,8 @@ func WriteJsonToFile(dst string, data interface{}, std ...bool) bool {
 	}
 	return true
 }
+
+func ToJson(v interface{}) (d string) {
+	rdata, _ := stdjson.MarshalIndent(v, "", "  ")
+	return string(rdata)
+}
