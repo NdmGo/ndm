@@ -9,6 +9,7 @@ import (
 type Driver interface {
 	Meta
 	Reader
+
 	//Writer
 	//Other
 }
@@ -53,6 +54,7 @@ type Getter interface {
 //	Rename
 //	Copy
 //	Remove
+//	BackupFile
 //	Put
 //}
 
@@ -75,6 +77,10 @@ type Copy interface {
 type Remove interface {
 	Remove(ctx context.Context, obj model.Obj) error
 }
+
+// type BackupFile interface {
+// 	BackupFile(ctx context.Context, obj model.Obj) error
+// }
 
 type Put interface {
 	// Put a file (provided as a FileStreamer) into the driver
