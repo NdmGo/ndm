@@ -126,4 +126,8 @@ func (d *FTP) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, u
 	}))
 }
 
+func (d *FTP) BackupFile(ctx context.Context, obj model.Obj) error {
+	return nil
+}
+
 var _ driver.Driver = (*FTP)(nil)

@@ -63,4 +63,8 @@ func (d *Tpl) Remove(ctx context.Context, obj model.Obj) error {
 	return nil
 }
 
+func (d *Tpl) BackupFile(ctx context.Context, obj model.Obj) error {
+	return nil
+}
+
 var _ driver.Driver = (*Tpl)(nil)

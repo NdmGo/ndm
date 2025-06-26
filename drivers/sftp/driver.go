@@ -116,4 +116,8 @@ func (d *SFTP) Put(ctx context.Context, dstDir model.Obj, stream model.FileStrea
 	return err
 }
 
+func (d *SFTP) BackupFile(ctx context.Context, obj model.Obj) error {
+	return nil
+}
+
 var _ driver.Driver = (*SFTP)(nil)

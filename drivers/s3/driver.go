@@ -187,4 +187,8 @@ func (d *S3) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, up
 	return err
 }
 
+func (d *S3) BackupFile(ctx context.Context, obj model.Obj) error {
+	return nil
+}
+
 var _ driver.Driver = (*S3)(nil)
