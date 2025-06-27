@@ -5,8 +5,7 @@ html, body{
 	height: 100%;
 }
 
-
-a {
+a{
   text-decoration: none;
 }
 /* 如果需要鼠标悬停时也没有下划线 */
@@ -21,6 +20,34 @@ div {
 
 .h30, .h30 .layui-input {
     height: 32px;
+}
+
+.plr15 {
+    padding: 0 15px;
+}
+
+.ptb20 {
+    padding: 20px 0;
+}
+
+.c6 {
+    color: #666;
+}
+
+.f16 {
+    font-size: 16px;
+}
+
+.mtb20 {
+    margin: 20px 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.btlink {
+    color: #20a53a;
 }
 
 .select70,.select70 .layui-unselect,.select70 .layui-input-inline{
@@ -63,7 +90,7 @@ div {
 }
 
 .layui-side-menu .layui-nav .layui-nav-item a {
-    height: 40px;
+    height: 50px;
     line-height: 40px;
     padding-left: 45px;
     padding-right: 30px;
@@ -307,5 +334,33 @@ div {
 
 #list .ico-file {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOVJREFUeNpi/P//P8NAAhZkzrVr1zyB1FwglqSiHSZAfBZZQEtLC7sDQJZLSUlJcnNzU8Xm27dvg6jVQByqqqp6FpsaJjS+JCcnJ8O/f/+ogkFATk5uJ8gRQMcYE+MAqgN2dvYMeXn5g0DmGmyOYKJHQmNjY0tQUFA4gc0RLLS0mI+PD5YOQCACSp8BYka6OEBUVJRBXFwcW8KkTwiAACwx4gJMDAMMRh0w6oBRB4w6YNQBow4YdcCoA0YdMOgc8Pzbt280swxq9gt8reKU58+fgzqnEjRyw1MgTkMWYBzo7jlAgAEAzk5sMbucHicAAAAASUVORK5CYII=")
+}
+
+.title {
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #eee;
+}
+
+.system-info-con {
+    width: 100%;
+}
+
+.sys-li-box {
+    height: 100px;
+    background-color: #f9f9f9;
+    border: #f0f0f0 1px solid;
+    margin-left: 20px;
+    max-width: 230px;
+}
+
+.sys-li-box .name {
+    line-height: 40px;
+    margin-top: 8px;
+}
+
+.sys-li-box .val a {
+    font-size: 26px;
+    font-family: arial;
 }
 
