@@ -83,7 +83,12 @@ func DoneTasks(c *gin.Context) {
 	}
 
 	task, err := db.GetTasksByMountPath(req.MountPath)
-	fmt.Println(task.ID, err)
+	if err != nil {
+		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
+		return
+	}
+
+	fmt.Println(task, err)
 
 	op.DoneTasksBackup(c, req.MountPath)
 
