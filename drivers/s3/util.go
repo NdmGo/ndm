@@ -2,9 +2,13 @@ package s3
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 	"strings"
 
@@ -62,6 +66,22 @@ func (d *S3) getClient(link bool) *s3.S3 {
 	return client
 }
 
+// 计算本地文件的ETag (MD5)
+func calculateFileETag(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	hash := md5.New()
+	if _, err := io.Copy(hash, file); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
 func getKey(path string, dir bool) string {
 	path = strings.TrimPrefix(path, "/")
 	if path != "" && dir {
@@ -70,7 +90,7 @@ func getKey(path string, dir bool) string {
 	return path
 }
 
-var defaultPlaceholderName = ".alist"
+var defaultPlaceholderName = ".ndm"
 
 func getPlaceholderName(placeholder string) string {
 	if placeholder == "" {

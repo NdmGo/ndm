@@ -192,17 +192,31 @@ func (d *S3) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, up
 	return err
 }
 
-func (d *S3) downloadFile(ctx context.Context, key, localfile string) error {
+func (d *S3) downloadFileByKey(ctx context.Context, key, localfile string) error {
 	result, err := d.client.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String(d.Bucket),
 		Key:    aws.String(key),
 	})
 
 	if err != nil {
-		return fmt.Errorf("unable to retrieve object: %w", err)
+		return fmt.Errorf("ftp failed to obtain remote file information: %v", err)
 	}
 	defer result.Body.Close()
 
+	file, err := os.Create(localfile)
+	if err != nil {
+		return fmt.Errorf("s3 unable to create local file: %w", err)
+	}
+	defer file.Close()
+
+	if _, err := file.ReadFrom(result.Body); err != nil {
+		return fmt.Errorf("s3 fail to write to file: %w", err)
+	}
+
+	return nil
+}
+
+func (d *S3) downloadFile(ctx context.Context, result *s3.GetObjectOutput, localfile string) error {
 	file, err := os.Create(localfile)
 	if err != nil {
 		return fmt.Errorf("s3 unable to create local file: %w", err)
@@ -239,7 +253,42 @@ func (d *S3) BackupFile(ctx context.Context, obj model.Obj, mount_path string) e
 		return err
 	}
 
-	return d.downloadFile(ctx, key, localfile)
+	result, err := d.client.GetObject(&s3.GetObjectInput{
+		Bucket: aws.String(d.Bucket),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		return fmt.Errorf("ftp failed to obtain remote file information: %v", err)
+	}
+	defer result.Body.Close()
+
+	if utils.IsExist(localfile) {
+
+		localEtag, err := calculateFileETag(localfile)
+		if err != nil {
+			return fmt.Errorf("calculate file eTag file error: %v", err)
+		}
+
+		if !strings.EqualFold(localEtag, *result.ETag) {
+			return d.downloadFile(ctx, result, localfile)
+		}
+
+		localFile, err := os.Stat(localfile)
+		if err != nil {
+			return fmt.Errorf("local file error: %v", err)
+		}
+
+		// compare modification time
+		localModTime := localFile.ModTime()
+		if result.LastModified.After(localModTime) {
+			return d.downloadFile(ctx, result, localfile)
+		}
+
+		return nil
+	}
+
+	return d.downloadFile(ctx, result, localfile)
 }
 
 var _ driver.Driver = (*S3)(nil)
