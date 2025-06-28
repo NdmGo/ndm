@@ -159,6 +159,7 @@ func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) 
 	}
 	defer resp.Close()
 
+
 	dstconn, err := os.Create(absfile)
 	if err != nil {
 		return err
