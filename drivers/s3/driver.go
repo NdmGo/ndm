@@ -267,7 +267,7 @@ func (d *S3) BackupFile(ctx context.Context, obj model.Obj, mount_path string) e
 
 		localEtag, err := calculateFileETag(localfile)
 		if err != nil {
-			return fmt.Errorf("calculate file eTag file error: %v", err)
+			return fmt.Errorf("calculate file etag file error: %v", err)
 		}
 
 		if !strings.EqualFold(localEtag, *result.ETag) {
