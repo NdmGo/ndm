@@ -11,7 +11,7 @@ import (
 	// "ndm/internal/errs"
 	"ndm/internal/driver"
 	"ndm/internal/model"
-	"ndm/internal/utils"
+	// "ndm/internal/utils"
 	// "ndm/pkg/generic_sync"
 
 	// mapset "github.com/deckarep/golang-set/v2"
@@ -82,38 +82,15 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 	driver, err := GetStorageByMountPath(mountPath)
 	root_path := getStoragesRootPath(driver)
 
-	// if r, ok := driver.GetAddition()(driver.Addition); ok {
-	// 	fmt.Println(r.BackupDir)
-	// }
-
-	addition := driver.GetAddition()
-
-	fmt.Println("ToJson:", utils.ToJson(addition))
-
-	// fmt.Println("ToJson:", addition["backup_dir"])
-
-	switch v := addition.(type) {
-	case map[string]interface{}:
-		value := v["key"]
-		fmt.Println(value)
-	case map[string]string:
-		value := v["key"]
-		fmt.Println(value)
-	default:
-		fmt.Printf("不支持的类型: %T\n", v)
-	}
-
-	// 首先断言为 map[string]interface{}
-	if rootMap, ok := addition.(map[string]interface{}); ok {
-		printMap(rootMap)
-	} else {
-		fmt.Println("JSON 数据不是对象类型")
-	}
-
+	fmt.Println(root_path)
 	objs, err := StorageList(ctx, driver, root_path, model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
 	}, false)
+
+	if err != nil {
+		return err
+	}
 
 	for _, d := range objs {
 		fmt.Println("GetPath:", d.GetPath())
@@ -126,7 +103,7 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 
 	}
 
-	fmt.Println("DoneTasks[driver]:", driver, err)
+	// fmt.Println("DoneTasks[driver]:", driver, err)
 
 	return nil
 }
@@ -139,30 +116,16 @@ func DoneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 	}, false)
 
 	for _, d := range objs {
-		fmt.Println("d.GetPath():", d.GetPath())
+		// fmt.Println("d.GetPath():", d.GetPath())
 
 		if d.IsDir() {
 			DoneTaskDownloadRecursion(ctx, storage, mountPath, d.GetPath())
 		} else {
-			file, err := GetUnwrap(ctx, storage, d.GetPath())
 
-			link, err := storage.Link(ctx, file, model.LinkArgs{
-				Header:  ctx.Request.Header,
-				Type:    ctx.Query("type"),
-				HttpReq: ctx.Request,
-			})
+			// fmt.Println("d.GetPath():", d.GetPath())
 
-			storage.MakeDir(ctx, file, "/tmp")
-
-			// link, file, err := Link(ctx, storage, d.GetPath(), model.LinkArgs{
-			// 	Header:  ctx.Request.Header,
-			// 	Type:    ctx.Query("type"),
-			// 	HttpReq: ctx.Request,
-			// })
-
-			// fmt.Println("DoneTaskDownloadRecursion:", d.GetPath(), link, file, err)
-			fmt.Println("mfile:", link.MFile, err)
-			fmt.Println("url:", link.URL, err)
+			err := BackupFile(ctx, storage, d.GetPath())
+			fmt.Println("BackupFile err:", err)
 		}
 
 	}
