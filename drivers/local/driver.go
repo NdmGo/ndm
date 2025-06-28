@@ -271,7 +271,7 @@ func (d *Local) Put(ctx context.Context, dstDir model.Obj, stream model.FileStre
 	return nil
 }
 
-func (d *Local) BackupFile(ctx context.Context, obj model.Obj) error {
+func (d *Local) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
 	return nil
 }
 

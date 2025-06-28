@@ -116,7 +116,7 @@ func (d *SFTP) Put(ctx context.Context, dstDir model.Obj, stream model.FileStrea
 	return err
 }
 
-func (d *SFTP) BackupFile(ctx context.Context, obj model.Obj) error {
+func (d *SFTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
 	return nil
 }
 

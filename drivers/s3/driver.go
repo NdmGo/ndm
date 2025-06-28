@@ -187,7 +187,7 @@ func (d *S3) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, up
 	return err
 }
 
-func (d *S3) BackupFile(ctx context.Context, obj model.Obj) error {
+func (d *S3) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
 	return nil
 }
 

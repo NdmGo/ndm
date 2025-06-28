@@ -63,7 +63,7 @@ func (d *Tpl) Remove(ctx context.Context, obj model.Obj) error {
 	return nil
 }
 
-func (d *Tpl) BackupFile(ctx context.Context, obj model.Obj) error {
+func (d *Tpl) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
 	return nil
 }
 

@@ -2,11 +2,17 @@ package ftp
 
 import (
 	"context"
+	"fmt"
+	"io"
+	"os"
 	stdpath "path"
+	"path/filepath"
+	"strings"
 
 	"ndm/internal/driver"
 	"ndm/internal/errs"
 	"ndm/internal/model"
+	"ndm/internal/utils"
 
 	"github.com/jlaffaye/ftp"
 )
@@ -126,7 +132,40 @@ func (d *FTP) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, u
 	}))
 }
 
-func (d *FTP) BackupFile(ctx context.Context, obj model.Obj) error {
+func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
+	if !d.EnableBackup {
+		return errs.NotEnbleBackup
+	}
+
+	if obj.IsDir() {
+		return errs.DirNotSupportBackup
+	}
+
+	if !utils.IsExist(d.BackupDir) {
+		return errs.BackupDirNotExist
+	}
+
+	bkdir := strings.TrimRight(d.BackupDir, "/")
+	dstdir := strings.TrimLeft(obj.GetPath(), "/")
+	absfile := fmt.Sprintf("%s%s/%s", bkdir, mount_path, dstdir)
+
+	dir := filepath.Dir(absfile)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	r := NewFileReader(d.conn, encode(obj.GetPath(), d.Encoding), obj.GetSize())
+	r.Read()
+
+	dstconn, err := os.Create(absfile)
+	if err != nil {
+		return err
+	}
+	defer dstconn.Close()
+
+	if _, err := io.Copy(dstconn, r); err != nil {
+		return err
+	}
 	return nil
 }
 
