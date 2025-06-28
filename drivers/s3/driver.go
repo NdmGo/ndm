@@ -6,16 +6,21 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"os"
 	stdpath "path"
+	"path/filepath"
 	"strings"
 	"time"
 
 	"ndm/internal/driver"
+	"ndm/internal/errs"
 	"ndm/internal/model"
 	"ndm/internal/op"
 	"ndm/internal/stream"
+	"ndm/internal/utils"
 	"ndm/pkg/cron"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -187,8 +192,54 @@ func (d *S3) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, up
 	return err
 }
 
-func (d *S3) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
+func (d *S3) downloadFile(ctx context.Context, key, localfile string) error {
+	result, err := d.client.GetObject(&s3.GetObjectInput{
+		Bucket: aws.String(d.Bucket),
+		Key:    aws.String(key),
+	})
+
+	if err != nil {
+		return fmt.Errorf("unable to retrieve object: %w", err)
+	}
+	defer result.Body.Close()
+
+	file, err := os.Create(localfile)
+	if err != nil {
+		return fmt.Errorf("s3 unable to create local file: %w", err)
+	}
+	defer file.Close()
+
+	if _, err := file.ReadFrom(result.Body); err != nil {
+		return fmt.Errorf("s3 fail to write to file: %w", err)
+	}
+
 	return nil
+}
+
+func (d *S3) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
+	if !d.EnableBackup {
+		return errs.NotEnbleBackup
+	}
+
+	if obj.IsDir() {
+		return errs.DirNotSupportBackup
+	}
+
+	if !utils.IsExist(d.BackupDir) {
+		return errs.BackupDirNotExist
+	}
+
+	key := obj.GetPath()
+
+	bkdir := strings.TrimRight(d.BackupDir, "/")
+	localfile := fmt.Sprintf("%s%s%s", bkdir, mount_path, key)
+
+	dir := filepath.Dir(localfile)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	return downloadFile(key, localfile)
 }
 
 var _ driver.Driver = (*S3)(nil)
