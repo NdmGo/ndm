@@ -131,29 +131,9 @@ func (d *FTP) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, u
 	}))
 }
 
-func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
-	if !d.EnableBackup {
-		return errs.NotEnbleBackup
-	}
-
-	if obj.IsDir() {
-		return errs.DirNotSupportBackup
-	}
-
-	if !utils.IsExist(d.BackupDir) {
-		return errs.BackupDirNotExist
-	}
-
-	bkdir := strings.TrimRight(d.BackupDir, "/")
-	dstdir := strings.TrimLeft(obj.GetPath(), "/")
-	absfile := fmt.Sprintf("%s%s/%s", bkdir, mount_path, dstdir)
-
-	dir := filepath.Dir(absfile)
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return err
-	}
-
-	resp, err := d.conn.Retr(dstdir)
+func (d *FTP) downloadFile(ctx context.Context, dstfile, absfile string) error {
+	// fmt.Println("downloadFile:::", absfile)
+	resp, err := d.conn.Retr(dstfile)
 	if err != nil {
 		return fmt.Errorf("failed to retrieve remote files: %v", err)
 	}
@@ -169,6 +149,56 @@ func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) 
 	}
 
 	return nil
+}
+
+func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
+	if !d.EnableBackup {
+		return errs.NotEnbleBackup
+	}
+
+	if obj.IsDir() {
+		return errs.DirNotSupportBackup
+	}
+
+	if !utils.IsExist(d.BackupDir) {
+		return errs.BackupDirNotExist
+	}
+
+	bkdir := strings.TrimRight(d.BackupDir, "/")
+	absfile := fmt.Sprintf("%s%s/%s", bkdir, mount_path, obj.GetPath())
+
+	dir := filepath.Dir(absfile)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	if utils.IsExist(absfile) {
+		remote_entry, err := d.conn.GetEntry(obj.GetPath())
+		if err != nil {
+			return fmt.Errorf("ftp failed to obtain remote file information: %v", err)
+		}
+
+		localFile, err := os.Stat(absfile)
+		if err != nil {
+			return fmt.Errorf("local file error: %v", err)
+		}
+
+		// compare file sizes
+		if remote_entry.Size != uint64(localFile.Size()) {
+			return d.downloadFile(ctx, obj.GetPath(), absfile)
+		}
+
+		// compare modification time
+		remoteModTime := remote_entry.Time
+		localModTime := localFile.ModTime()
+		if remoteModTime.After(localModTime) {
+			return d.downloadFile(ctx, obj.GetPath(), absfile)
+		}
+
+		return nil
+	}
+
+	return d.downloadFile(ctx, obj.GetPath(), absfile)
 }
 
 var _ driver.Driver = (*FTP)(nil)
