@@ -239,7 +239,7 @@ func (d *S3) BackupFile(ctx context.Context, obj model.Obj, mount_path string) e
 		return err
 	}
 
-	return downloadFile(key, localfile)
+	return d.downloadFile(key, localfile)
 }
 
 var _ driver.Driver = (*S3)(nil)
