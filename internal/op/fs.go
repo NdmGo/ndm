@@ -2,6 +2,7 @@ package op
 
 import (
 	"context"
+	// "fmt"
 	stdpath "path"
 	"slices"
 	"time"
@@ -646,5 +647,20 @@ func PutURL(ctx context.Context, storage driver.Driver, dstDirPath, dstName, url
 		return errs.NotImplement
 	}
 	log.Debugf("put url [%s](%s) done", dstName, url)
+	return errors.WithStack(err)
+}
+
+func BackupFile(ctx context.Context, storage driver.Driver, path string) error {
+	if storage.Config().CheckStatus && storage.GetStorage().Status != WORK {
+		return errors.Errorf("storage not init: %s", storage.GetStorage().Status)
+	}
+	path = utils.FixAndCleanPath(path)
+	f, err := GetUnwrap(ctx, storage, path)
+	switch s := storage.(type) {
+	case driver.BackupFile:
+		return s.BackupFile(ctx, f, storage.GetStorage().MountPath)
+	default:
+		return errs.NotImplement
+	}
 	return errors.WithStack(err)
 }
