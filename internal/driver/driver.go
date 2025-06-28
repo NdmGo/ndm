@@ -79,7 +79,7 @@ type Remove interface {
 }
 
 type BackupFile interface {
-	BackupFile(ctx context.Context, obj model.Obj) error
+	BackupFile(ctx context.Context, obj model.Obj, mount_path string) error
 }
 
 type Put interface {
@@ -142,7 +142,7 @@ type CopyResult interface {
 }
 
 type BackupFileResult interface {
-	BackupFile(ctx context.Context, obj model.Obj) error
+	BackupFile(ctx context.Context, obj model.Obj, mount_path string) error
 }
 
 type PutResult interface {
