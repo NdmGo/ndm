@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"io"
 	stdpath "path"
 	"path/filepath"
 	"strings"
@@ -154,18 +153,20 @@ func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) 
 		return err
 	}
 
-	r := NewFileReader(d.conn, encode(obj.GetPath(), d.Encoding), obj.GetSize())
-	// r.Read()
+	resp, err := d.conn.Retr(dstdir)
+	if err != nil {
+		return fmt.Errorf("failed to retrieve remote files: %v", err)
+	}
+	defer resp.Close()
 
 	dstconn, err := os.Create(absfile)
 	if err != nil {
 		return err
 	}
-	defer dstconn.Close()
-
-	if _, err := io.Copy(dstconn, r); err != nil {
-		return err
+	if _, err := dstconn.ReadFrom(resp); err != nil {
+		return fmt.Errorf("download file failed: %v", err)
 	}
+
 	return nil
 }
 
