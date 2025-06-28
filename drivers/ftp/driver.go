@@ -131,15 +131,14 @@ func (d *FTP) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, u
 	}))
 }
 
-func (d *FTP) downloadFile(ctx context.Context, dstfile, absfile string) error {
-	// fmt.Println("downloadFile:::", absfile)
-	resp, err := d.conn.Retr(dstfile)
+func (d *FTP) downloadFile(ctx context.Context, key, localfile string) error {
+	resp, err := d.conn.Retr(key)
 	if err != nil {
 		return fmt.Errorf("failed to retrieve remote files: %v", err)
 	}
 	defer resp.Close()
 
-	dstconn, err := os.Create(absfile)
+	dstconn, err := os.Create(localfile)
 	if err != nil {
 		return err
 	}
@@ -164,41 +163,43 @@ func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) 
 		return errs.BackupDirNotExist
 	}
 
-	bkdir := strings.TrimRight(d.BackupDir, "/")
-	absfile := fmt.Sprintf("%s%s/%s", bkdir, mount_path, obj.GetPath())
+	key := obj.GetPath()
 
-	dir := filepath.Dir(absfile)
+	bkdir := strings.TrimRight(d.BackupDir, "/")
+	localfile := fmt.Sprintf("%s%s/%s", bkdir, mount_path, key)
+
+	dir := filepath.Dir(localfile)
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return err
 	}
 
-	if utils.IsExist(absfile) {
-		remote_entry, err := d.conn.GetEntry(obj.GetPath())
+	if utils.IsExist(localfile) {
+		remote_entry, err := d.conn.GetEntry(key)
 		if err != nil {
 			return fmt.Errorf("ftp failed to obtain remote file information: %v", err)
 		}
 
-		localFile, err := os.Stat(absfile)
+		localFile, err := os.Stat(localfile)
 		if err != nil {
 			return fmt.Errorf("local file error: %v", err)
 		}
 
 		// compare file sizes
 		if remote_entry.Size != uint64(localFile.Size()) {
-			return d.downloadFile(ctx, obj.GetPath(), absfile)
+			return d.downloadFile(ctx, obj.GetPath(), localfile)
 		}
 
 		// compare modification time
 		remoteModTime := remote_entry.Time
 		localModTime := localFile.ModTime()
 		if remoteModTime.After(localModTime) {
-			return d.downloadFile(ctx, obj.GetPath(), absfile)
+			return d.downloadFile(ctx, obj.GetPath(), localfile)
 		}
 
 		return nil
 	}
 
-	return d.downloadFile(ctx, obj.GetPath(), absfile)
+	return d.downloadFile(ctx, key, localfile)
 }
 
 var _ driver.Driver = (*FTP)(nil)
