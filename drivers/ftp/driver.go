@@ -3,8 +3,8 @@ package ftp
 import (
 	"context"
 	"fmt"
-	"io"
 	"os"
+	"io"
 	stdpath "path"
 	"path/filepath"
 	"strings"
@@ -155,7 +155,7 @@ func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) 
 	}
 
 	r := NewFileReader(d.conn, encode(obj.GetPath(), d.Encoding), obj.GetSize())
-	r.Read()
+	// r.Read()
 
 	dstconn, err := os.Create(absfile)
 	if err != nil {
