@@ -272,7 +272,7 @@ func (d *Local) Put(ctx context.Context, dstDir model.Obj, stream model.FileStre
 }
 
 func (d *Local) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
-	return nil
+	return errs.NotSupport
 }
 
 var _ driver.Driver = (*Local)(nil)
