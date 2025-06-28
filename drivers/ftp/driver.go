@@ -159,11 +159,11 @@ func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) 
 	}
 	defer resp.Close()
 
-
 	dstconn, err := os.Create(absfile)
 	if err != nil {
 		return err
 	}
+
 	if _, err := dstconn.ReadFrom(resp); err != nil {
 		return fmt.Errorf("download file failed: %v", err)
 	}
