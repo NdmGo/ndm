@@ -11,6 +11,7 @@ import (
 	// "ndm/internal/errs"
 	"ndm/internal/driver"
 	"ndm/internal/model"
+	"ndm/internal/utils/multitasking"
 	// "ndm/internal/utils"
 	// "ndm/pkg/generic_sync"
 
@@ -104,12 +105,11 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 	}
 
 	// fmt.Println("DoneTasks[driver]:", driver, err)
-
+	multitasking.Instance().Close()
 	return nil
 }
 
 func DoneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPath string, path string) error {
-
 	objs, err := StorageList(ctx, storage, path, model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -121,17 +121,17 @@ func DoneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		if d.IsDir() {
 			DoneTaskDownloadRecursion(ctx, storage, mountPath, d.GetPath())
 		} else {
-
 			// fmt.Println("d.GetPath():", d.GetPath())
 
-			err := BackupFile(ctx, storage, d.GetPath())
-			fmt.Println("BackupFile err:", err)
+			multitasking.Instance().DoneTask(func() {
+				err := BackupFile(ctx, storage, d.GetPath())
+				fmt.Println("BackupFile err:", err)
+			})
 		}
 
 	}
 
-	fmt.Println("mountPath:", mountPath, "path:", path)
-
+	// fmt.Println("mountPath:", mountPath, "path:", path)
 	return err
 }
 
