@@ -79,15 +79,12 @@ func printMap(data map[string]interface{}) {
 }
 
 func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
-
 	storage, err := GetStorageByMountPath(mountPath)
 	if err != nil {
 		return err
 	}
 
 	root_path := getStoragesRootPath(storage)
-	fmt.Println(root_path)
-
 	objs, err := StorageList(ctx, storage, root_path, model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -98,23 +95,27 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 	}
 
 	for _, d := range objs {
-		fmt.Println("GetPath:", d.GetPath())
-
 		if d.IsDir() {
-			DoneTaskDownloadRecursion(ctx, storage, mountPath, d.GetPath())
+			err := DoneTaskDownloadRecursion(ctx, storage, mountPath, d.GetPath())
+			fmt.Println("DoneTaskDownloadRecursion:", err)
 		} else {
-			fmt.Println("path1:", d.GetPath())
-			multitasking.Factory(mountPath).DoneTask(func() {
+
+			if storage.GetStorage().Driver == "ftp" {
 				err := BackupFile(ctx, storage, d.GetPath())
-				fmt.Println("BackupFile err:", err)
-			})
-
+				fmt.Println("ftp BackupFile1 err:", err)
+			} else {
+				fmt.Println("path1:", d.GetPath())
+				fmt.Println("storage1:", storage.GetStorage().Driver)
+				multitasking.Factory(mountPath).DoneTask(func() {
+					err := BackupFile(ctx, storage, d.GetPath())
+					fmt.Println("BackupFile1 err:", err)
+				})
+			}
 		}
-
 	}
 
-	// fmt.Println("DoneTasks[driver]:", driver, err)
-	multitasking.Factory(mountPath).Close()
+	defer multitasking.Factory(mountPath).Close()
+	fmt.Println("done ok!")
 	return nil
 }
 
@@ -125,14 +126,22 @@ func DoneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 	}, false)
 
 	for _, d := range objs {
+		filepath := d.GetPath()
+		fmt.Println("path2:", filepath)
 		if d.IsDir() {
-			return DoneTaskDownloadRecursion(ctx, storage, mountPath, d.GetPath())
+			return DoneTaskDownloadRecursion(ctx, storage, mountPath, filepath)
 		} else {
-			fmt.Println("path2:", d.GetPath())
-			multitasking.Factory(mountPath).DoneTask(func() {
-				err := BackupFile(ctx, storage, d.GetPath())
-				fmt.Println("BackupFile err:", err)
-			})
+			if storage.GetStorage().Driver == "ftp" {
+				err := BackupFile(ctx, storage, filepath)
+				fmt.Println("ftp BackupFile2 err:", err)
+			} else {
+				fmt.Println("storage2:", storage.GetStorage().Driver)
+				multitasking.Factory(mountPath).DoneTask(func() {
+					err := BackupFile(ctx, storage, filepath)
+					fmt.Println("BackupFile2 err:", err)
+				})
+			}
+
 		}
 	}
 	return err

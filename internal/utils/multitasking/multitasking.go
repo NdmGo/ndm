@@ -3,29 +3,12 @@ package multitasking
 import (
 	// "strings"
 	"fmt"
-	"log"
+	// "log"
 	"sync"
 	// "time"
 
 	"ndm/pkg/generic_sync"
 )
-
-type DownloadTask struct {
-	Key  string
-	Size int64
-}
-
-type MultiTasking struct {
-	limit                 int64
-	current_task_num      int64
-	task_already_executed int64
-
-	taskChan chan DownloadTask
-	results  chan string
-	done     chan bool
-
-	task chan func()
-}
 
 const (
 	maxConcurrent = 5 // maximum concurrent download quantity
@@ -59,35 +42,68 @@ func Factory(name string) *MultiTasking {
 	return f
 }
 
-func (mt *MultiTasking) Reset() {
-	mt.current_task_num = 0
-	mt.task_already_executed = 0
+type MultiTasking struct {
+	limit                 int64
+	current_task_num      int64
+	task_already_executed int64
+
+	results  chan string
+	taskDo   chan bool
+	resultDo chan bool
+
+	task chan func()
 }
 
-func (mt *MultiTasking) Init(limit int64) error {
-	mt.limit = limit
+func (mt *MultiTasking) do() {
+	go func() {
+		for {
+			select {
+			case fn := <-mt.task:
+				wg.Done()
+				mt.current_task_num -= 1
+				fn()
+				mt.results <- "ok"
+			case <-mt.taskDo:
+				fmt.Println("do over")
+				return
+			}
+		}
+	}()
+
+}
+
+func (mt *MultiTasking) end() {
+	go func() {
+		for {
+			select {
+			case <-mt.results:
+				mt.task_already_executed += 1
+				fmt.Println("已经执行任务:", mt.task_already_executed)
+			case <-mt.resultDo:
+				fmt.Println("下载成功:", mt.task_already_executed)
+				return
+			}
+		}
+	}()
+}
+
+func (mt *MultiTasking) Reset() {
 	mt.current_task_num = 0
 	mt.task_already_executed = 0
 
 	// create task channels and work pools
 	mt.results = make(chan string, mt.limit*2)
 	mt.task = make(chan func(), mt.limit)
-	mt.done = make(chan bool)
+	mt.taskDo = make(chan bool)
+	mt.resultDo = make(chan bool)
 
-	go func() {
-		for {
-			select {
-			case <-mt.results:
-				mt.task_already_executed += 1
-				log.Printf("已经执行任务: %v", mt.task_already_executed)
-			case <-mt.done:
-				fmt.Println("下载完成! 成功:", mt.task_already_executed)
-				return
-			}
-		}
-	}()
+	mt.do()
+	mt.end()
+}
 
-	go mt.do()
+func (mt *MultiTasking) Init(limit int64) error {
+	mt.limit = limit
+	mt.Reset()
 	return nil
 }
 
@@ -99,32 +115,16 @@ func (mt *MultiTasking) GetTaskInfo() {
 
 }
 
-func (mt *MultiTasking) do() {
-	for {
-		select {
-		case fn := <-mt.task:
-			defer wg.Done()
-			mt.current_task_num -= 1
-			fmt.Println("task:", len(mt.task))
-			fn()
-			mt.results <- "ok"
-		case <-mt.done:
-			fmt.Println("do over")
-			return
-		}
-	}
-}
-
 func (mt *MultiTasking) DoneTask(fn func()) {
 	wg.Add(1)
 	mt.current_task_num += 1
 	mt.task <- fn
-
 }
 
 func (mt *MultiTasking) Close() {
 	wg.Wait()
-	mt.done <- true
-	close(mt.done)
-	close(mt.results)
+	mt.taskDo <- true
+	close(mt.taskDo)
+	close(mt.resultDo)
+	mt.Reset()
 }

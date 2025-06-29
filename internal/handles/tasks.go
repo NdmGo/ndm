@@ -11,6 +11,7 @@ import (
 
 	"ndm/internal/common"
 	"ndm/internal/db"
+	"ndm/internal/errs"
 	"ndm/internal/model"
 	"ndm/internal/op"
 )
@@ -78,7 +79,7 @@ func DoneTasks(c *gin.Context) {
 	}
 
 	if strings.EqualFold(req.MountPath, "") {
-		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{}, true)
+		common.ErrorWithDataResp(c, errs.MountPathCannotEmpty, 500, gin.H{}, true)
 		return
 	}
 
@@ -88,8 +89,7 @@ func DoneTasks(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(task, err)
-
+	fmt.Println(task)
 	op.DoneTasksBackup(c, req.MountPath)
 
 	common.ErrorResp(c, errors.New("测试中!"), 500, true)
