@@ -6,16 +6,8 @@ import (
 	"log"
 	"sync"
 	// "time"
-)
 
-const (
-	maxConcurrent = 5 // maximum concurrent download quantity
-)
-
-var (
-	instance *MultiTasking
-	once     sync.Once
-	wg       sync.WaitGroup
+	"ndm/pkg/generic_sync"
 )
 
 type DownloadTask struct {
@@ -34,6 +26,19 @@ type MultiTasking struct {
 
 	task chan func()
 }
+
+const (
+	maxConcurrent = 5 // maximum concurrent download quantity
+)
+
+var (
+	instance *MultiTasking
+	once     sync.Once
+	wg       sync.WaitGroup
+
+	taskMap generic_sync.MapOf[string, *MultiTasking]
+	mm      map[string]*MultiTasking
+)
 
 func Instance() *MultiTasking {
 	once.Do(func() {
