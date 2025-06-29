@@ -46,7 +46,7 @@ func Instance() *MultiTasking {
 func Factory() *MultiTasking {
 	f := &MultiTasking{}
 	f.Init(10)
-	return t
+	return f
 }
 
 func (mt *MultiTasking) Init(limit int64) error {
