@@ -96,14 +96,14 @@ func (mt *MultiTasking) Reset() {
 	mt.task = make(chan func(), mt.limit)
 	mt.taskDo = make(chan bool)
 	mt.resultDo = make(chan bool)
-
-	mt.do()
-	mt.end()
 }
 
 func (mt *MultiTasking) Init(limit int64) error {
 	mt.limit = limit
 	mt.Reset()
+
+	mt.do()
+	mt.end()
 	return nil
 }
 
