@@ -16,13 +16,13 @@ type DownloadTask struct {
 }
 
 type MultiTasking struct {
-	limit            int64
-	current_task_num int64
+	limit                 int64
+	current_task_num      int64
+	task_already_executed int64
 
-	taskChan  chan DownloadTask
-	results   chan string
-	errorChan chan error
-	done      chan bool
+	taskChan chan DownloadTask
+	results  chan string
+	done     chan bool
 
 	task chan func()
 }
@@ -37,7 +37,6 @@ var (
 	wg       sync.WaitGroup
 
 	taskMap generic_sync.MapOf[string, *MultiTasking]
-	mm      map[string]*MultiTasking
 )
 
 func Instance() *MultiTasking {
@@ -48,34 +47,41 @@ func Instance() *MultiTasking {
 	return instance
 }
 
-func Factory() *MultiTasking {
+func Factory(name string) *MultiTasking {
+	if taskMap.Has(name) {
+		task, _ := taskMap.Load(name)
+		return task
+	}
+
 	f := &MultiTasking{}
 	f.Init(10)
+	taskMap.Store(name, f)
 	return f
+}
+
+func (mt *MultiTasking) Reset() {
+	mt.current_task_num = 0
+	mt.task_already_executed = 0
 }
 
 func (mt *MultiTasking) Init(limit int64) error {
 	mt.limit = limit
 	mt.current_task_num = 0
+	mt.task_already_executed = 0
 
 	// create task channels and work pools
-	mt.taskChan = make(chan DownloadTask, mt.limit*2)
 	mt.results = make(chan string, mt.limit*2)
-	mt.errorChan = make(chan error, mt.limit*2)
 	mt.task = make(chan func(), mt.limit)
-
 	mt.done = make(chan bool)
+
 	go func() {
-		var successCount, failCount int
 		for {
 			select {
 			case <-mt.results:
-				successCount++
-			case err := <-mt.errorChan:
-				log.Printf("下载失败: %v", err)
-				failCount++
+				mt.task_already_executed += 1
+				log.Printf("已经执行任务: %v", mt.task_already_executed)
 			case <-mt.done:
-				fmt.Printf("\n下载完成! 成功: %d, 失败: %d\n", successCount, failCount)
+				fmt.Println("下载完成! 成功:", mt.task_already_executed)
 				return
 			}
 		}
@@ -89,6 +95,10 @@ func (mt *MultiTasking) GetTaskLimit() int64 {
 	return mt.limit
 }
 
+func (mt *MultiTasking) GetTaskInfo() {
+
+}
+
 func (mt *MultiTasking) do() {
 	for {
 		select {
@@ -96,36 +106,25 @@ func (mt *MultiTasking) do() {
 			defer wg.Done()
 			mt.current_task_num -= 1
 			fmt.Println("task:", len(mt.task))
-			fmt.Println("do....")
 			fn()
-
-			// case err := <-mt.errorChan:
-			// 	log.Printf("下载失败: %v", err)
-			// 	failCount++
-			// case <-mt.done:
-			// 	fmt.Printf("\n下载完成! 成功: %d, 失败: %d\n", successCount, failCount)
-			// 	return
+			mt.results <- "ok"
+		case <-mt.done:
+			fmt.Println("do over")
+			return
 		}
 	}
-
-	// for _, fn := range mt.task {
-	// 	fn()
-	// 	defer wg.Done()
-	// 	mt.current_task_num -= 1
-
-	// }
 }
 
 func (mt *MultiTasking) DoneTask(fn func()) {
 	wg.Add(1)
 	mt.current_task_num += 1
 	mt.task <- fn
+
 }
 
 func (mt *MultiTasking) Close() {
-	close(mt.taskChan)
 	wg.Wait()
-	close(mt.results)
-	close(mt.errorChan)
 	mt.done <- true
+	close(mt.done)
+	close(mt.results)
 }
