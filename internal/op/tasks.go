@@ -93,7 +93,6 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		} else {
 			fmt.Println("path2:", fpath)
 			if storage.GetStorage().Driver == "ftp" {
-				// err := BackupFile(ctx, storage, d.GetPath())
 				mtf.Init(1)
 			}
 			mtf.DoneTask(func() {
