@@ -1,7 +1,7 @@
 package multitasking
 
 import (
-	"fmt"
+	// "fmt"
 	"sync"
 
 	"ndm/pkg/generic_sync"
@@ -111,6 +111,6 @@ func (mt *MultiTasking) DoneTask(fn func()) {
 func (mt *MultiTasking) Close() {
 	mt.wg.Wait()
 	mt.running = false
-	close(mt.task)
+	// close(mt.task)
 	mt.Reset()
 }
