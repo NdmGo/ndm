@@ -57,6 +57,8 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 		return err
 	}
 
+	mtf := multitasking.Factory(mountPath)
+
 	for _, d := range objs {
 		fpath := d.GetPath()
 		fmt.Println("path1:", fpath)
@@ -66,20 +68,17 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 		} else {
 
 			if storage.GetStorage().Driver == "ftp" {
-				err := BackupFile(ctx, storage, d.GetPath())
-				fmt.Println("ftp BackupFile1 err:", err)
-			} else {
-				multitasking.Factory(mountPath).DoneTask(func() {
-					err := BackupFile(ctx, storage, fpath)
-					fmt.Println("BackupFile1 err:", err)
-				})
+				// err := BackupFile(ctx, storage, d.GetPath())
+				mtf.Init(1)
 			}
+			mtf.DoneTask(func() {
+				err := BackupFile(ctx, storage, fpath)
+				fmt.Println("BackupFile1 err:", err)
+			})
 		}
 	}
 
-	fmt.Println("doneTaskDownload close start")
 	multitasking.Factory(mountPath).Close()
-	fmt.Println("doneTaskDownload close end")
 	return err
 }
 
