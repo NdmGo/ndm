@@ -17,6 +17,7 @@ var (
 	NotEnbleBackup      = errors.New("backup not supported")
 	DirNotSupportBackup = errors.New("directory does not support backup")
 	BackupDirNotExist   = errors.New("backup dir does not exist")
+	BackupTaskIsRun     = errors.New("backup task is currently in progress")
 )
 
 func IsObjectNotFound(err error) bool {

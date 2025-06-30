@@ -90,8 +90,12 @@ func DoneTasks(c *gin.Context) {
 	}
 
 	fmt.Println(task)
-	op.DoneTasksBackup(c, req.MountPath)
-
+	err = op.DoneTasksBackup(c, req.MountPath)
+	if err != nil {
+		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
+		return
+	}
+	fmt.Println("err:", err)
 	common.ErrorResp(c, errors.New("测试中!"), 500, true)
 }
 

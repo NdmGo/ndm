@@ -1,7 +1,6 @@
 package multitasking
 
 import (
-	// "strings"
 	"fmt"
 	"sync"
 
@@ -15,7 +14,6 @@ const (
 var (
 	instance *MultiTasking
 	once     sync.Once
-	wg       sync.WaitGroup
 
 	taskMap generic_sync.MapOf[string, *MultiTasking]
 )
@@ -44,12 +42,11 @@ type MultiTasking struct {
 	limit                 int64
 	current_task_num      int64
 	task_already_executed int64
-	running               bool
 
-	results        chan string
-	taskDoChan     chan bool
-	resultDoneChan chan bool
+	running bool
+	results chan string
 
+	wg   sync.WaitGroup
 	task chan func()
 }
 
@@ -65,26 +62,12 @@ func (mt *MultiTasking) do() {
 		for {
 			select {
 			case fn := <-mt.task:
-				wg.Done()
+				mt.wg.Done()
 				mt.current_task_num -= 1
 				fn()
 				mt.results <- "ok"
-			case <-mt.taskDoChan:
-				return
-			}
-		}
-	}()
-}
-
-func (mt *MultiTasking) end() {
-	go func() {
-		for {
-			select {
 			case <-mt.results:
 				mt.task_already_executed += 1
-				fmt.Println("已经执行任务:", mt.task_already_executed)
-			case <-mt.resultDoneChan:
-				return
 			}
 		}
 	}()
@@ -96,19 +79,15 @@ func (mt *MultiTasking) Reset() {
 
 	// create task channels and work pools
 	mt.results = make(chan string, mt.limit*2)
-
-	mt.taskDoChan = make(chan bool)
-	mt.resultDoneChan = make(chan bool)
+	mt.task = make(chan func(), mt.limit)
 }
 
 func (mt *MultiTasking) Init(limit int64) error {
 	mt.limit = limit
-	mt.task = make(chan func(), mt.limit)
-	mt.running = true
+	mt.running = false
 	mt.Reset()
-
 	mt.do()
-	mt.end()
+
 	return nil
 }
 
@@ -124,17 +103,14 @@ func (mt *MultiTasking) DoneTask(fn func()) {
 	if !mt.running {
 		mt.running = true
 	}
-	wg.Add(1)
+	mt.wg.Add(1)
 	mt.current_task_num += 1
 	mt.task <- fn
 }
 
 func (mt *MultiTasking) Close() {
-	wg.Wait()
+	mt.wg.Wait()
 	mt.running = false
-	mt.taskDoChan <- true
-	mt.resultDoneChan <- true
-	close(mt.taskDoChan)
-	close(mt.resultDoneChan)
+	close(mt.task)
 	mt.Reset()
 }

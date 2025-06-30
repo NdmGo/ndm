@@ -8,8 +8,8 @@ import (
 
 	// "ndm/internal/conf"
 	"ndm/internal/db"
-	// "ndm/internal/errs"
 	"ndm/internal/driver"
+	"ndm/internal/errs"
 	"ndm/internal/model"
 	"ndm/internal/utils/multitasking"
 	// "ndm/internal/utils"
@@ -38,7 +38,11 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 		return err
 	}
 
-	doneTaskDownload(ctx, storage, mountPath)
+	if multitasking.Factory(mountPath).IsRun() {
+		return errs.BackupTaskIsRun
+	}
+
+	go doneTaskDownload(ctx, storage, mountPath)
 	return nil
 }
 
@@ -72,7 +76,10 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 			}
 		}
 	}
+
+	fmt.Println("doneTaskDownload close start")
 	multitasking.Factory(mountPath).Close()
+	fmt.Println("doneTaskDownload close end")
 	return err
 }
 
