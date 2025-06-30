@@ -87,9 +87,9 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 
 	mtf := multitasking.Factory(mountPath)
 	for _, d := range objs {
-		filepath := d.GetPath()
+		fpath := d.GetPath()
 		if d.IsDir() {
-			doneTaskDownloadRecursion(ctx, storage, mountPath, filepath)
+			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
 			fmt.Println("path2:", fpath)
 			if storage.GetStorage().Driver == "ftp" {
