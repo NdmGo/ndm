@@ -32,58 +32,17 @@ func CreateTasks(task model.Tasks) (int64, error) {
 	return task.ID, nil
 }
 
-func printArray(arr []interface{}) {
-	for i, item := range arr {
-		fmt.Printf("  [%d]: ", i)
-
-		switch v := item.(type) {
-		case string:
-			fmt.Printf("string: %s\n", v)
-		case float64:
-			fmt.Printf("number: %f\n", v)
-		case map[string]interface{}:
-			fmt.Println("object:")
-			printMap(v)
-		case []interface{}:
-			fmt.Println("array:")
-			printArray(v)
-		default:
-			fmt.Printf("unknown (%T)\n", v)
-		}
-	}
-}
-
-func printMap(data map[string]interface{}) {
-	for key, value := range data {
-		fmt.Printf("Key: %s\n", key)
-
-		switch v := value.(type) {
-		case string:
-			fmt.Printf("  Type: string, Value: %s\n", v)
-		case float64:
-			fmt.Printf("  Type: number, Value: %f\n", v)
-		case bool:
-			fmt.Printf("  Type: bool, Value: %t\n", v)
-		case map[string]interface{}:
-			fmt.Println("  Type: object")
-			printMap(v)
-		case []interface{}:
-			fmt.Println("  Type: array")
-			printArray(v)
-		case nil:
-			fmt.Println("  Type: null")
-		default:
-			fmt.Printf("  Type: unknown (%T)\n", v)
-		}
-	}
-}
-
 func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 	storage, err := GetStorageByMountPath(mountPath)
 	if err != nil {
 		return err
 	}
 
+	doneTaskDownload(ctx, storage, mountPath)
+	return nil
+}
+
+func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string) error {
 	root_path := getStoragesRootPath(storage)
 	objs, err := StorageList(ctx, storage, root_path, model.ListArgs{
 		ReqPath: mountPath,
@@ -95,8 +54,10 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 	}
 
 	for _, d := range objs {
+		fpath := d.GetPath()
+		fmt.Println("path1:", fpath)
 		if d.IsDir() {
-			err := DoneTaskDownloadRecursion(ctx, storage, mountPath, d.GetPath())
+			err := doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 			fmt.Println("DoneTaskDownloadRecursion:", err)
 		} else {
 
@@ -104,22 +65,18 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 				err := BackupFile(ctx, storage, d.GetPath())
 				fmt.Println("ftp BackupFile1 err:", err)
 			} else {
-				fmt.Println("path1:", d.GetPath())
-				fmt.Println("storage1:", storage.GetStorage().Driver)
 				multitasking.Factory(mountPath).DoneTask(func() {
-					err := BackupFile(ctx, storage, d.GetPath())
+					err := BackupFile(ctx, storage, fpath)
 					fmt.Println("BackupFile1 err:", err)
 				})
 			}
 		}
 	}
-
-	defer multitasking.Factory(mountPath).Close()
-	fmt.Println("done ok!")
-	return nil
+	multitasking.Factory(mountPath).Close()
+	return err
 }
 
-func DoneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPath string, path string) error {
+func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPath string, path string) error {
 	objs, err := StorageList(ctx, storage, path, model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -129,19 +86,18 @@ func DoneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		filepath := d.GetPath()
 		fmt.Println("path2:", filepath)
 		if d.IsDir() {
-			return DoneTaskDownloadRecursion(ctx, storage, mountPath, filepath)
+			doneTaskDownloadRecursion(ctx, storage, mountPath, filepath)
 		} else {
 			if storage.GetStorage().Driver == "ftp" {
 				err := BackupFile(ctx, storage, filepath)
 				fmt.Println("ftp BackupFile2 err:", err)
 			} else {
-				fmt.Println("storage2:", storage.GetStorage().Driver)
+				fmt.Println("filepath2:", filepath)
 				multitasking.Factory(mountPath).DoneTask(func() {
 					err := BackupFile(ctx, storage, filepath)
 					fmt.Println("BackupFile2 err:", err)
 				})
 			}
-
 		}
 	}
 	return err

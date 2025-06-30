@@ -3,9 +3,7 @@ package multitasking
 import (
 	// "strings"
 	"fmt"
-	// "log"
 	"sync"
-	// "time"
 
 	"ndm/pkg/generic_sync"
 )
@@ -46,12 +44,20 @@ type MultiTasking struct {
 	limit                 int64
 	current_task_num      int64
 	task_already_executed int64
+	running               bool
 
-	results  chan string
-	taskDo   chan bool
-	resultDo chan bool
+	results        chan string
+	taskDoChan     chan bool
+	resultDoneChan chan bool
 
 	task chan func()
+}
+
+func (mt *MultiTasking) IsRun() bool {
+	if mt.running {
+		return true
+	}
+	return false
 }
 
 func (mt *MultiTasking) do() {
@@ -63,13 +69,11 @@ func (mt *MultiTasking) do() {
 				mt.current_task_num -= 1
 				fn()
 				mt.results <- "ok"
-			case <-mt.taskDo:
-				fmt.Println("do over")
+			case <-mt.taskDoChan:
 				return
 			}
 		}
 	}()
-
 }
 
 func (mt *MultiTasking) end() {
@@ -79,8 +83,7 @@ func (mt *MultiTasking) end() {
 			case <-mt.results:
 				mt.task_already_executed += 1
 				fmt.Println("已经执行任务:", mt.task_already_executed)
-			case <-mt.resultDo:
-				fmt.Println("下载成功:", mt.task_already_executed)
+			case <-mt.resultDoneChan:
 				return
 			}
 		}
@@ -93,13 +96,15 @@ func (mt *MultiTasking) Reset() {
 
 	// create task channels and work pools
 	mt.results = make(chan string, mt.limit*2)
-	mt.task = make(chan func(), mt.limit)
-	mt.taskDo = make(chan bool)
-	mt.resultDo = make(chan bool)
+
+	mt.taskDoChan = make(chan bool)
+	mt.resultDoneChan = make(chan bool)
 }
 
 func (mt *MultiTasking) Init(limit int64) error {
 	mt.limit = limit
+	mt.task = make(chan func(), mt.limit)
+	mt.running = true
 	mt.Reset()
 
 	mt.do()
@@ -116,6 +121,9 @@ func (mt *MultiTasking) GetTaskInfo() {
 }
 
 func (mt *MultiTasking) DoneTask(fn func()) {
+	if !mt.running {
+		mt.running = true
+	}
 	wg.Add(1)
 	mt.current_task_num += 1
 	mt.task <- fn
@@ -123,8 +131,10 @@ func (mt *MultiTasking) DoneTask(fn func()) {
 
 func (mt *MultiTasking) Close() {
 	wg.Wait()
-	mt.taskDo <- true
-	close(mt.taskDo)
-	close(mt.resultDo)
+	mt.running = false
+	mt.taskDoChan <- true
+	mt.resultDoneChan <- true
+	close(mt.taskDoChan)
+	close(mt.resultDoneChan)
 	mt.Reset()
 }
