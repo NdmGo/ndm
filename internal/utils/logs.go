@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -33,7 +34,83 @@ func WriteBackupLog(base_path, name, content string) error {
 
 func TailBackupFile(base_path, name string, n int) ([]string, error) {
 	abs_path := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
-	return GetLastNLinesSeek(abs_path, n)
+	if !IsExist(abs_path) {
+		return []string{}, nil
+	}
+	return getLastNLines(abs_path, n)
+}
+
+func getLastNLines(filename string, n int) ([]string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if len(lines) >= n {
+			lines = append(lines[1:], scanner.Text())
+		} else {
+			lines = append(lines, scanner.Text())
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return lines, nil
+}
+
+func readLastLines(filename string, n int) ([]string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	stat, _ := file.Stat()
+	filesize := stat.Size()
+	var cursor int64 = 0
+	lines := make([]string, 0, n)
+	line := ""
+
+	for {
+		cursor -= 1
+		file.Seek(cursor, io.SeekEnd)
+
+		char := make([]byte, 1)
+		_, err := file.Read(char)
+		if err != nil {
+			break
+		}
+
+		if cursor != -1 && (char[0] == 10 || char[0] == 13) { // 换行或回车
+			if len(line) > 0 {
+				lines = append(lines, line)
+				line = ""
+				if len(lines) == n {
+					break
+				}
+			}
+		} else {
+			line = string(char) + line
+		}
+
+		if cursor == -filesize { // 到达文件开头
+			if len(line) > 0 {
+				lines = append(lines, line)
+			}
+			break
+		}
+	}
+
+	// 反转顺序
+	for i, j := 0, len(lines)-1; i < j; i, j = i+1, j-1 {
+		lines[i], lines[j] = lines[j], lines[i]
+	}
+
+	return lines, nil
 }
 
 func GetLastNLinesSeek(filename string, n int) ([]string, error) {

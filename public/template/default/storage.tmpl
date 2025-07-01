@@ -149,8 +149,10 @@ function task_done(table_data){
     var args = {
         "mount_path": table_data.data['mount_path'],
     }
+
+    var reqTimer = null;
     layer.open({
-        title:"任务执行【"+table_data.data['mount_path']+"】",
+        title:"备份任务执行【"+table_data.data['mount_path']+"】",
         type: 1,
         area: ['500px', '400px'],
         btn:["执行","取消"],
@@ -158,7 +160,7 @@ function task_done(table_data){
         shadeClose: true,
         content: '<textarea style="margin:0px;height:100%;width:100%;background-color:#333;color:#fff;padding:0 5px" id="info_log"></textarea>',
         success:function(){
-            setInterval(function(){
+            reqTimer = setInterval(function(){
                 $.ajax({
                     type: "POST",
                     headers: {'Content-Type': 'application/json'},
@@ -166,7 +168,6 @@ function task_done(table_data){
                     data: JSON.stringify(args),
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
                         if (data.code == 200){
                             $("#info_log").text(data.data);
                         }                    
@@ -200,8 +201,12 @@ function task_done(table_data){
                     layer.msg(e, {icon: 2});
                 }
             });
-
-        }
+        },
+        end: function(){
+            if (reqTimer){
+                clearInterval(reqTimer);
+            }
+        },
     });    
 }
 

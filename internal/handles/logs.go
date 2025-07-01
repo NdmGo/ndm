@@ -1,7 +1,7 @@
 package handles
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -68,16 +68,18 @@ func GetLogs(c *gin.Context) {
 	}
 
 	mount_path := strings.TrimPrefix(args.MountPath, "/")
-	data, err := op.TailFile(mount_path, 10)
+	data, err := op.TailFile(mount_path, 18)
 	if err != nil {
 		common.ErrorResp(c, err, 500, true)
 		return
 	}
 
+	// fmt.Println(data)
+
 	content := ""
 	for _, d := range data {
-		fmt.Println(d)
-		content += d
+		// fmt.Println(d)
+		content += d + "\n"
 	}
 
 	common.SuccessResp(c, content)
