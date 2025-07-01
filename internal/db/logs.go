@@ -15,10 +15,7 @@ func AddLog(log *model.Logs) error {
 
 // TruncateLogs just delete all logs from database
 func TruncateLogs() error {
-	if err := db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&model.Logs{}); err != nil {
-		return err
-	}
-	return nil
+	return db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&model.Logs{}).Error
 }
 
 // GetLogsList Get all logs from database order by index
