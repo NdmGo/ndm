@@ -152,11 +152,11 @@ function task_done(table_data){
     layer.open({
         title:"任务执行【"+table_data.data['mount_path']+"】",
         type: 1,
-        area: ['500px', '500px'],
+        area: ['500px', '400px'],
         btn:["执行","取消"],
         shade: 0.6,
         shadeClose: true,
-        content: '<textarea readonly="" style="margin: 0px;height: 100%;width: 100%;background-color: #333;color:#fff; padding:0 5px" id="info_log"></textarea>',
+        content: '<textarea style="margin:0px;height:100%;width:100%;background-color:#333;color:#fff;padding:0 5px" id="info_log"></textarea>',
         success:function(){
             setInterval(function(){
                 $.ajax({
