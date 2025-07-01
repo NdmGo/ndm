@@ -1,11 +1,15 @@
 package utils
 
 import (
-	"fmt"
-	"time"
+	// "fmt"
+	// "time"
 
 	"github.com/hpcloud/tail"
 )
+
+func WriteBackupLog() {
+
+}
 
 func TailFile(filename string, n int) ([]string, error) {
 	t, err := tail.TailFile(filename, tail.Config{

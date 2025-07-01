@@ -31,8 +31,8 @@ func InitLog() {
 	fileConfig := &go_logger.FileConfig{
 		Filename: fmt.Sprintf("%s/%s", logPath, logFileName),
 		LevelFileName: map[int]string{
-			logger.LoggerLevel("error"): fmt.Sprintf("%s/%s", logPath, "error.log"),
-			logger.LoggerLevel("debug"): fmt.Sprintf("%s/%s", logPath, "debug.log"),
+			logger.LoggerLevel("error"): fmt.Sprintf("%s/%s", logPath, "ndm.log"),
+			logger.LoggerLevel("debug"): fmt.Sprintf("%s/%s", logPath, "ndm.log"),
 		},
 		MaxSize:    1024 * 1024,
 		MaxLine:    100000,
