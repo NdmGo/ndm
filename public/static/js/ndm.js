@@ -443,11 +443,25 @@ Admin.prototype.batchDel = function(_url,_id) {
 Admin.prototype.del = function(_this,_url,_id) {
     layer.confirm('确定要删除吗?', { title:'删除提示', btn: ['确定', '取消'],shade:0.001}, function(index) {
         $.post(_url, { 'id':_id }, function(res) {
-            console.log(res);
+            // console.log(res);
             showMsg(res.msg, function(){
         		if(res.code > -1){
             		location.reload();
            	 	}
+            },{icon: res.code > -1 ? 1 : 2});
+        },'json');
+    }, function(index) {
+        layer.close(index);
+    });
+};
+
+Admin.prototype.truncate = function(_this,_url) {
+    layer.confirm('确定要清空吗?', { title:'清空提示', btn: ['确定', '取消'],shade:0.001}, function(index) {
+        $.post(_url, {}, function(res) {
+            showMsg(res.msg, function(){
+                if(res.code > -1){
+                    location.reload();
+                }
             },{icon: res.code > -1 ? 1 : 2});
         },'json');
     }, function(index) {

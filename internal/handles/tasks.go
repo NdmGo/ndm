@@ -92,7 +92,7 @@ func DoneTasks(c *gin.Context) {
 	fmt.Println(task)
 	err = op.DoneTasksBackup(c, req.MountPath)
 	if err != nil {
-		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
+		common.ErrorResp(c, err, 500)
 		return
 	}
 	fmt.Println("err:", err)

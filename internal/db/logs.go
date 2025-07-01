@@ -1,25 +1,24 @@
 package db
 
 import (
-	// "fmt"
-	// "strings"
+	"fmt"
+
+	"ndm/internal/model"
 
 	"github.com/pkg/errors"
-	"ndm/internal/model"
+	"gorm.io/gorm"
 )
 
 func AddLog(log *model.Logs) error {
 	return errors.WithStack(db.Create(log).Error)
 }
 
-// DeleteLogById just delete logs from database by id
-func DeleteLogById(id int64) error {
-	return errors.WithStack(db.Delete(&model.Logs{}, id).Error)
-}
-
-// ClearLogs just delete all logs from database
-func ClearLogs(id int64) error {
-	return errors.WithStack(db.Delete(&model.Logs{}, id).Error)
+// TruncateLogs just delete all logs from database
+func TruncateLogs() error {
+	if err := db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&model.Logs{}); err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetLogsList Get all logs from database order by index
@@ -31,8 +30,15 @@ func GetLogsList(page, size int) ([]model.Logs, int64, error) {
 	}
 
 	var logs []model.Logs
-	if err := db.Order(columnName("id")).Offset((page - 1) * size).Limit(size).Find(&logs).Error; err != nil {
+
+	logOrder := fmt.Sprintf("%s %s", columnName("id"), "desc")
+	if err := db.Order(logOrder).Offset((page - 1) * size).Limit(size).Find(&logs).Error; err != nil {
 		return nil, 0, errors.WithStack(err)
 	}
 	return logs, count, nil
+}
+
+// DeleteLogsById just delete logs from database by id
+func DeleteLogsById(id int64) error {
+	return errors.WithStack(db.Delete(&model.Logs{}, id).Error)
 }

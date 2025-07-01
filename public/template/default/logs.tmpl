@@ -16,7 +16,7 @@
         <div class="bgw divtable" style="padding:8px;font-size:12px;">
             <div class="layui-form toolbar" style="margin-top: 10px;margin-bottom: 10px;">
                 <div class="layui-inline mr0">
-                    <button id="clear" class="layui-btn layui-btn-sm layui-bg-blue" lay-event="clear">清空</button>
+                    <button id="clear" class="layui-btn layui-btn-sm layui-bg-blue" onclick="Admin.truncate(this, '{{.api_path}}/logs/truncate')" lay-event="clear">清空</button>
                 </div>
                 <div class="layui-inline mr0">
                     <button id="refresh" class="layui-btn layui-btn-sm layui-bg-purple" lay-event="refresh">刷新</button>
@@ -64,10 +64,10 @@ table.render({
     defaultToolbar: [],
     title: '数据表',
     cols: [[
-        {field:'id', title:'ID', width:200},
+        {field:'id', title:'ID', width:70},
         {field:'type', title:'类型', width:100},
         {field:'content', title:'内容'},
-        {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:180}
+        {title:'操作', toolbar: '#cmdTpl', fixed: 'right', width:70}
     ]],
     page: true,
     where:[],

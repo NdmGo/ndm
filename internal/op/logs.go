@@ -35,3 +35,19 @@ func AddWarnLogs(content string) (int64, error) {
 func AddErrorLogs(content string) (int64, error) {
 	return AddTypeLogs("error", content)
 }
+
+func DeleteLogsById(id int64) error {
+	// delete the logs in the database
+	if err := db.DeleteLogsById(id); err != nil {
+		return errors.WithMessage(err, "failed delete logs in database")
+	}
+	return nil
+}
+
+func TruncateLogs() error {
+	// truncate the logs in the database
+	if err := db.TruncateLogs(); err != nil {
+		return errors.WithMessage(err, "failed truncate logs in database")
+	}
+	return nil
+}

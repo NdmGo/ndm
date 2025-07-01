@@ -4,16 +4,16 @@ import (
 	// "errors"
 	// "fmt"
 	"net/http"
-	// "strconv"
+	"strconv"
 	// "strings"
-
-	"github.com/gin-gonic/gin"
 
 	"ndm/internal/common"
 	"ndm/internal/db"
 	"ndm/internal/model"
-	// "ndm/internal/op"
+	"ndm/internal/op"
 	// "ndm/pkg/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func LogsPage(c *gin.Context) {
@@ -34,4 +34,26 @@ func LogsList(c *gin.Context) {
 		return
 	}
 	common.SuccessLayuiResp(c, total, "ok", storages)
+}
+
+func DeleteLogs(c *gin.Context) {
+	idStr := c.Query("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+	if err := op.DeleteLogsById(int64(id)); err != nil {
+		common.ErrorResp(c, err, 500, true)
+		return
+	}
+	common.SuccessResp(c)
+}
+
+func TruncateLogs(c *gin.Context) {
+	if err := op.TruncateLogs(); err != nil {
+		common.ErrorResp(c, err, 500, true)
+		return
+	}
+	common.SuccessResp(c)
 }

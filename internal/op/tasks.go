@@ -66,16 +66,21 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 		} else {
 			fmt.Println("path1:", fpath)
 			if storage.GetStorage().Driver == "ftp" {
-				mtf.Init(1)
+				mtf.SetTaskLimit(1)
 			}
 			mtf.DoneTask(func() {
 				err := BackupFile(ctx, storage, fpath)
-				fmt.Println("BackupFile1 err:", err)
+				if err != nil {
+					AddErrorLogs(err.Error())
+				}
+				fmt.Println(fpath, "BackupFile1 err:", err)
 			})
 		}
 	}
 
 	multitasking.Factory(mountPath).Close()
+
+	fmt.Println(mountPath, "end!")
 	return err
 }
 
@@ -93,11 +98,14 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		} else {
 			fmt.Println("path2:", fpath)
 			if storage.GetStorage().Driver == "ftp" {
-				mtf.Init(1)
+				mtf.SetTaskLimit(1)
 			}
 			mtf.DoneTask(func() {
 				err := BackupFile(ctx, storage, fpath)
-				fmt.Println("BackupFile2 err:", err)
+				if err != nil {
+					AddErrorLogs(err.Error())
+				}
+				fmt.Println(fpath, "BackupFile2 err:", err)
 			})
 		}
 	}
