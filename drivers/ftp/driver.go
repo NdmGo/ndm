@@ -132,6 +132,10 @@ func (d *FTP) Put(ctx context.Context, dstDir model.Obj, s model.FileStreamer, u
 }
 
 func (d *FTP) downloadFile(ctx context.Context, key, localfile string) error {
+	if err := d.login(); err != nil {
+		return err
+	}
+
 	resp, err := d.conn.Retr(key)
 	if err != nil {
 		return fmt.Errorf("failed to retrieve remote files: %v", err)
@@ -151,6 +155,7 @@ func (d *FTP) downloadFile(ctx context.Context, key, localfile string) error {
 }
 
 func (d *FTP) BackupFile(ctx context.Context, obj model.Obj, mount_path string) error {
+
 	if !d.EnableBackup {
 		return errs.NotEnbleBackup
 	}

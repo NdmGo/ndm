@@ -1,7 +1,7 @@
 package op
 
 import (
-	"fmt"
+	// "fmt"
 	// "sort"
 	// "strings"
 	"time"
@@ -13,7 +13,6 @@ import (
 	"ndm/internal/model"
 	"ndm/internal/utils/multitasking"
 	// "ndm/internal/utils"
-	// "ndm/pkg/generic_sync"
 
 	// mapset "github.com/deckarep/golang-set/v2"
 	"github.com/gin-gonic/gin"
@@ -64,7 +63,6 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 		if d.IsDir() {
 			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
-			fmt.Println("path1:", fpath)
 			if storage.GetStorage().Driver == "ftp" {
 				mtf.SetTaskLimit(1)
 			}
@@ -73,14 +71,11 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 				if err != nil {
 					AddErrorLogs(err.Error())
 				}
-				fmt.Println(fpath, "BackupFile1 err:", err)
 			})
 		}
 	}
 
 	multitasking.Factory(mountPath).Close()
-
-	fmt.Println(mountPath, "end!")
 	return err
 }
 
@@ -96,7 +91,6 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		if d.IsDir() {
 			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
-			fmt.Println("path2:", fpath)
 			if storage.GetStorage().Driver == "ftp" {
 				mtf.SetTaskLimit(1)
 			}
@@ -105,7 +99,6 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 				if err != nil {
 					AddErrorLogs(err.Error())
 				}
-				fmt.Println(fpath, "BackupFile2 err:", err)
 			})
 		}
 	}
