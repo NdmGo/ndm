@@ -58,3 +58,7 @@ func TruncateLogs() error {
 func WriteBackupLog(name, content string) error {
 	return utils.WriteBackupLog(conf.Log.RootPath, name, content)
 }
+
+func TailFile(name string, n int) ([]string, error) {
+	return utils.TailBackupFile(conf.Log.RootPath, name, n)
+}

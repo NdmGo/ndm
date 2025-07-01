@@ -9,8 +9,7 @@ import (
 
 func WriteBackupLog(base_path, name, content string) error {
 	l := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
-
-	file, err := os.Create(l)
+	file, err := os.OpenFile(l, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
@@ -22,8 +21,13 @@ func WriteBackupLog(base_path, name, content string) error {
 	return nil
 }
 
-func TailFile(filename string, n int) ([]string, error) {
-	t, err := tail.TailFile(filename, tail.Config{
+func TailBackupFile(base_path, name string, n int) ([]string, error) {
+	abs_path := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
+	return TailFile(abs_path, n)
+}
+
+func TailFile(name string, n int) ([]string, error) {
+	t, err := tail.TailFile(name, tail.Config{
 		Location: &tail.SeekInfo{Offset: 0, Whence: 2}, // 从文件末尾开始
 		Poll:     true,
 		Follow:   false,
