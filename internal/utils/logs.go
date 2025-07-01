@@ -1,14 +1,25 @@
 package utils
 
 import (
-	// "fmt"
-	// "time"
+	"fmt"
+	"os"
 
 	"github.com/hpcloud/tail"
 )
 
-func WriteBackupLog() {
+func WriteBackupLog(base_path, name, content string) error {
+	l := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
 
+	file, err := os.Create(l)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	if _, err := file.WriteString(content + "\n"); err != nil {
+		return err
+	}
+	return nil
 }
 
 func TailFile(filename string, n int) ([]string, error) {

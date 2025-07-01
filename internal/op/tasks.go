@@ -3,18 +3,16 @@ package op
 import (
 	// "fmt"
 	// "sort"
-	// "strings"
+	"strings"
 	"time"
 
-	// "ndm/internal/conf"
 	"ndm/internal/db"
 	"ndm/internal/driver"
 	"ndm/internal/errs"
 	"ndm/internal/model"
-	"ndm/internal/utils/multitasking"
 	// "ndm/internal/utils"
+	"ndm/internal/utils/multitasking"
 
-	// mapset "github.com/deckarep/golang-set/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	// log "github.com/sirupsen/logrus"
@@ -67,6 +65,7 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 				mtf.SetTaskLimit(1)
 			}
 			mtf.DoneTask(func() {
+				WriteBackupLog(strings.TrimPrefix(mountPath, "/"), fpath)
 				err := BackupFile(ctx, storage, fpath)
 				if err != nil {
 					AddErrorLogs(err.Error())
@@ -95,6 +94,7 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 				mtf.SetTaskLimit(1)
 			}
 			mtf.DoneTask(func() {
+				WriteBackupLog(strings.TrimPrefix(mountPath, "/"), fpath)
 				err := BackupFile(ctx, storage, fpath)
 				if err != nil {
 					AddErrorLogs(err.Error())

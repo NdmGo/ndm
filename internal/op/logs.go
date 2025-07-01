@@ -3,9 +3,12 @@ package op
 import (
 	"time"
 
-	"github.com/pkg/errors"
+	"ndm/internal/conf"
 	"ndm/internal/db"
 	"ndm/internal/model"
+	"ndm/internal/utils"
+
+	"github.com/pkg/errors"
 )
 
 func AddLogs(log model.Logs) (int64, error) {
@@ -50,4 +53,8 @@ func TruncateLogs() error {
 		return errors.WithMessage(err, "failed truncate logs in database")
 	}
 	return nil
+}
+
+func WriteBackupLog(name, content string) error {
+	return utils.WriteBackupLog(conf.Log.RootPath, name, content)
 }
