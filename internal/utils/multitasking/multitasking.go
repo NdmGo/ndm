@@ -8,10 +8,6 @@ import (
 	"ndm/pkg/generic_sync"
 )
 
-const (
-	maxConcurrent = 5 // maximum concurrent download quantity
-)
-
 var (
 	instance *MultiTasking
 	once     sync.Once
@@ -58,6 +54,10 @@ func (mt *MultiTasking) IsRun() bool {
 	return mt.running
 }
 
+func (mt *MultiTasking) SetForceRuningStatus() {
+	mt.running = true
+}
+
 func (mt *MultiTasking) do() {
 	mt.wg.Add(1)
 	go func() {
@@ -92,6 +92,7 @@ func (mt *MultiTasking) reset() {
 }
 
 func (mt *MultiTasking) Init(limit int64) error {
+
 	mt.limit = limit
 	mt.running = false
 	mt.backend_process = true

@@ -83,20 +83,18 @@ func DoneTasks(c *gin.Context) {
 		return
 	}
 
-	task, err := db.GetTasksByMountPath(req.MountPath)
+	_, err := db.GetTasksByMountPath(req.MountPath)
 	if err != nil {
 		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
 		return
 	}
 
-	fmt.Println(task)
 	err = op.DoneTasksBackup(c, req.MountPath)
 	if err != nil {
 		common.ErrorResp(c, err, 500)
 		return
 	}
-	fmt.Println("err:", err)
-	common.ErrorResp(c, errors.New("测试中!"), 500, true)
+	common.SuccessResp(c, "ok")
 }
 
 func DeleteTasks(c *gin.Context) {

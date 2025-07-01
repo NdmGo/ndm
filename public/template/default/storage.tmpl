@@ -149,28 +149,60 @@ function task_done(table_data){
     var args = {
         "mount_path": table_data.data['mount_path'],
     }
-    var loader = layer.load();
-    $.ajax({
-        type: "POST",
-        headers: {'Content-Type': 'application/json'},
-        url: '{{.api_path}}/tasks/done',
-        data: JSON.stringify(args),
-        dataType: 'json',
-        success: function(data) {
-            layer.close(loader);
-            if (data.code != 200 ){
-                layer.msg(data.msg, {icon: 2});
-            } else if (data.code == 200){
-                layer.msg("执行成功!", {icon: 1});
-            } else {
-                layer.msg("访问异常!", {icon: 2});
-            }
+    layer.open({
+        title:"任务执行【"+table_data.data['mount_path']+"】",
+        type: 1,
+        area: ['500px', '500px'],
+        btn:["执行","取消"],
+        shade: 0.6,
+        shadeClose: true,
+        content: '<textarea readonly="" style="margin: 0px;height: 100%;width: 100%;background-color: #333;color:#fff; padding:0 5px" id="info_log"></textarea>',
+        success:function(){
+            setInterval(function(){
+                $.ajax({
+                    type: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    url: '{{.api_path}}/logs/get',
+                    data: JSON.stringify(args),
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        if (data.code == 200){
+                            $("#info_log").text(data.data);
+                        }                    
+                    },
+                    error:function(e){
+                        layer.msg(e, {icon: 2});
+                    }
+                });
+            },3000);
         },
-        error:function(e){
-            layer.close(loader);
-            layer.msg(e, {icon: 2});
+        yes:function(){
+            var loader = layer.load();
+            $.ajax({
+                type: "POST",
+                headers: {'Content-Type': 'application/json'},
+                url: '{{.api_path}}/tasks/done',
+                data: JSON.stringify(args),
+                dataType: 'json',
+                success: function(data) {
+                    layer.close(loader);
+                    if (data.code != 200 ){
+                        layer.msg(data.msg, {icon: 2});
+                    } else if (data.code == 200){
+                        layer.msg("执行成功!", {icon: 1});
+                    } else {
+                        layer.msg("访问异常!", {icon: 2});
+                    }
+                },
+                error:function(e){
+                    layer.close(loader);
+                    layer.msg(e, {icon: 2});
+                }
+            });
+
         }
-    });
+    });    
 }
 
 

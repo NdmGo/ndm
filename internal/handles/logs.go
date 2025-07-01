@@ -1,17 +1,15 @@
 package handles
 
 import (
-	// "errors"
-	// "fmt"
+	"fmt"
 	"net/http"
 	"strconv"
-	// "strings"
+	"strings"
 
 	"ndm/internal/common"
 	"ndm/internal/db"
 	"ndm/internal/model"
 	"ndm/internal/op"
-	// "ndm/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -56,4 +54,31 @@ func TruncateLogs(c *gin.Context) {
 		return
 	}
 	common.SuccessResp(c)
+}
+
+type LogsReq struct {
+	MountPath string `json:"mount_path" binding:"required"`
+}
+
+func GetLogs(c *gin.Context) {
+	var args LogsReq
+	if err := c.ShouldBind(&args); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	mount_path := strings.TrimPrefix(args.MountPath, "/")
+	data, err := op.TailFile(mount_path, 10)
+	if err != nil {
+		common.ErrorResp(c, err, 500, true)
+		return
+	}
+
+	content := ""
+	for _, d := range data {
+		fmt.Println(d)
+		content += d
+	}
+
+	common.SuccessResp(c, content)
 }

@@ -133,6 +133,7 @@ func initRuoteApi(r *gin.Engine) {
 	logs.GET("/list", handles.LogsList)
 	logs.POST("/delete", handles.DeleteLogs)
 	logs.POST("/truncate", handles.TruncateLogs)
+	logs.POST("/get", handles.GetLogs)
 
 	tasks := g.Group("/tasks")
 	tasks.GET("/list", handles.TasksList)

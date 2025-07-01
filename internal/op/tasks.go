@@ -39,6 +39,7 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 		return errs.BackupTaskIsRun
 	}
 
+	multitasking.Factory(mountPath).SetForceRuningStatus()
 	go doneTaskDownload(ctx, storage, mountPath)
 	return nil
 }
@@ -55,7 +56,9 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 	}
 
 	mtf := multitasking.Factory(mountPath)
+	log_path := strings.TrimPrefix(mountPath, "/")
 
+	TruncateBackupLog(log_path)
 	for _, d := range objs {
 		fpath := d.GetPath()
 		if d.IsDir() {
@@ -65,7 +68,7 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 				mtf.SetTaskLimit(1)
 			}
 			mtf.DoneTask(func() {
-				WriteBackupLog(strings.TrimPrefix(mountPath, "/"), fpath)
+				WriteBackupLog(log_path, fpath)
 				err := BackupFile(ctx, storage, fpath)
 				if err != nil {
 					AddErrorLogs(err.Error())
@@ -74,7 +77,7 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 		}
 	}
 
-	multitasking.Factory(mountPath).Close()
+	mtf.Close()
 	return err
 }
 
@@ -85,6 +88,7 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 	}, false)
 
 	mtf := multitasking.Factory(mountPath)
+	log_path := strings.TrimPrefix(mountPath, "/")
 	for _, d := range objs {
 		fpath := d.GetPath()
 		if d.IsDir() {
@@ -94,7 +98,7 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 				mtf.SetTaskLimit(1)
 			}
 			mtf.DoneTask(func() {
-				WriteBackupLog(strings.TrimPrefix(mountPath, "/"), fpath)
+				WriteBackupLog(log_path, fpath)
 				err := BackupFile(ctx, storage, fpath)
 				if err != nil {
 					AddErrorLogs(err.Error())

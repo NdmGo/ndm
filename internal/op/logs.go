@@ -55,6 +55,10 @@ func TruncateLogs() error {
 	return nil
 }
 
+func TruncateBackupLog(name string) error {
+	return utils.TruncateBackupLog(conf.Log.RootPath, name)
+}
+
 func WriteBackupLog(name, content string) error {
 	return utils.WriteBackupLog(conf.Log.RootPath, name, content)
 }
