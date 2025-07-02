@@ -128,6 +128,13 @@
 		    </div>
 		</div>
 
+		<div class="layui-form-item">
+	    	<label class="layui-form-label">同步挂载目录</label>
+	    	<div class="layui-input-block">
+                <input name="addition.sync_mount_path" type="text" value="{{if .addition}}{{.addition.SyncMountPath}}{{end}}"  class="layui-input">
+            </div>
+	  	</div>
+
 
         <div class="layui-form-item" style="text-align: center;padding: 10px;">
             <input type="hidden" name="id" value="{{if .storage}}{{.storage.ID}}{{end}}">

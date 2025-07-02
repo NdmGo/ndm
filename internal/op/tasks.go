@@ -15,7 +15,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	// log "github.com/sirupsen/logrus"
 )
 
 func CreateTasks(task model.Tasks) (int64, error) {
@@ -78,6 +77,8 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 	}
 
 	mtf.Close()
+
+	WriteBackupLog(log_path, "end")
 	return err
 }
 

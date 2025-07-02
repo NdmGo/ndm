@@ -70,6 +70,12 @@ div {
     width: 180px;
 }
 
+.layui-elem-field legend {
+    margin-left: 0px;
+    padding: 0 10px;
+    font-size: 20px;
+}
+
 .ndm-logo {
 	height: 50px;
 	line-height: 50px;

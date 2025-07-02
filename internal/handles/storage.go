@@ -11,6 +11,7 @@ import (
 
 	"ndm/internal/common"
 	"ndm/internal/db"
+	"ndm/internal/errs"
 	"ndm/internal/model"
 	"ndm/internal/op"
 	"ndm/pkg/utils"
@@ -75,7 +76,7 @@ func CreateStorage(c *gin.Context) {
 	fmt.Println(req)
 
 	if strings.EqualFold(req.MountPath, "") {
-		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
+		common.ErrorWithDataResp(c, errs.MountPathCannotEmpty, 500, gin.H{
 			"id": 0,
 		}, true)
 		return
