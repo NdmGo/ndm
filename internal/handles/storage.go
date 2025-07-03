@@ -24,6 +24,7 @@ func StoragesPage(c *gin.Context) {
 
 func StoragesCreatePage(c *gin.Context) {
 	data := common.CommonVer()
+
 	c.HTML(http.StatusOK, "storage_create.tmpl", data)
 }
 

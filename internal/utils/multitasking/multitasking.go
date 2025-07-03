@@ -1,7 +1,7 @@
 package multitasking
 
 import (
-	// "fmt"
+	"fmt"
 	// "time"
 	"sync"
 
@@ -66,6 +66,8 @@ func (mt *MultiTasking) do() {
 			exit := false
 			select {
 			case fn := <-mt.task:
+
+				fmt.Println("fn:", fn)
 				fn()
 				mt.current_task_num -= 1
 				mt.results <- "ok"

@@ -39,6 +39,30 @@ func SizeFormat(size float64) string {
 	return strconv.FormatFloat(size, 'f', 2, 32) + " " + units[n]
 }
 
+func FormatDuration(d time.Duration) string {
+	// 计算天数
+	days := int(d.Hours() / 24)
+	if days > 0 {
+		return fmt.Sprintf("%d天 %s", days, FormatDuration(d-time.Duration(days)*24*time.Hour))
+	}
+
+	// 计算小时
+	hours := int(d.Hours())
+	if hours > 0 {
+		return fmt.Sprintf("%d小时 %s", hours, FormatDuration(d-time.Duration(hours)*time.Hour))
+	}
+
+	// 计算分钟
+	minutes := int(d.Minutes())
+	if minutes > 0 {
+		return fmt.Sprintf("%d分钟 %s", minutes, FormatDuration(d-time.Duration(minutes)*time.Minute))
+	}
+
+	// 剩余秒数
+	seconds := int(d.Seconds())
+	return fmt.Sprintf("%d秒", seconds)
+}
+
 // FileSize calculates the file size and generate user-friendly string.
 func FileSize(s int64) string {
 	sizes := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}

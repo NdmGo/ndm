@@ -1,7 +1,7 @@
 package op
 
 import (
-	// "fmt"
+	"fmt"
 	// "sort"
 	"strings"
 	"time"
@@ -10,7 +10,7 @@ import (
 	"ndm/internal/driver"
 	"ndm/internal/errs"
 	"ndm/internal/model"
-	// "ndm/internal/utils"
+	"ndm/internal/utils"
 	"ndm/internal/utils/multitasking"
 
 	"github.com/gin-gonic/gin"
@@ -44,6 +44,7 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 }
 
 func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string) error {
+	task_start := time.Now()
 	root_path := getStoragesRootPath(storage)
 	objs, err := StorageList(ctx, storage, root_path, model.ListArgs{
 		ReqPath: mountPath,
@@ -78,7 +79,8 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 
 	mtf.Close()
 
-	WriteBackupLog(log_path, "end")
+	elapsed := time.Now().Sub(task_start)
+	WriteBackupLog(log_path, fmt.Sprintf("end, cos:%s", utils.FormatDuration(elapsed)))
 	return err
 }
 
