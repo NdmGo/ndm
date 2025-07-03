@@ -146,6 +146,18 @@ var options = {
 			"key": "addition.enable_sync",
 			"checked":false
 		},
+		{
+			"tag": "select",
+			"label":"同步挂载目录",
+			"type":"text",
+			"key": "addition.sync_mp_id",
+			"option" :[
+				{"name":"无选择","value":0},
+				{{range .net_storage}}
+				{"name":"{{.MountPath}}","value":{{.ID}}},
+	    		{{end}}
+			]
+		},
 		
 	],
 	"s3" : [

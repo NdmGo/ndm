@@ -1,5 +1,5 @@
 {{template "header_head.tmpl" .}}
-
+{{$outer := .}}
 <div class="layui-fluid" style="background-color: white;padding: 20px;">
     <form class="layui-form layui-form-pane" lay-filter="storage" id="storage_edit" action="{{.api_path}}/storage/update" method="POST">
 
@@ -131,7 +131,12 @@
 		<div class="layui-form-item">
 	    	<label class="layui-form-label">同步挂载目录</label>
 	    	<div class="layui-input-block">
-                <input name="addition.sync_mount_path" type="text" value="{{if .addition}}{{.addition.SyncMountPath}}{{end}}"  class="layui-input">
+	    		<select name="addition.sync_mp_id">
+	    			<option value="0" {{if eq 0 .ID}}selected{{end}}>无选择</option>
+	    			{{range .net_storage}}
+	    				<option value="{{.ID}}" {{if eq $outer.addition.SyncMpId .ID}}selected{{end}}>{{.MountPath}}</option>
+	    			{{end}}
+                </select>
             </div>
 	  	</div>
 

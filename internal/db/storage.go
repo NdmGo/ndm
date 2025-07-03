@@ -57,6 +57,18 @@ func GetStoragesDriver(page, size int, driverName string) ([]model.Storage, int6
 	return storages, count, nil
 }
 
+// GetNetStorages get network storages from database order by index
+func GetNetStorages() ([]model.Storage, error) {
+	storageDB := db.Model(&model.Storage{})
+	storageDB = storageDB.Where("driver != ?", "local")
+
+	var storages []model.Storage
+	if err := addStorageOrder(storageDB).Order(columnName("order")).Find(&storages).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return storages, nil
+}
+
 // GetStorages Get all storages from database order by index
 func GetStorages(page, size int) ([]model.Storage, int64, error) {
 	storageDB := db.Model(&model.Storage{})

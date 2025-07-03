@@ -25,6 +25,11 @@ func StoragesPage(c *gin.Context) {
 func StoragesCreatePage(c *gin.Context) {
 	data := common.CommonVer()
 
+	net_storage, err := db.GetNetStorages()
+	if err == nil {
+		data["net_storage"] = net_storage
+	}
+
 	c.HTML(http.StatusOK, "storage_create.tmpl", data)
 }
 
@@ -38,6 +43,12 @@ func StoragesEditPage(c *gin.Context) {
 	storage, err := db.GetStorageById(int64(id))
 	if err == nil {
 		data["storage"] = storage
+	}
+
+	// obtain network storage
+	net_storage, err := db.GetNetStorages()
+	if err == nil {
+		data["net_storage"] = net_storage
 	}
 
 	driverName := storage.Driver
