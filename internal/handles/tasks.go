@@ -1,11 +1,11 @@
 package handles
 
 import (
-	"errors"
+	// "errors"
 	// "fmt"
 	"net/http"
 	"strconv"
-	"strings"
+	// "strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -51,16 +51,16 @@ func CreateTasks(c *gin.Context) {
 		return
 	}
 
-	if strings.EqualFold(req.MountPath, "") {
-		common.ErrorWithDataResp(c, errors.New("挂载路径不能为空!"), 500, gin.H{
+	if req.MpId == 0 {
+		common.ErrorWithDataResp(c, errs.MountPathCannotEmpty, 500, gin.H{
 			"id": 0,
 		}, true)
 		return
 	}
 
-	_, err := db.GetTasksByMountPath(req.MountPath)
+	_, err := db.GetTasksByMpId(req.MpId)
 	if err == nil {
-		common.ErrorWithDataResp(c, errors.New("任务已经存在!"), 500, gin.H{}, true)
+		common.ErrorWithDataResp(c, errs.TaskAlredyExists, 500, gin.H{}, true)
 		return
 	}
 
@@ -78,18 +78,20 @@ func DoneTasks(c *gin.Context) {
 		return
 	}
 
-	if strings.EqualFold(req.MountPath, "") {
+	if req.MpId == 0 {
 		common.ErrorWithDataResp(c, errs.MountPathCannotEmpty, 500, gin.H{}, true)
 		return
 	}
 
-	_, err := db.GetTasksByMountPath(req.MountPath)
+	_, err := db.GetTasksByMpId(req.MpId)
 	if err != nil {
 		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
 		return
 	}
 
-	err = op.DoneTasksBackup(c, req.MountPath)
+	storage, err := db.GetStorageById(req.MpId)
+
+	err = op.DoneTasksBackup(c, storage.MountPath)
 	if err != nil {
 		common.ErrorResp(c, err, 500)
 		return

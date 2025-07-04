@@ -116,7 +116,7 @@ $("#refresh").click(function(){
 
 function task_create(table_data){
     var args = {
-        "mount_path": table_data.data['mount_path'],
+        "mp_id": table_data.data['id'],
         "cron":"0 0 * * 1",
     }
 
@@ -184,7 +184,7 @@ function task_done(table_data){
                 type: "POST",
                 headers: {'Content-Type': 'application/json'},
                 url: '{{.api_path}}/tasks/done',
-                data: JSON.stringify(args),
+                data: JSON.stringify({"mp_id": table_data.data['id'],}),
                 dataType: 'json',
                 success: function(data) {
                     layer.close(loader);
