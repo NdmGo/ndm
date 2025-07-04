@@ -150,9 +150,15 @@ function task_done(table_data){
         "mount_path": table_data.data['mount_path'],
     }
 
+    var driver_name = table_data.data['driver'];
+    var type_name = "备份";
+    if (driver_name == 'local'){
+        type_name = "同步";
+    }
+
     var reqTimer = null;
     layer.open({
-        title:"备份任务执行【"+table_data.data['mount_path']+"】",
+        title:type_name+"任务执行【"+table_data.data['mount_path']+"】",
         type: 1,
         area: ['500px', '400px'],
         btn:["执行","取消"],

@@ -68,13 +68,11 @@ func GetLogs(c *gin.Context) {
 	}
 
 	mount_path := strings.TrimPrefix(args.MountPath, "/")
-	data, err := op.TailFile(mount_path, 18)
+	data, err := op.TailBackupFile(mount_path, 18)
 	if err != nil {
 		common.ErrorResp(c, err, 500, true)
 		return
 	}
-
-	// fmt.Println(data)
 
 	content := ""
 	for _, d := range data {

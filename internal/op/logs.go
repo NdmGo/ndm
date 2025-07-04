@@ -56,13 +56,25 @@ func TruncateLogs() error {
 }
 
 func TruncateBackupLog(name string) error {
-	return utils.TruncateBackupLog(conf.Log.RootPath, name)
+	return utils.TruncateLog(conf.Log.RootPath, "backup", name)
 }
 
 func WriteBackupLog(name, content string) error {
-	return utils.WriteBackupLog(conf.Log.RootPath, name, content)
+	return utils.WriteLog(conf.Log.RootPath, "backup", name, "backup:"+content)
 }
 
-func TailFile(name string, n int) ([]string, error) {
-	return utils.TailBackupFile(conf.Log.RootPath, name, n)
+func TailBackupFile(name string, n int) ([]string, error) {
+	return utils.TailFile(conf.Log.RootPath, "backup", name, n)
+}
+
+func TruncateSyncLog(name string) error {
+	return utils.TruncateLog(conf.Log.RootPath, "sync", name)
+}
+
+func WriteSyncLog(name, content string) error {
+	return utils.WriteLog(conf.Log.RootPath, "sync", name, "sync:"+content)
+}
+
+func TailSyncFile(name string, n int) ([]string, error) {
+	return utils.TailFile(conf.Log.RootPath, "sync", name, n)
 }

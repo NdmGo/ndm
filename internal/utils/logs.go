@@ -9,8 +9,8 @@ import (
 	"github.com/hpcloud/tail"
 )
 
-func TruncateBackupLog(base_path, name string) error {
-	l := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
+func TruncateLog(base_path, prefix, name string) error {
+	l := fmt.Sprintf("%s/%s_%s", base_path, prefix, name+".log")
 	err := os.Truncate(l, 0)
 	if err != nil {
 		return err
@@ -18,8 +18,8 @@ func TruncateBackupLog(base_path, name string) error {
 	return nil
 }
 
-func WriteBackupLog(base_path, name, content string) error {
-	l := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
+func WriteLog(base_path, prefix, name, content string) error {
+	l := fmt.Sprintf("%s/%s_%s", base_path, prefix, name+".log")
 	file, err := os.OpenFile(l, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
@@ -32,8 +32,8 @@ func WriteBackupLog(base_path, name, content string) error {
 	return nil
 }
 
-func TailBackupFile(base_path, name string, n int) ([]string, error) {
-	abs_path := fmt.Sprintf("%s/%s", base_path, "backup_"+name+".log")
+func TailFile(base_path, prefix, name string, n int) ([]string, error) {
+	abs_path := fmt.Sprintf("%s/%s_%s", base_path, prefix, name+".log")
 	if !IsExist(abs_path) {
 		return []string{}, nil
 	}
@@ -171,7 +171,7 @@ func GetLastNLinesSeek(filename string, n int) ([]string, error) {
 	return lines, nil
 }
 
-func TailFile(name string, n int) ([]string, error) {
+func TailFileBak1(name string, n int) ([]string, error) {
 	t, err := tail.TailFile(name, tail.Config{
 		Location: &tail.SeekInfo{Offset: 0, Whence: 2}, // 从文件末尾开始
 		Poll:     true,
