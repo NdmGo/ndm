@@ -21,10 +21,15 @@ type Info struct {
 
 type IRootPath interface {
 	GetRootPath() string
+	GetMpId() int64
 }
 
 type IRootId interface {
 	GetRootId() string
+}
+
+type IMpId interface {
+	GetMpId() int64
 }
 
 type RootPath struct {
@@ -33,6 +38,10 @@ type RootPath struct {
 
 type RootID struct {
 	RootFolderID string `json:"root_folder_id"`
+}
+
+type MpId struct {
+	SyncMpId int64 `json:"sync_mp_id"`
 }
 
 func (r RootPath) GetRootPath() string {
@@ -45,4 +54,8 @@ func (r *RootPath) SetRootPath(path string) {
 
 func (r RootID) GetRootId() string {
 	return r.RootFolderID
+}
+
+func (r MpId) GetMpId() int64 {
+	return r.SyncMpId
 }

@@ -387,7 +387,13 @@ func getStoragesRootPath(storage driver.Driver) string {
 		return r.GetRootPath()
 	}
 	return ""
+}
 
+func getStoragesMpId(storage driver.Driver) int64 {
+	if r, ok := storage.GetAddition().(driver.IMpId); ok {
+		return r.GetMpId()
+	}
+	return 0
 }
 
 func TriggerDisabledStorageById(ctx context.Context, id int64) error {
