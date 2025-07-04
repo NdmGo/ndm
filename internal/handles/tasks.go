@@ -2,10 +2,10 @@ package handles
 
 import (
 	// "errors"
-	// "fmt"
+	"fmt"
 	"net/http"
 	"strconv"
-	// "strings"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -90,13 +90,17 @@ func DoneTasks(c *gin.Context) {
 	}
 
 	storage, err := db.GetStorageById(req.MpId)
-
 	if err != nil {
 		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
 		return
 	}
 
-	err = op.DoneTasksBackup(c, storage.MountPath)
+	if strings.EqualFold(storage.Driver, "local") {
+		err = op.DoneTasksSync(c, storage.MountPath)
+	} else {
+		err = op.DoneTasksBackup(c, storage.MountPath)
+	}
+
 	if err != nil {
 		common.ErrorResp(c, err, 500)
 		return
