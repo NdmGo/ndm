@@ -91,6 +91,11 @@ func DoneTasks(c *gin.Context) {
 
 	storage, err := db.GetStorageById(req.MpId)
 
+	if err != nil {
+		common.ErrorWithDataResp(c, err, 500, gin.H{}, true)
+		return
+	}
+
 	err = op.DoneTasksBackup(c, storage.MountPath)
 	if err != nil {
 		common.ErrorResp(c, err, 500)
