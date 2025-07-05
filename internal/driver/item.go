@@ -21,7 +21,6 @@ type Info struct {
 
 type IRootPath interface {
 	GetRootPath() string
-	GetMpId() int64
 }
 
 type IRootId interface {
