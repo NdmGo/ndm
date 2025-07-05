@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="ndm-login">登录</button>
+            <button id="login" class="layui-btn layui-btn-fluid" lay-submit lay-filter="ndm-login">登录</button>
         </div>
     </div>
 
@@ -50,6 +50,14 @@ layui.use(function(){
 ///
 var $ = layui.$
 ,form = layui.form;
+
+$(document).keydown(function(event){
+    if(event.keyCode == 13){
+        $('#login').click();
+        return false;
+    }
+});
+
 form.on('submit(ndm-login)', function(d){
     $.ajax({
         type: "POST",
