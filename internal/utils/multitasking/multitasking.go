@@ -82,7 +82,7 @@ func (mt *MultiTasking) do() {
 				break
 			}
 			if exit {
-				break
+				return
 			}
 		}
 	}()
