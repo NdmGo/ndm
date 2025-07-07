@@ -15,7 +15,7 @@ var (
 	logger      *go_logger.Logger
 )
 
-func InitLog() {
+func InitLog() error {
 	logger = go_logger.NewLogger()
 
 	jsonFormat := false
@@ -26,7 +26,10 @@ func InitLog() {
 	logPath := conf.Log.RootPath
 
 	// creare logs dir
-	os.MkdirAll(logPath, 0755)
+	err := os.MkdirAll(logPath, 0o777)
+	if err != nil {
+		return err
+	}
 
 	fileConfig := &go_logger.FileConfig{
 		Filename: fmt.Sprintf("%s/%s", logPath, logFileName),
@@ -41,6 +44,8 @@ func InitLog() {
 		Format:     "",
 	}
 	logger.Attach("file", go_logger.LOGGER_LEVEL_DEBUG, fileConfig)
+
+	return nil
 }
 
 func GetLogger() *go_logger.Logger {

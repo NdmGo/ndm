@@ -3,6 +3,9 @@ package op
 import (
 	"fmt"
 	// "sort"
+	// "io"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -10,47 +13,87 @@ import (
 	"ndm/internal/driver"
 	"ndm/internal/errs"
 	"ndm/internal/model"
+	"ndm/internal/stream"
+	"ndm/internal/task"
 	"ndm/internal/utils"
 	"ndm/internal/utils/multitasking"
+	pkutils "ndm/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/xhofe/tache"
 )
 
-func CreateTasks(task model.Tasks) (int64, error) {
-	task.Modified = time.Now()
-	task.Progress = 0
-	task.LastDone = ""
-	err := db.CreateTasks(&task)
+type UpTask struct {
+	task.TaskExtensionBg
+	storage          driver.Driver
+	dstDirActualPath string
+	file             model.FileStreamer
+}
+
+func (t *UpTask) GetName() string {
+	return fmt.Sprintf("upload %s to [%s](%s)", t.file.GetName(), t.storage.GetStorage().MountPath, t.dstDirActualPath)
+}
+
+func (t *UpTask) GetStatus() string {
+	return "uploading"
+}
+
+func (t *UpTask) Run() error {
+	t.ClearEndTime()
+	t.SetStartTime(time.Now())
+	defer func() { t.SetEndTime(time.Now()) }()
+	return Put(t.Ctx(), t.storage, t.dstDirActualPath, t.file, t.SetProgress, true)
+}
+
+var UpTaskManager *tache.Manager[*UpTask]
+
+func CreateTasks(t model.Tasks) (int64, error) {
+	t.Modified = time.Now()
+	t.Progress = 0
+	t.LastDone = ""
+	err := db.CreateTasks(&t)
 	if err != nil {
-		return task.ID, errors.WithMessage(err, "failed create task in database")
+		return t.ID, errors.WithMessage(err, "failed create task in database")
 	}
-	return task.ID, nil
+	return t.ID, nil
 }
 
 // 上传任务
 func DoneTasksSync(ctx *gin.Context, mountPath string) error {
-	fmt.Println("sync:", mountPath)
+	// fmt.Println("sync:", mountPath)
 	storage, err := GetStorageByMountPath(mountPath)
 	if err != nil {
 		return err
 	}
 
 	mpid := getStoragesMpId(storage)
-	fmt.Println("mpid:", mpid)
+	root_path := getStoragesRootPath(storage)
+
+	dst, err := db.GetStorageById(mpid)
+	if err != nil {
+		return err
+	}
+
+	dst_storage, err := GetStorageByMountPath(dst.MountPath)
+	if err != nil {
+		return err
+	}
+
+	// fmt.Println("mpid:", mpid)
 	// if multitasking.Factory(mountPath).IsRun() {
 	// 	return errs.BackupTaskIsRun
 	// }
 
 	// multitasking.Factory(mountPath).SetForceRuningStatus()
-	err = DoneTasksUpload(ctx, storage, mountPath)
-	fmt.Println("sync:", err)
+	err = DoneTasksUpload(ctx, storage, dst_storage, root_path, mountPath)
+	// fmt.Println("sync:", err)
 	return nil
 }
 
-func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, mountPath string) error {
+func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dst_storage driver.Driver, root_path, mountPath string) error {
 	// task_start := time.Now()
-	root_path := getStoragesRootPath(storage)
+
 	objs, err := StorageList(ctx, storage, "/", model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -62,15 +105,30 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, mountPath string) 
 
 	for _, d := range objs {
 		fpath := d.GetPath()
-		fmt.Println(fpath)
+		// fmt.Println(fpath)
 		if d.IsDir() {
 			relative_path := strings.ReplaceAll(fpath, root_path, "")
-			fmt.Println("dir:", mountPath, fpath, relative_path)
-			doneTasksUploadRecursion(ctx, storage, mountPath, relative_path)
+			// fmt.Println("dir:", mountPath, fpath, relative_path)
+			doneTasksUploadRecursion(ctx, storage, dst_storage, root_path, mountPath, relative_path)
 		} else {
-			if storage.GetStorage().Driver == "ftp" {
-				// mtf.SetTaskLimit(1)
+
+			f, _ := os.Open(fpath)
+			defer f.Close()
+
+			fileInfo, err := os.Stat(fpath)
+			if err != nil {
+				fmt.Println("Error:", err)
 			}
+
+			fileSize := fileInfo.Size()
+			modTime := fileInfo.ModTime()
+			relative_path := strings.ReplaceAll(fpath, root_path, "")
+
+			filename := filepath.Base(relative_path)
+			dstDirPath := filepath.Dir(relative_path)
+
+			mimetype := utils.GetMimeType(fpath)
+			fmt.Println("file1:", mountPath, fpath, relative_path, filename, mimetype)
 			// mtf.DoneTask(func() {
 			// 	WriteBackupLog(log_path, fpath)
 			// 	err := BackupFile(ctx, storage, fpath)
@@ -78,13 +136,30 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, mountPath string) 
 			// 		AddErrorLogs(err.Error())
 			// 	}
 			// })
+
+			h := make(map[*pkutils.HashType]string)
+
+			file := &stream.FileStream{
+				Obj: &model.Object{
+					Name:     filename,
+					Size:     fileSize,
+					Modified: modTime,
+					HashInfo: pkutils.NewHashInfoByMap(h),
+				},
+				Reader:       f,
+				Mimetype:     mimetype,
+				WebPutAsTask: true,
+			}
+
+			err = Put(ctx, dst_storage, dstDirPath, file, nil, true)
+			fmt.Println("err1:", err)
 		}
 	}
 
 	return nil
 }
 
-func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, mountPath string, path string) error {
+func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dst_storage driver.Driver, root_path, mountPath string, path string) error {
 	objs, err := StorageList(ctx, storage, path, model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -94,13 +169,28 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, mountPath
 	// log_path := strings.TrimPrefix(mountPath, "/")
 	for _, d := range objs {
 		fpath := d.GetPath()
-		fmt.Println("sync d:", fpath)
+
 		if d.IsDir() {
-			doneTasksUploadRecursion(ctx, storage, mountPath, fpath)
+			doneTasksUploadRecursion(ctx, storage, dst_storage, root_path, mountPath, fpath)
 		} else {
-			if storage.GetStorage().Driver == "ftp" {
-				// mtf.SetTaskLimit(1)
+
+			f, _ := os.Open(fpath)
+			defer f.Close()
+
+			fileInfo, err := os.Stat(fpath)
+			if err != nil {
+				fmt.Println("Error:", err)
 			}
+
+			fileSize := fileInfo.Size()
+			modTime := fileInfo.ModTime()
+			relative_path := strings.ReplaceAll(fpath, root_path, "")
+
+			filename := filepath.Base(relative_path)
+			dstDirPath := filepath.Dir(relative_path)
+
+			mimetype := utils.GetMimeType(fpath)
+			fmt.Println("file:", mountPath, fpath, relative_path, filename, mimetype)
 			// mtf.DoneTask(func() {
 			// 	WriteBackupLog(log_path, fpath)
 			// 	err := BackupFile(ctx, storage, fpath)
@@ -108,6 +198,41 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, mountPath
 			// 		AddErrorLogs(err.Error())
 			// 	}
 			// })
+
+			h := make(map[*pkutils.HashType]string)
+
+			file := &stream.FileStream{
+				Obj: &model.Object{
+					Name:     filename,
+					Size:     fileSize,
+					Modified: modTime,
+					HashInfo: pkutils.NewHashInfoByMap(h),
+				},
+				Reader:       f,
+				Mimetype:     mimetype,
+				WebPutAsTask: true,
+			}
+
+			t := &UpTask{
+				TaskExtensionBg: task.TaskExtensionBg{
+					Creator: "bg-upload",
+				},
+				storage:          dst_storage,
+				dstDirActualPath: relative_path,
+				file:             file,
+			}
+			t.SetTotalBytes(file.GetSize())
+
+			if t == nil {
+				return fmt.Errorf("failed to create task")
+			}
+
+			err = Put(ctx, dst_storage, dstDirPath, file, nil, true)
+			fmt.Println("err:", err)
+			// fmt.Println("t:", t)
+			// fmt.Println("UpTaskManager:", UpTaskManager)
+			// UpTaskManager.Add(t)
+
 		}
 	}
 	return err
