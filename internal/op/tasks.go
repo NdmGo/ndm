@@ -4,6 +4,7 @@ import (
 	"fmt"
 	// "sort"
 	// "io"
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -75,7 +76,7 @@ func DoneTasksSync(ctx *gin.Context, mountPath string) error {
 		return err
 	}
 
-	dst_storage, err := GetStorageByMountPath(dst.MountPath)
+	dstStorage, err := GetStorageByMountPath(dst.MountPath)
 	if err != nil {
 		return err
 	}
@@ -86,12 +87,12 @@ func DoneTasksSync(ctx *gin.Context, mountPath string) error {
 	// }
 
 	// multitasking.Factory(mountPath).SetForceRuningStatus()
-	err = DoneTasksUpload(ctx, storage, dst_storage, root_path, mountPath)
+	err = DoneTasksUpload(ctx, storage, dstStorage, root_path, mountPath)
 	// fmt.Println("sync:", err)
 	return nil
 }
 
-func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dst_storage driver.Driver, root_path, mountPath string) error {
+func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dstStorage driver.Driver, root_path, mountPath string) error {
 	// task_start := time.Now()
 
 	objs, err := StorageList(ctx, storage, "/", model.ListArgs{
@@ -109,7 +110,7 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dst_storage driver
 		if d.IsDir() {
 			relative_path := strings.ReplaceAll(fpath, root_path, "")
 			// fmt.Println("dir:", mountPath, fpath, relative_path)
-			doneTasksUploadRecursion(ctx, storage, dst_storage, root_path, mountPath, relative_path)
+			doneTasksUploadRecursion(ctx, storage, dstStorage, root_path, mountPath, relative_path)
 		} else {
 
 			f, _ := os.Open(fpath)
@@ -151,7 +152,7 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dst_storage driver
 				WebPutAsTask: true,
 			}
 
-			err = Put(ctx, dst_storage, dstDirPath, file, nil, true)
+			err = Put(ctx, dstStorage, dstDirPath, file, nil, true)
 			fmt.Println("err1:", err)
 		}
 	}
@@ -159,7 +160,7 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dst_storage driver
 	return nil
 }
 
-func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dst_storage driver.Driver, root_path, mountPath string, path string) error {
+func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dstStorage driver.Driver, root_path, mountPath string, path string) error {
 	objs, err := StorageList(ctx, storage, path, model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -171,7 +172,7 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dst_stora
 		fpath := d.GetPath()
 
 		if d.IsDir() {
-			doneTasksUploadRecursion(ctx, storage, dst_storage, root_path, mountPath, fpath)
+			doneTasksUploadRecursion(ctx, storage, dstStorage, root_path, mountPath, fpath)
 		} else {
 
 			f, _ := os.Open(fpath)
@@ -217,7 +218,7 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dst_stora
 				TaskExtensionBg: task.TaskExtensionBg{
 					Creator: "bg-upload",
 				},
-				storage:          dst_storage,
+				storage:          dstStorage,
 				dstDirActualPath: relative_path,
 				file:             file,
 			}
@@ -227,7 +228,7 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dst_stora
 				return fmt.Errorf("failed to create task")
 			}
 
-			err = Put(ctx, dst_storage, dstDirPath, file, nil, true)
+			err = Put(ctx, dstStorage, dstDirPath, file, nil, true)
 			fmt.Println("err:", err)
 			// fmt.Println("t:", t)
 			// fmt.Println("UpTaskManager:", UpTaskManager)
@@ -250,7 +251,20 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 	}
 
 	multitasking.Factory(mountPath).SetForceRuningStatus()
-	go doneTaskDownload(ctx, storage, mountPath)
+
+	go func() {
+		c := context.TODO()
+		err := utils.Try(c, func(c context.Context) {
+			doneTaskDownload(ctx, storage, mountPath)
+		})
+
+		if err != nil {
+			log_path := strings.TrimPrefix(mountPath, "/")
+			WriteBackupLog(log_path, err.Error())
+		}
+
+	}()
+
 	return nil
 }
 
