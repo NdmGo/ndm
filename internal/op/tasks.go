@@ -36,7 +36,6 @@ func CreateTasks(t model.Tasks) (int64, error) {
 
 // 上传任务
 func DoneTasksSync(ctx *gin.Context, mountPath string) error {
-	// fmt.Println("sync:", mountPath)
 	storage, err := GetStorageByMountPath(mountPath)
 	if err != nil {
 		return err
@@ -83,6 +82,7 @@ func DoneTasksSync(ctx *gin.Context, mountPath string) error {
 }
 
 func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dstStorage driver.Driver, root_path, mountPath string) error {
+	task_start := time.Now()
 	objs, err := StorageList(ctx, storage, "/", model.ListArgs{
 		ReqPath: mountPath,
 		Refresh: true,
@@ -104,13 +104,16 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dstStorage driver.
 
 			f, err := os.Open(fpath)
 			if err != nil {
+				fmt.Println("dd1:", err.Error())
 				AddErrorLogs(err.Error())
 				continue
 			}
-			defer f.Close()
+			// defer f.Close()
 
 			fileInfo, err := os.Stat(fpath)
 			if err != nil {
+
+				fmt.Println("dd2:", err.Error())
 				AddErrorLogs(err.Error())
 				continue
 			}
@@ -145,9 +148,15 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dstStorage driver.
 				if err != nil {
 					AddErrorLogs(err.Error())
 				}
+				f.Close()
 			})
 		}
 	}
+
+	mtf.Close()
+
+	elapsed := time.Now().Sub(task_start)
+	WriteBackupLog(log_path, fmt.Sprintf("end, cos:%s", utils.FormatDuration(elapsed)))
 
 	return nil
 }
@@ -173,7 +182,7 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dstStorag
 				AddErrorLogs(err.Error())
 				continue
 			}
-			defer f.Close()
+			// defer f.Close()
 
 			fileInfo, err := os.Stat(fpath)
 			if err != nil {
@@ -210,6 +219,7 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dstStorag
 				if err != nil {
 					AddErrorLogs(err.Error())
 				}
+				f.Close()
 			})
 		}
 	}
