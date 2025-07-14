@@ -24,6 +24,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/nwaples/rardecode/v2 v2.0.0-beta.4.0.20241112120701-034e449c6e78
 	github.com/otiai10/copy v1.14.0
+	github.com/panjf2000/ants v1.3.0
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.6
