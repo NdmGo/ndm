@@ -294,10 +294,9 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 	for _, d := range objs {
 		fpath := d.GetPath()
 		if d.IsDir() {
-			fmt.Println("dir:", fpath)
 			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
-			fmt.Println("doneTaskDownload file:", fpath)
+			// fmt.Println("doneTaskDownload file:", fpath)
 			mtf.DoneTask(func() {
 				WriteBackupLog(log_path, fpath)
 				err := BackupFile(ctx, storage, fpath)
@@ -321,8 +320,8 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		Refresh: true,
 	}, false)
 
-	if path == "/p" {
-		fmt.Println("dtr p", err, path, objs)
+	if err != nil {
+		return err
 	}
 
 	mtf := multitasking.Factory(mountPath)
@@ -332,7 +331,7 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		if d.IsDir() {
 			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
-			fmt.Println("doneTaskDownloadRecursion file:", fpath)
+			// fmt.Println("doneTaskDownloadRecursion file:", fpath)
 			mtf.DoneTask(func() {
 				WriteBackupLog(log_path, fpath)
 				err := BackupFile(ctx, storage, fpath)
