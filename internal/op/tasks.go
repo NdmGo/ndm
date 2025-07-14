@@ -246,11 +246,18 @@ func DoneTasksBackup(ctx *gin.Context, mountPath string) error {
 		return err
 	}
 
-	if multitasking.Factory(mountPath).IsRun() {
+	mtf := multitasking.Factory(mountPath)
+	if mtf.IsRun() {
 		return errs.BackupTaskIsRun
 	}
 
-	multitasking.Factory(mountPath).SetForceRuningStatus()
+	mtf.SetForceRuningStatus()
+
+	if storage.GetStorage().Driver == "ftp" {
+		mtf.SetTaskLimit(1)
+	} else {
+		mtf.SetTaskLimit(100)
+	}
 
 	go func() {
 		c := context.TODO()
@@ -286,13 +293,11 @@ func doneTaskDownload(ctx *gin.Context, storage driver.Driver, mountPath string)
 	TruncateBackupLog(log_path)
 	for _, d := range objs {
 		fpath := d.GetPath()
-		// fmt.Println(fpath)
 		if d.IsDir() {
+			fmt.Println("dir:", fpath)
 			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
-			if storage.GetStorage().Driver == "ftp" {
-				mtf.SetTaskLimit(1)
-			}
+			fmt.Println("doneTaskDownload file:", fpath)
 			mtf.DoneTask(func() {
 				WriteBackupLog(log_path, fpath)
 				err := BackupFile(ctx, storage, fpath)
@@ -316,18 +321,18 @@ func doneTaskDownloadRecursion(ctx *gin.Context, storage driver.Driver, mountPat
 		Refresh: true,
 	}, false)
 
+	if path == "/p" {
+		fmt.Println("dtr p", err, path, objs)
+	}
+
 	mtf := multitasking.Factory(mountPath)
 	log_path := strings.TrimPrefix(mountPath, "/")
 	for _, d := range objs {
 		fpath := d.GetPath()
-
-		fmt.Println(fpath)
 		if d.IsDir() {
 			doneTaskDownloadRecursion(ctx, storage, mountPath, fpath)
 		} else {
-			if storage.GetStorage().Driver == "ftp" {
-				mtf.SetTaskLimit(1)
-			}
+			fmt.Println("doneTaskDownloadRecursion file:", fpath)
 			mtf.DoneTask(func() {
 				WriteBackupLog(log_path, fpath)
 				err := BackupFile(ctx, storage, fpath)
