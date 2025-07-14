@@ -73,6 +73,6 @@ func (mt *MultiTasking) DoneTask(callback func()) {
 }
 
 func (mt *MultiTasking) Close() {
-	defer mt.Pool.Release()
+	// defer mt.Pool.Release()
 	mt.running = false
 }

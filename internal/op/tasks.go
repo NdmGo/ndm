@@ -148,7 +148,6 @@ func DoneTasksUpload(ctx *gin.Context, storage driver.Driver, dstStorage driver.
 				if err != nil {
 					AddErrorLogs(err.Error())
 				}
-				f.Close()
 			})
 		}
 	}
@@ -219,7 +218,6 @@ func doneTasksUploadRecursion(ctx *gin.Context, storage driver.Driver, dstStorag
 				if err != nil {
 					AddErrorLogs(err.Error())
 				}
-				f.Close()
 			})
 		}
 	}
