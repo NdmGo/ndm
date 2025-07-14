@@ -1,9 +1,9 @@
 package multitasking
 
 import (
-	"fmt"
-	// "time"
+	// "fmt"
 	"sync"
+	// "time"
 
 	"ndm/pkg/generic_sync"
 
@@ -71,7 +71,14 @@ func (mt *MultiTasking) DoneTask(callback func()) {
 }
 
 func (mt *MultiTasking) Close() {
-	fmt.Println("mt close")
-	// mt.Pool.Release()
+	// for {
+	// 	t := mt.Pool.Running()
+	// 	if t == 0 {
+	// 		break
+	// 	}
+	// 	time.Sleep(3)
+	// }
+
+	// defer mt.Pool.Release()
 	mt.running = false
 }
