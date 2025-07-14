@@ -1,7 +1,7 @@
 package multitasking
 
 import (
-	// "fmt"
+	"fmt"
 	"sync"
 	// "time"
 
@@ -25,15 +25,17 @@ func Instance() *MultiTasking {
 	return instance
 }
 
-func Factory(name string) *MultiTasking {
-	if taskMap.Has(name) {
-		task, _ := taskMap.Load(name)
+func Factory(name string, tag string) *MultiTasking {
+	key := fmt.Sprintf("%s_%s", name, tag)
+
+	if taskMap.Has(key) {
+		task, _ := taskMap.Load(key)
 		return task
 	}
 
 	f := &MultiTasking{}
 	f.Init(10)
-	taskMap.Store(name, f)
+	taskMap.Store(key, f)
 	return f
 }
 

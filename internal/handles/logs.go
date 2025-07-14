@@ -58,25 +58,39 @@ func TruncateLogs(c *gin.Context) {
 
 type LogsReq struct {
 	MountPath string `json:"mount_path" binding:"required"`
+	Driver    string `json:"driver" binding:"required"`
 }
 
 func GetLogs(c *gin.Context) {
-	var args LogsReq
-	if err := c.ShouldBind(&args); err != nil {
+	var (
+		args LogsReq
+		data []string
+		err  error
+	)
+
+	if err = c.ShouldBind(&args); err != nil {
 		common.ErrorResp(c, err, 400)
 		return
 	}
 
 	mount_path := strings.TrimPrefix(args.MountPath, "/")
-	data, err := op.TailBackupFile(mount_path, 18)
-	if err != nil {
-		common.ErrorResp(c, err, 500, true)
-		return
+
+	if args.Driver == "local" {
+		data, err = op.TailSyncFile(mount_path, 18)
+		if err != nil {
+			common.ErrorResp(c, err, 500, true)
+			return
+		}
+	} else {
+		data, err = op.TailBackupFile(mount_path, 18)
+		if err != nil {
+			common.ErrorResp(c, err, 500, true)
+			return
+		}
 	}
 
 	content := ""
 	for _, d := range data {
-		// fmt.Println(d)
 		content += d + "\n"
 	}
 

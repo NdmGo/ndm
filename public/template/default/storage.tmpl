@@ -148,6 +148,7 @@ function task_create(table_data){
 function task_done(table_data){
     var args = {
         "mount_path": table_data.data['mount_path'],
+        "driver": table_data.data['driver'],
     }
 
     var driver_name = table_data.data['driver'];
