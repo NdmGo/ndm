@@ -3,6 +3,7 @@ package cmd
 import (
 	"ndm/drivers"
 	"ndm/internal/conf"
+	"ndm/internal/crontab"
 	"ndm/internal/db"
 	"ndm/internal/logs"
 	"ndm/internal/routers"
@@ -31,6 +32,8 @@ func runWeb(c *cli.Context) error {
 		userdata.InitAdmin("admin", "admin")
 	}
 	routers.LoadStorages()
+	crontab.Load()
+
 	routers.InitRouters()
 	return nil
 }
