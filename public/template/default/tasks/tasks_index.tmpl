@@ -49,5 +49,5 @@ $("#refresh").click(function(){
 
 <script type="text/html" id="cmdTpl">
     <a class="layui-btn layui-btn-danger layui-btn-xs" onclick="Admin.del(this, '{{.api_path}}/tasks/delete?id={@d.id@}')">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" onclick="Admin.open('编辑','{{.admin_path}}/tasks/edit?id={@d.id@}',800,480)">编辑</a>
 </script>

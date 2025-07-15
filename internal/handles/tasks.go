@@ -18,7 +18,6 @@ import (
 
 func TasksPage(c *gin.Context) {
 	data := common.CommonVer()
-
 	action := c.Param("action")
 	data["task_page"] = action
 	c.HTML(http.StatusOK, "tasks.tmpl", data)
@@ -27,6 +26,21 @@ func TasksPage(c *gin.Context) {
 func TasksCreatePage(c *gin.Context) {
 	data := common.CommonVer()
 	c.HTML(http.StatusOK, "tasks_create.tmpl", data)
+}
+
+func TasksEditPage(c *gin.Context) {
+	data := common.CommonVer()
+
+	tidStr := c.Query("id")
+	tid, err := strconv.Atoi(tidStr)
+	if err != nil {
+		tid = 0
+	}
+	task, err := db.GetTasksById(int64(tid))
+	if err == nil {
+		data["task"] = task
+	}
+	c.HTML(http.StatusOK, "tasks_edit.tmpl", data)
 }
 
 func TasksList(c *gin.Context) {

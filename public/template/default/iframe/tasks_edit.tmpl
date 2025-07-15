@@ -1,0 +1,104 @@
+{{template "header_head.tmpl" .}}
+
+<!-- {{.}} -->
+
+<div class="layui-fluid" style="background-color: white;padding: 20px;">
+    <form class="layui-form layui-form-pane" id="user_edit" action="{{.api_path}}/tasks/{{if .task}}update{{else}}create{{end}}" method="POST">
+
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务周期</label>
+            <div class="layui-input-block">
+                <input type="text" name="cron" value="{{if .task}}{{.task.Cron}}{{end}}" autocomplete="off" class="layui-input"readonly="readonly">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="text-align: center;padding: 10px;">
+            <input type="hidden" name="id" value="{{if .task}}{{.task.ID}}{{else}}0{{end}}">
+            <button class="layui-btn layui-btn-sm" lay-filter="submit_user" lay-submit>保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+        </div>
+    </form>
+</div>
+
+<script>
+layui.use(['layer','form','element','jquery','table','laydate','util'],function() {
+///
+var $ = layui.$;
+var layer = layui.layer;
+var form = layui.form;
+var element = layui.element;
+var table = layui.table;
+var laydate = layui.laydate;
+var util = layui.util;
+
+form.on('submit(submit_user)', function(data){
+    var index = layer.load();
+    var intarr = ['id'];
+    for (var d in data.field) {
+        if ($.inArray(d, intarr)!==-1){
+            data.field[d] = parseInt(data.field[d]);
+        } else if (d === 'disabled'){
+            if (data.field[d] == 'on'){
+                data.field[d] = true;
+            } else {
+                data.field[d] = false;
+            }
+        } else if ( d.indexOf(".") > -1){
+            var t = d.split(".");
+            var name = t[0];
+            var val = t[1];
+
+            if (name in data.field){
+                data.field[name][val] = data.field[d];
+            } else{
+                data.field[name] = {};
+                data.field[name][val] = data.field[d];
+            }
+            delete data.field[d];
+        }
+    }
+    
+    var permission = data.field['permission'];
+    var permission_init = 0;
+    for (var i in permission) {
+        if (i>0){
+            permission_init += 1<<i;
+        } else if (i==0){
+            permission_init += 1;
+        }
+
+    }
+    data.field['permission'] = permission_init;
+
+    $.ajax({
+        type: "POST",
+        headers: {'Content-Type': 'application/json'},
+        url: data.form.action,
+        data: JSON.stringify(data.field),
+        dataType: 'json',
+        success: function(res) {
+            layer.close(index);
+            if (res.code != 200 ){
+                layer.msg(res.message, {icon: 2});
+            } else if (res.code == 200){
+                setTimeout(function(){
+                    parent.location.reload();
+                }, 2000);
+            } else {
+                layer.msg("访问异常!", {icon: 2});
+            }
+        },
+        error:function(e){
+            layer.close(index);
+            layer.msg(e, {icon: 2});
+        }
+    });
+    return false;
+});
+///
+});
+</script>
+</body>
+</html>
