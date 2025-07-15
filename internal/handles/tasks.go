@@ -85,6 +85,20 @@ func CreateTasks(c *gin.Context) {
 	}
 }
 
+func UpdateTask(c *gin.Context) {
+	var req model.Tasks
+	if err := c.ShouldBind(&req); err != nil {
+		common.ErrorResp(c, err, 400)
+		return
+	}
+
+	if err := db.UpdateTask(&req); err != nil {
+		common.ErrorResp(c, err, 500)
+	} else {
+		common.SuccessResp(c)
+	}
+}
+
 func DoneTasks(c *gin.Context) {
 	var req model.Tasks
 	if err := c.ShouldBind(&req); err != nil {

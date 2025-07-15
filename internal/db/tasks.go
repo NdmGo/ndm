@@ -16,6 +16,10 @@ func DeleteTasksById(id int64) error {
 	return errors.WithStack(db.Delete(&model.Tasks{}, id).Error)
 }
 
+func UpdateTask(u *model.Tasks) error {
+	return errors.WithStack(db.Save(u).Error)
+}
+
 func GetTasksById(id int64) (*model.Tasks, error) {
 	var task model.Tasks
 	task.ID = id
