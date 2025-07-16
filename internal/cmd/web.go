@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"net/http"
+
 	"ndm/drivers"
 	"ndm/internal/conf"
 	"ndm/internal/crontab"
@@ -31,9 +33,16 @@ func runWeb(c *cli.Context) error {
 		db.InitDb()
 		userdata.InitAdmin("admin", "admin")
 	}
+
+	if conf.App.RunMode != "prod" {
+		go func() {
+			http.ListenAndServe("localhost:6060", nil)
+		}()
+	}
+
 	routers.LoadStorages()
 	crontab.Load()
-
 	routers.InitRouters()
+
 	return nil
 }
