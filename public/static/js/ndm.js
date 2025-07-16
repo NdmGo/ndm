@@ -331,10 +331,12 @@ laydate.render({
 $('.layui-input,.layui-textarea').click(function(){
     if($(this).attr('placeholder') != ''){
         var tps = $(this).attr('placeholder');
-        if (tps.indexOf("*")>-1){
-        } else {
-            layer.tips(tps, $(this),{tips:1});
-        }   
+        if (tps) {
+            if (tps.indexOf("*")>-1){
+            } else {
+                layer.tips(tps, $(this),{tips:1});
+            }
+        }
     }
 });
 

@@ -4,7 +4,11 @@ import (
 	"fmt"
 
 	"ndm/internal/db"
+
+	"github.com/robfig/cron"
 )
+
+var ndmCron = cron.New()
 
 func Load() {
 
@@ -15,7 +19,12 @@ func Load() {
 
 	for _, task := range tasks {
 		fmt.Println(task, total)
+
+		ndmCron.AddFunc(task.Cron, func() { fmt.Println("Every hour on the half hour") })
+
 	}
+
+	ndmCron.Start()
 
 	fmt.Println("crontab")
 

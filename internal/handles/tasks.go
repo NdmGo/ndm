@@ -2,10 +2,11 @@ package handles
 
 import (
 	// "errors"
-	// "fmt"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
+	// "time"
 
 	"github.com/gin-gonic/gin"
 
@@ -85,14 +86,15 @@ func CreateTasks(c *gin.Context) {
 	}
 }
 
-func UpdateTask(c *gin.Context) {
+func UpdateTasks(c *gin.Context) {
 	var req model.Tasks
 	if err := c.ShouldBind(&req); err != nil {
 		common.ErrorResp(c, err, 400)
 		return
 	}
 
-	if err := db.UpdateTask(&req); err != nil {
+	fmt.Println("UpdateTasks:", req)
+	if err := db.UpdateTasksCronById(req.ID, req.Cron); err != nil {
 		common.ErrorResp(c, err, 500)
 	} else {
 		common.SuccessResp(c)

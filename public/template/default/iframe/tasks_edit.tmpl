@@ -8,7 +8,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">任务周期</label>
             <div class="layui-input-block">
-                <input type="text" name="cron" value="{{if .task}}{{.task.Cron}}{{end}}" autocomplete="off" class="layui-input" >
+                <input type="text" name="cron" value="{{if .task}}{{.task.Cron}}{{end}}" autocomplete="off" class="layui-input" placeholder="任务周期">
             </div>
         </div>
 
@@ -67,7 +67,7 @@ form.on('submit(submit_task)', function(data){
         success: function(res) {
             layer.close(index);
             if (res.code != 200 ){
-                layer.msg(res.message, {icon: 2});
+                layer.msg(res.msg, {icon: 2});
             } else if (res.code == 200){
                 setTimeout(function(){
                     parent.location.reload();

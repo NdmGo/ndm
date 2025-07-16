@@ -16,8 +16,12 @@ func DeleteTasksById(id int64) error {
 	return errors.WithStack(db.Delete(&model.Tasks{}, id).Error)
 }
 
-func UpdateTask(u *model.Tasks) error {
+func UpdateTasks(u *model.Tasks) error {
 	return errors.WithStack(db.Save(u).Error)
+}
+
+func UpdateTasksCronById(id int64, cron string) error {
+	return db.Model(&model.Tasks{ID: id}).Update("cron", cron).Error
 }
 
 func GetTasksById(id int64) (*model.Tasks, error) {

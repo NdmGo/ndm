@@ -28,6 +28,7 @@ require (
 	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea
 	github.com/pkg/errors v0.9.1
 	github.com/pkg/sftp v1.13.6
+	github.com/robfig/cron v1.2.0
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.10.0

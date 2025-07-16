@@ -85,8 +85,7 @@ func CreateStorage(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(req)
-
+	// fmt.Println(req)
 	if strings.EqualFold(req.MountPath, "") {
 		common.ErrorWithDataResp(c, errs.MountPathCannotEmpty, 500, gin.H{
 			"id": 0,
