@@ -30,18 +30,18 @@ func GetStorageAndActualPath(rawPath string) (storage driver.Driver, actualPath 
 	return
 }
 
-// urlTreeSplitLineFormPath 分割path中分割真实路径和UrlTree定义字符串
+// urlTreeSplitLineFormPath split real path and UrlTree definition string from path
 func urlTreeSplitLineFormPath(path string) (pp string, file string) {
-	// url.PathUnescape 会移除 // ，手动加回去
+	// url.PathUnescape will remove //, manually add it back
 	path = strings.Replace(path, "https:/", "https://", 1)
 	path = strings.Replace(path, "http:/", "http://", 1)
 	if strings.Contains(path, ":https:/") || strings.Contains(path, ":http:/") {
-		// URL-Tree模式 /url_tree_drivr/file_name[:size[:time]]:https://example.com/file
+		// URL-Tree mode /url_tree_drivr/file_name[:size[:time]]:https://example.com/file
 		fPath := strings.SplitN(path, ":", 2)[0]
 		pp, _ = stdpath.Split(fPath)
 		file = path[len(pp):]
 	} else if strings.Contains(path, "/https:/") || strings.Contains(path, "/http:/") {
-		// URL-Tree模式 /url_tree_drivr/https://example.com/file
+		// URL-Tree mode /url_tree_drivr/https://example.com/file
 		index := strings.Index(path, "/http://")
 		if index == -1 {
 			index = strings.Index(path, "/https://")

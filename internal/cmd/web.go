@@ -32,6 +32,9 @@ func runWeb(c *cli.Context) error {
 	if conf.Security.InstallLock {
 		db.InitDb()
 		userdata.InitAdmin("admin", "admin")
+		// 数据库初始化后再加载存储和定时任务
+		routers.LoadStorages()
+		crontab.Load()
 	}
 
 	if conf.App.RunMode != "prod" {
@@ -40,9 +43,6 @@ func runWeb(c *cli.Context) error {
 		}()
 	}
 
-	routers.LoadStorages()
-	crontab.Load()
 	routers.InitRouters()
-
 	return nil
 }

@@ -5,6 +5,15 @@ import (
 	"fmt"
 )
 
+// NewErr create new error, supports wrapping original error
+func NewErr(err error, format string, args ...interface{}) error {
+	msg := fmt.Sprintf(format, args...)
+	if err != nil {
+		return fmt.Errorf("%s: %w", msg, err)
+	}
+	return fmt.Errorf("%s", msg)
+}
+
 // Throw throws out an exception, which can be caught be TryCatch or recover.
 func Throw(exception interface{}) {
 	panic(exception)

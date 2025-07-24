@@ -116,7 +116,7 @@ func Cancel2FAById(c *gin.Context) {
 		common.ErrorResp(c, err, 500)
 		return
 	}
-	common.SuccessLayuiMsgResp(c, "取消两步验证成功")
+	common.SuccessLayuiMsgResp(c, "Two-factor authentication cancelled successfully")
 }
 
 func DeleteUser(c *gin.Context) {

@@ -153,8 +153,8 @@ func list(ss []*stream.SeekableStream, password string) (*WrapReader, error) {
 		opts = append(opts, rardecode.Password(password))
 	}
 	files, err := rardecode.List(fileName, opts...)
-	// rardecode输出文件列表的顺序不一定是父目录在前，子目录在后
-	// 父路径的长度一定比子路径短，排序后的files可保证父路径在前
+	// rardecode output file list order is not necessarily parent directory first, subdirectory last
+	// parent path length is definitely shorter than child path, sorted files can ensure parent path comes first
 	sort.Slice(files, func(i, j int) bool {
 		return len(files[i].Name) < len(files[j].Name)
 	})

@@ -33,10 +33,10 @@ func InitDb() {
 	newLogger := logger.New(
 		stdlog.New(os.Stdout, "\r\n", stdlog.LstdFlags), // io writer
 		logger.Config{
-			SlowThreshold:             time.Second, // 慢 SQL 阈值
+			SlowThreshold:             time.Second, // slow SQL threshold
 			LogLevel:                  logLevel,    // Log level
 			IgnoreRecordNotFoundError: true,
-			Colorful:                  true, // 禁用彩色打印
+			Colorful:                  true, // disable colorful printing
 		},
 	)
 
@@ -47,6 +47,10 @@ func InitDb() {
 			TablePrefix: database.TablePrefix,
 		},
 		Logger: newLogger,
+		// performance optimization: enable prepared statement cache
+		PrepareStmt: true,
+		// performance optimization: disable auto ping
+		DisableForeignKeyConstraintWhenMigrating: true,
 	}
 
 	var dB *gorm.DB
@@ -108,7 +112,19 @@ func InitDb() {
 
 func Init(d *gorm.DB) {
 	db = d
-	err := AutoMigrate(new(model.User), new(model.Storage), new(model.SettingItem), new(model.Logs), new(model.Tasks))
+
+	// performance optimization: configure connection pool
+	sqlDB, err := db.DB()
+	if err == nil {
+		// set maximum number of idle connections in the connection pool
+		sqlDB.SetMaxIdleConns(10)
+		// set maximum number of open database connections
+		sqlDB.SetMaxOpenConns(100)
+		// set maximum time a connection can be reused
+		sqlDB.SetConnMaxLifetime(time.Hour)
+	}
+
+	err = AutoMigrate(new(model.User), new(model.Storage), new(model.SettingItem), new(model.Logs), new(model.Tasks))
 	if err != nil {
 		log.Fatalf("failed migrate database: %s", err.Error())
 	}

@@ -85,7 +85,7 @@ func readLastLines(filename string, n int) ([]string, error) {
 			break
 		}
 
-		if cursor != -1 && (char[0] == 10 || char[0] == 13) { // 换行或回车
+		if cursor != -1 && (char[0] == 10 || char[0] == 13) { // newline or carriage return
 			if len(line) > 0 {
 				lines = append(lines, line)
 				line = ""
@@ -97,7 +97,7 @@ func readLastLines(filename string, n int) ([]string, error) {
 			line = string(char) + line
 		}
 
-		if cursor == -filesize { // 到达文件开头
+		if cursor == -filesize { // reached beginning of file
 			if len(line) > 0 {
 				lines = append(lines, line)
 			}
@@ -105,7 +105,7 @@ func readLastLines(filename string, n int) ([]string, error) {
 		}
 	}
 
-	// 反转顺序
+	// reverse order
 	for i, j := 0, len(lines)-1; i < j; i, j = i+1, j-1 {
 		lines[i], lines[j] = lines[j], lines[i]
 	}
@@ -120,7 +120,7 @@ func GetLastNLinesSeek(filename string, n int) ([]string, error) {
 	}
 	defer file.Close()
 
-	// 获取文件大小
+	// get file size
 	stat, err := file.Stat()
 	if err != nil {
 		return nil, err
@@ -128,19 +128,19 @@ func GetLastNLinesSeek(filename string, n int) ([]string, error) {
 	size := stat.Size()
 
 	var lines []string
-	buf := make([]byte, 1024) // 缓冲区大小
+	buf := make([]byte, 1024) // buffer size
 	// lineBreak := []byte{'\n'}
 	pos := size
 
 	for len(lines) < n && pos > 0 {
-		// 计算读取位置和大小
+		// calculate read position and size
 		readSize := int64(len(buf))
 		if pos < readSize {
 			readSize = pos
 		}
 		pos -= readSize
 
-		// 读取块
+		// read chunk
 		_, err := file.Seek(pos, io.SeekStart)
 		if err != nil {
 			return nil, err
@@ -150,7 +150,7 @@ func GetLastNLinesSeek(filename string, n int) ([]string, error) {
 			return nil, err
 		}
 
-		// 在块中查找换行符
+		// search for newlines in chunk
 		chunk := buf[:readSize]
 		for i := len(chunk) - 1; i >= 0; i-- {
 			if chunk[i] == '\n' {
@@ -163,7 +163,7 @@ func GetLastNLinesSeek(filename string, n int) ([]string, error) {
 		}
 	}
 
-	// 反转顺序
+	// reverse order
 	for i, j := 0, len(lines)-1; i < j; i, j = i+1, j-1 {
 		lines[i], lines[j] = lines[j], lines[i]
 	}
@@ -173,7 +173,7 @@ func GetLastNLinesSeek(filename string, n int) ([]string, error) {
 
 func TailFileBak1(name string, n int) ([]string, error) {
 	t, err := tail.TailFile(name, tail.Config{
-		Location: &tail.SeekInfo{Offset: 0, Whence: 2}, // 从文件末尾开始
+		Location: &tail.SeekInfo{Offset: 0, Whence: 2}, // start from end of file
 		Poll:     true,
 		Follow:   false,
 	})

@@ -113,8 +113,8 @@ func ServeHTTP(w http.ResponseWriter, r *http.Request, name string, modTime time
 		ranges = nil
 	}
 
-	// 使用请求的Context
-	// 不然从sendContent读不到数据，即使请求断开CopyBuffer也会一直堵塞
+	// use request's Context
+	// otherwise can't read data from sendContent, even if request disconnects CopyBuffer will keep blocking
 	ctx := context.WithValue(r.Context(), "request_header", r.Header)
 	switch {
 	case len(ranges) == 0:
@@ -244,14 +244,14 @@ func RequestHttp(ctx context.Context, httpMethod string, headerOverride http.Hea
 	res.Header.Del("set-cookie")
 	var reader io.Reader
 	if res.StatusCode >= 400 {
-		// 根据 Content-Encoding 判断 Body 是否压缩
+		// determine if Body is compressed based on Content-Encoding
 		switch res.Header.Get("Content-Encoding") {
 		case "gzip":
-			// 使用gzip.NewReader解压缩
+			// use gzip.NewReader to decompress
 			reader, _ = gzip.NewReader(res.Body)
 			defer reader.(*gzip.Reader).Close()
 		default:
-			// 没有Content-Encoding，直接读取
+			// no Content-Encoding, read directly
 			reader = res.Body
 		}
 		all, _ := io.ReadAll(reader)

@@ -108,14 +108,21 @@ func (f *FileStream) GetFile() model.File {
 	return nil
 }
 
-const InMemoryBufMaxSize = 10 // Megabytes
+// performance optimization: increase memory buffer size
+const InMemoryBufMaxSize = 32 // Megabytes
 const InMemoryBufMaxSizeBytes = InMemoryBufMaxSize * 1024 * 1024
+
+// performance optimization: define buffer size constants
+const (
+	DefaultBufferSize = 64 * 1024   // 64KB
+	LargeBufferSize   = 1024 * 1024 // 1MB
+)
 
 // RangeRead have to cache all data first since only Reader is provided.
 // also support a peeking RangeRead at very start, but won't buffer more than 10MB data in memory
 func (f *FileStream) RangeRead(httpRange http_range.Range) (io.Reader, error) {
 	if httpRange.Length == -1 {
-		// 参考 internal/net/request.go
+		// refer to internal/net/request.go
 		httpRange.Length = f.GetSize() - httpRange.Start
 	}
 	size := httpRange.Start + httpRange.Length
@@ -126,8 +133,8 @@ func (f *FileStream) RangeRead(httpRange http_range.Range) (io.Reader, error) {
 	if cache == nil {
 		if size <= InMemoryBufMaxSizeBytes {
 			bufSize := min(size, f.GetSize())
-			// 使用bytes.Buffer作为io.CopyBuffer的写入对象，CopyBuffer会调用Buffer.ReadFrom
-			// 即使被写入的数据量与Buffer.Cap一致，Buffer也会扩大
+			// use bytes.Buffer as the write target for io.CopyBuffer, CopyBuffer will call Buffer.ReadFrom
+			// even if the amount of data written matches Buffer.Cap, Buffer will still expand
 			buf := make([]byte, bufSize)
 			n, err := io.ReadFull(f.Reader, buf)
 			if err != nil {

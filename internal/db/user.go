@@ -2,6 +2,8 @@ package db
 
 import (
 	"encoding/base64"
+	"sync"
+	"time"
 
 	"github.com/go-webauthn/webauthn/webauthn"
 	"github.com/pkg/errors"
@@ -9,6 +11,20 @@ import (
 	"ndm/internal/model"
 	"ndm/internal/utils"
 )
+
+// 性能优化：用户缓存
+var (
+	userCache     *utils.MemoryCache
+	userCacheOnce sync.Once
+)
+
+// getUserCache 获取用户缓存实例
+func getUserCache() *utils.MemoryCache {
+	userCacheOnce.Do(func() {
+		userCache = utils.NewMemoryCache(1000, 5*time.Minute)
+	})
+	return userCache
+}
 
 func GetAdmin() (*model.User, error) {
 	var adminUser *model.User
@@ -43,10 +59,22 @@ func GetUserByRole(role int64) (*model.User, error) {
 }
 
 func GetUserByName(username string) (*model.User, error) {
+	// 性能优化：先检查缓存
+	cache := getUserCache()
+	if cachedUser, exists := cache.Get("user:" + username); exists {
+		if user, ok := cachedUser.(*model.User); ok {
+			return user, nil
+		}
+	}
+
 	user := model.User{Username: username}
 	if err := db.Where(user).First(&user).Error; err != nil {
 		return nil, errors.Wrapf(err, "failed find user")
 	}
+
+	// 性能优化：更新缓存
+	cache.Set("user:"+username, &user)
+
 	return &user, nil
 }
 

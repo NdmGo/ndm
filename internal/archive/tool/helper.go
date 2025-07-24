@@ -39,7 +39,7 @@ func GenerateMetaTreeFromFolderTraversal(r ArchiveReader) (bool, []model.ObjTree
 		var dirObj *model.ObjectTree
 		isNewFolder := false
 		if !file.FileInfo().IsDir() {
-			// 先将 文件 添加到 所在的文件夹
+			// first add file to its containing folder
 			dir = stdpath.Dir(name)
 			dirObj = dirMap[dir]
 			if dirObj == nil {
@@ -68,9 +68,9 @@ func GenerateMetaTreeFromFolderTraversal(r ArchiveReader) (bool, []model.ObjTree
 			dirObj.Modified = file.FileInfo().ModTime()
 		}
 		if isNewFolder {
-			// 将 文件夹 添加到 父文件夹
-			// 考虑压缩包仅记录文件的路径，不记录文件夹
-			// 循环创建所有父文件夹
+			// add folder to parent folder
+			// consider that archive only records file paths, not folders
+			// loop to create all parent folders
 			parentDir := stdpath.Dir(dir)
 			for {
 				parentDirObj := dirMap[parentDir]

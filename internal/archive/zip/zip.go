@@ -5,10 +5,10 @@ import (
 	stdpath "path"
 	"strings"
 
-	"github.com/alist-org/alist/v3/internal/archive/tool"
-	"github.com/alist-org/alist/v3/internal/errs"
-	"github.com/alist-org/alist/v3/internal/model"
-	"github.com/alist-org/alist/v3/internal/stream"
+	"ndm/internal/archive/tool"
+	"ndm/internal/errs"
+	"ndm/internal/model"
+	"ndm/internal/stream"
 )
 
 type Zip struct {

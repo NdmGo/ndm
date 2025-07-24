@@ -10,7 +10,6 @@ import (
 	"github.com/pkg/errors"
 	"gopkg.in/ini.v1"
 
-	"ndm/internal/utils"
 	"ndm/public"
 )
 
@@ -49,7 +48,7 @@ func InstallConf(data map[string]string) error {
 
 	customConf := filepath.Join(CustomDir(), "conf", "app.conf")
 
-	if !utils.IsExist(filepath.Dir(customConf)) {
+	if !isExist(filepath.Dir(customConf)) {
 		os.MkdirAll(filepath.Dir(customConf), os.ModePerm)
 	}
 
@@ -63,10 +62,10 @@ func InstallConf(data map[string]string) error {
 
 	File.Section("http").Key("port").SetValue("5868")
 
-	safe_path := fmt.Sprintf("/ndm_%s", utils.RandString(6))
+	safe_path := fmt.Sprintf("/ndm_%s", randString(6))
 	File.Section("http").Key("safe_path").SetValue(safe_path)
 
-	api_path := fmt.Sprintf("/api_%s", utils.RandString(6))
+	api_path := fmt.Sprintf("/api_%s", randString(6))
 	File.Section("http").Key("api_path").SetValue(api_path)
 	File.Section("http").Key("temp_dir").SetValue("/temp")
 	File.Section("http").Key("debug").SetValue("false")
@@ -85,7 +84,7 @@ func InstallConf(data map[string]string) error {
 	}
 
 	File.Section("security").Key("install_lock").SetValue("true")
-	File.Section("security").Key("secret_key").SetValue(utils.RandString(10))
+	File.Section("security").Key("secret_key").SetValue(randString(10))
 
 	if err := File.SaveTo(customConf); err != nil {
 		return err
@@ -100,6 +99,8 @@ func InstallConf(data map[string]string) error {
 }
 
 func InitConf(customConf string) error {
+	// performance optimization: initialize performance configuration
+	InitPerformanceConfig()
 
 	data, err := public.Conf.ReadFile("conf/app.conf")
 	if err != nil {
@@ -125,7 +126,7 @@ func InitConf(customConf string) error {
 		}
 	}
 
-	if utils.IsFile(customConf) {
+	if isFile(customConf) {
 		if err = File.Append(customConf); err != nil {
 			return errors.Wrapf(err, "append %q", customConf)
 		}

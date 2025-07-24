@@ -33,3 +33,4 @@ logs
 /custom_*
 .*.sh
 /tmp
+/.vercel

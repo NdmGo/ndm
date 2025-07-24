@@ -175,7 +175,7 @@ func getArchiveMeta(ctx context.Context, storage driver.Driver, path string, arg
 		Expiration := time.Minute * time.Duration(storage.GetStorage().CacheExpiration)
 		archiveMetaProvider.Expiration = &Expiration
 	} else if ss[0].Link.MFile == nil {
-		// alias、crypt 驱动
+		// alias, crypt drivers
 		archiveMetaProvider.Expiration = ss[0].Link.Expiration
 	}
 	return obj, archiveMetaProvider, err

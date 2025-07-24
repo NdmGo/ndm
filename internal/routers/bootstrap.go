@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 
 	"ndm/internal/conf"
 	"ndm/internal/handles"
@@ -155,7 +156,29 @@ func InitRouters() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	r := gin.Default()
+	// 性能优化：使用自定义配置创建gin引擎
+	r := gin.New()
+
+	// 性能优化：添加恢复中间件和日志中间件
+	r.Use(gin.Recovery())
+	if conf.Http.Debug {
+		r.Use(gin.Logger())
+	}
+
+	// 性能优化：添加性能监控中间件
+	r.Use(middlewares.PerformanceMonitor())
+
+	// 安全优化：添加安全头
+	r.Use(middlewares.SecurityHeaders())
+
+	// 性能优化：添加CORS支持
+	r.Use(middlewares.CORS())
+
+	// 性能优化：限制请求大小（10MB）
+	r.Use(middlewares.RequestSizeLimit(10 * 1024 * 1024))
+
+	// 性能优化：限制并发连接数
+	r.Use(middlewares.MaxAllowed(conf.Performance.HTTP.MaxConcurrent))
 
 	home := r.Group("", middlewares.SysIsInstalled)
 	home.GET("/", handles.HomePage)
@@ -165,5 +188,19 @@ func InitRouters() {
 	initRuoteApi(r)
 	initAdminStaticPage(r)
 
-	r.Run(fmt.Sprintf(":%d", conf.Http.Port))
+	// 性能优化：使用自定义HTTP服务器配置
+	srv := &http.Server{
+		Addr:         fmt.Sprintf(":%d", conf.Http.Port),
+		Handler:      r,
+		ReadTimeout:  conf.Performance.HTTP.ReadTimeout,
+		WriteTimeout: conf.Performance.HTTP.WriteTimeout,
+		IdleTimeout:  conf.Performance.HTTP.IdleTimeout,
+		// 性能优化：设置最大头部大小
+		MaxHeaderBytes: 1 << 20, // 1MB
+	}
+
+	log.Infof("Starting server on port %d", conf.Http.Port)
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

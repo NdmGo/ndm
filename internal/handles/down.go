@@ -136,7 +136,7 @@ func localProxy(c *gin.Context, link *model.Link, file model.Obj, proxyRange boo
 	}
 	Writer := &common.WrittenResponseWriter{ResponseWriter: c.Writer}
 
-	//优先处理md文件
+	// prioritize processing md files
 	if utils.Ext(file.GetName()) == "md" && setting.GetBool(conf.FilterReadMeScripts) {
 		buf := bytes.NewBuffer(make([]byte, 0, file.GetSize()))
 		w := &common.InterceptResponseWriter{ResponseWriter: Writer, Writer: buf}
